@@ -78,14 +78,6 @@ export default function StatsPage() {
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-border/50">
-        <div className="mx-auto max-w-3xl px-6 py-8">
-          <p className="text-xs text-muted-foreground">
-            © 2024 小哲导航
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }
