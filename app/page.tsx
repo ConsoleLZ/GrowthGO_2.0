@@ -55,7 +55,7 @@ export default function HomePage() {
             {filteredSites.length > 0 ? (
               <div className="grid gap-3 sm:grid-cols-2">
                 {filteredSites.map((site) => (
-                  <SiteCardGrid key={site.id} site={site} />
+                  <SiteCardGrid key={site.url} site={site} />
                 ))}
               </div>
             ) : (
@@ -73,18 +73,7 @@ export default function HomePage() {
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 {featuredSites.map((site) => (
-                  <SiteCardGrid key={site.id} site={site} />
-                ))}
-              </div>
-            </section>
-
-            <section className="pb-16">
-              <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
-                更多资源
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {sites.filter(s => !s.featured).map((site) => (
-                  <SiteCardGrid key={site.id} site={site} />
+                  <SiteCardGrid key={site.url} site={site} />
                 ))}
               </div>
             </section>

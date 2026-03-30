@@ -115,7 +115,7 @@ export default function CategoryPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               {filteredSites.map((site) => (
                 <a
-                  key={site.id}
+                  key={site.url}
                   href={site.url}
                   target="_blank"
                   rel="noopener noreferrer"
