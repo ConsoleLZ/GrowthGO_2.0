@@ -10,9 +10,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: '小哲导航',
+  title: '小哲的个人导航网站',
   description: '精选开发者资源导航',
   generator: 'v0.app',
+  icons: '/favicon.ico'
 }
 
 export default function RootLayout({
