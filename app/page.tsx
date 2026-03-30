@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { Search } from "lucide-react"
 import { NavHeader } from "@/components/nav-header"
 import { SiteCardGrid } from "@/components/site-card"
@@ -47,10 +47,21 @@ export default function HomePage() {
     setPage(prev => prev + 1)
   }, [])
 
-  const { isLoading } = useInfiniteScroll({
+  const { isLoading, resetLoading } = useInfiniteScroll({
     hasMore,
     onLoadMore: handleLoadMore
   })
+
+  // 数据加载完成后重置加载状态
+  useEffect(() => {
+    if (isLoading) {
+      // 设置一个延迟来确保数据已经更新
+      const timer = setTimeout(() => {
+        resetLoading()
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading, resetLoading])
 
   // 搜索时重置分页
   const handleSearchChange = useCallback((value: string) => {
