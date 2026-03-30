@@ -60,10 +60,16 @@ export default function CategoryPage() {
     }
   }, [isLoading, resetLoading])
 
-  // 切换标签时重置分页
+  // 切换标签时重置分页并滚动到顶部
   const handleTagSelect = useCallback((tag: string | null) => {
     setSelectedTag(tag)
     setPage(1)
+    
+    // 滚动到页面顶部
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
   }, [])
 
   return (
