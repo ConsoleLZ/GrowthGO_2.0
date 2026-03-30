@@ -72,13 +72,13 @@ export default function CategoryPage() {
 
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex gap-12 py-12">
-          {/* Left Sidebar - Fixed Tags */}
+          {/* Left Sidebar - Fixed Tags with Independent Scroll */}
           <aside className="hidden w-56 shrink-0 md:block">
-            <div className="sticky top-8">
+            <div className="fixed top-24 h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin">
               <h2 className="mb-6 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 分类标签
               </h2>
-              <nav className="space-y-1">
+              <nav className="space-y-1 pr-4">
                 <button
                   onClick={() => handleTagSelect(null)}
                   className={cn(
