@@ -1,165 +1,74 @@
 export interface Site {
-  name: string;
-  description: string;
-  url: string;
-  icon: string;
-  tags: string[];
-  featured?: boolean;
+  name: string
+  ico: string
+  url: string
+  description: string
+  tags: string[]
+  recommend?: boolean
 }
 
-export interface Category {
-  id: string;
-  name: string;
-}
-
-export const categories: Category[] = [
-  { id: "frontend", name: "前端" },
-  { id: "ai", name: "AI" },
-  { id: "tools", name: "工具" },
-  { id: "design", name: "设计" },
-  { id: "backend", name: "后端" },
-  { id: "database", name: "数据库" },
-  { id: "cloud", name: "云平台" },
-  { id: "devops", name: "DevOps" },
-  { id: "mobile", name: "移动端" },
-  { id: "security", name: "安全" },
-  { id: "learning", name: "学习" },
-  { id: "community", name: "社区" },
-];
+export const tags = {
+  frontEnd: "前端",
+  openSource: "开源项目",
+  community: "社区",
+  safe: "网络安全",
+};
 
 export const sites: Site[] = [
   {
-    name: "Vue.js",
-    description: "渐进式 JavaScript 框架，易学易用，性能出色，适用场景丰富",
-    url: "https://vuejs.org",
-    icon: "https://vuejs.org/logo.svg",
-    tags: ["前端", "框架"],
-    featured: true,
+    name: "JavaScript Rising Stars",
+    ico: "https://risingstars.js.org/favicon.ico",
+    url: "https://risingstars.js.org/",
+    description: "了解每年JS生态系统的趋势",
+    tags: [tags.frontEnd],
+    recommend: true,
   },
   {
-    name: "React",
-    description: "用于构建 Web 和原生用户界面的库",
-    url: "https://react.dev",
-    icon: "https://react.dev/favicon.ico",
-    tags: ["前端", "框架"],
-    featured: true,
+    name: "Can I use",
+    ico: "https://caniuse.com/img/favicon-128.png",
+    url: "https://caniuse.com/",
+    description: "前端兼容性问题查询",
+    tags: [tags.frontEnd],
   },
   {
-    name: "GitHub",
-    description: "全球最大的代码托管平台和开发者社区",
-    url: "https://github.com",
-    icon: "https://github.githubassets.com/favicons/favicon.svg",
-    tags: ["工具", "社区"],
-    featured: true,
+    name: "lucaong / minisearch",
+    ico: '',
+    url: "https://github.com/lucaong/minisearch",
+    description: "小巧而强大的 JavaScript 全文搜索引擎，适用于浏览器和 Node",
+    tags: [tags.openSource],
   },
   {
-    name: "掘金",
-    description: "一个帮助开发者成长的社区，可以看看大佬的各种文章",
-    url: "https://juejin.cn",
-    icon: "https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/static/favicons/favicon-32x32.png",
-    tags: ["社区", "学习"],
-    featured: true,
+    name: "稀土掘金",
+    ico:
+      "https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/static/favicons/favicon-32x32.png",
+    url: "https://juejin.cn/",
+    description: "一个很好的开发者社区，可以看看大佬的各种文章",
+    tags: [tags.community],
+    recommend: true,
   },
   {
-    name: "DeepSeek",
-    description: "深度求索，国产大模型的优秀代表",
-    url: "https://deepseek.com",
-    icon: "https://www.deepseek.com/favicon.ico",
-    tags: ["AI", "工具"],
-    featured: true,
+    name: "思否",
+    ico: "https://static.segmentfault.com/main_site_next/dc3490f3/favicon.ico",
+    url: "https://segmentfault.com/",
+    description: "技术分享",
+    tags: [tags.community],
   },
   {
-    name: "通义千问",
-    description:
-      "阿里达摩院推出的大模型，拥有千亿参数，可用于智能问答、知识检索",
-    url: "https://tongyi.aliyun.com",
-    icon: "https://img.alicdn.com/imgextra/i3/O1CN01sffRIx1nb3dXCKHsz_!!6000000005107-2-tps-32-32.png",
-    tags: ["AI", "工具"],
-    featured: true,
+    name: "BUUCTF",
+    ico: "https://buuoj.cn/themes/buu_core/static/img/favicon.ico",
+    url: "https://buuoj.cn/",
+    description: "ctf我不会",
+    tags: [tags.safe],
+    recommend: true,
   },
   {
-    name: "v0",
-    description: "基于人工智能的 UI 生成工具，快速构建界面",
-    url: "https://v0.dev",
-    icon: "https://v0.dev/favicon.ico",
-    tags: ["AI", "设计"],
-  },
-  {
-    name: "Vercel",
-    description: "前端部署平台，支持自动化部署和全球 CDN",
-    url: "https://vercel.com",
-    icon: "https://vercel.com/favicon.ico",
-    tags: ["云平台", "工具"],
-  },
-  {
-    name: "Next.js",
-    description: "React 全栈框架，支持 SSR、SSG 等多种渲染模式",
-    url: "https://nextjs.org",
-    icon: "https://nextjs.org/favicon.ico",
-    tags: ["前端", "框架"],
-  },
-  {
-    name: "Tailwind CSS",
-    description: "实用优先的 CSS 框架，快速构建现代化界面",
-    url: "https://tailwindcss.com",
-    icon: "https://tailwindcss.com/favicons/favicon-32x32.png",
-    tags: ["前端", "设计"],
-  },
-  {
-    name: "Figma",
-    description: "协作式界面设计工具，支持团队实时协作",
-    url: "https://figma.com",
-    icon: "https://www.figma.com/favicon.ico",
-    tags: ["设计", "工具"],
-  },
-  {
-    name: "Linear",
-    description: "现代化的项目管理工具，流畅的用户体验",
-    url: "https://linear.app",
-    icon: "https://linear.app/favicon.ico",
-    tags: ["工具", "DevOps"],
-  },
-  {
-    name: "Supabase",
-    description: "开源的 Firebase 替代品，提供数据库、认证等服务",
-    url: "https://supabase.com",
-    icon: "https://supabase.com/favicon.ico",
-    tags: ["数据库", "后端"],
-  },
-  {
-    name: "Prisma",
-    description: "下一代 Node.js 和 TypeScript ORM",
-    url: "https://prisma.io",
-    icon: "https://www.prisma.io/favicon.ico",
-    tags: ["数据库", "后端"],
-  },
-  {
-    name: "MDN Web Docs",
-    description: "Mozilla 开发者网络，Web 技术权威文档",
-    url: "https://developer.mozilla.org",
-    icon: "https://developer.mozilla.org/favicon.ico",
-    tags: ["学习", "前端"],
-  },
-  {
-    name: "Stack Overflow",
-    description: "全球最大的程序员问答社区",
-    url: "https://stackoverflow.com",
-    icon: "https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico",
-    tags: ["社区", "学习"],
-  },
-  {
-    name: "ChatGPT",
-    description: "OpenAI 的对话式 AI 助手",
-    url: "https://chat.openai.com",
-    icon: "https://chat.openai.com/favicon.ico",
-    tags: ["AI", "工具"],
-  },
-  {
-    name: "Claude",
-    description: "Anthropic 的 AI 助手，擅长长文本和代码",
-    url: "https://claude.ai",
-    icon: "https://claude.ai/favicon.ico",
-    tags: ["AI", "工具"],
+    name: "WgpSec CTF",
+    ico:
+      "https://ctf.wgpsec.org/files/4aecfc78e9fe458cbd934aacc69ffd94/favicon.ico",
+    url: "https://ctf.wgpsec.org/",
+    description: "打CTF怎么能没有电竞椅呢!",
+    tags: [tags.safe],
+    recommend: true,
   },
 ];
 

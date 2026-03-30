@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 export default function HomePage() {
   const [query, setQuery] = useState("")
   
-  const featuredSites = sites.filter((site) => site.featured)
+  const featuredSites = sites.filter((site) => site.recommend)
   const filteredSites = query
     ? sites.filter(
         (site) =>
