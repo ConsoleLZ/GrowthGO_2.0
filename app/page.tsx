@@ -77,10 +77,10 @@ export default function HomePage() {
         {/* Hero */}
         <section className="py-16 md:py-24">
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            小哲导航
+            前端、硬件、AI等各种实用网站和工具
           </h1>
           <p className="mt-3 text-muted-foreground">
-            精选开发者资源，简单、高效、实用
+            宝剑锋从磨砺出，梅花香自苦寒来。
           </p>
           
           {/* Search */}
