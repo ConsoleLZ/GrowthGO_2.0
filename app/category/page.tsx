@@ -1,13 +1,18 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useCallback } from "react"
 import { NavHeader } from "@/components/nav-header"
 import { SiteCard } from "@/components/site-card"
+import { LoadingSpinner } from "@/components/loading-spinner"
 import { sites } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
+
+const ITEMS_PER_PAGE = 20
 
 export default function CategoryPage() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
 
   const tagsWithCount = useMemo(() => {
     const tagMap = new Map<string, number>()
@@ -26,6 +31,30 @@ export default function CategoryPage() {
     return sites.filter((site) => site.tags.includes(selectedTag))
   }, [selectedTag])
 
+  // 懒加载逻辑
+  const sitesToDisplay = useMemo(() => {
+    return filteredSites.slice(0, page * ITEMS_PER_PAGE)
+  }, [filteredSites, page])
+
+  const hasMore = useMemo(() => {
+    return sitesToDisplay.length < filteredSites.length
+  }, [sitesToDisplay.length, filteredSites.length])
+
+  const handleLoadMore = useCallback(() => {
+    setPage(prev => prev + 1)
+  }, [])
+
+  const { isLoading } = useInfiniteScroll({
+    hasMore,
+    onLoadMore: handleLoadMore
+  })
+
+  // 切换标签时重置分页
+  const handleTagSelect = useCallback((tag: string | null) => {
+    setSelectedTag(tag)
+    setPage(1)
+  }, [])
+
   return (
     <div className="min-h-screen bg-background">
       <NavHeader />
@@ -40,7 +69,7 @@ export default function CategoryPage() {
               </h2>
               <nav className="space-y-1">
                 <button
-                  onClick={() => setSelectedTag(null)}
+                  onClick={() => handleTagSelect(null)}
                   className={cn(
                     "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
                     !selectedTag
@@ -54,7 +83,7 @@ export default function CategoryPage() {
                 {tagsWithCount.map(({ tag, count }) => (
                   <button
                     key={tag}
-                    onClick={() => setSelectedTag(tag)}
+                    onClick={() => handleTagSelect(tag)}
                     className={cn(
                       "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
                       selectedTag === tag
@@ -74,29 +103,29 @@ export default function CategoryPage() {
           <div className="mb-6 overflow-x-auto pb-2 md:hidden">
             <div className="flex gap-2">
               <button
-                onClick={() => setSelectedTag(null)}
-                className={cn(
-                  "shrink-0 rounded-full px-3 py-1.5 text-sm transition-colors",
-                  !selectedTag
-                    ? "bg-foreground text-background"
-                    : "bg-muted text-muted-foreground"
-                )}
-              >
-                全部
-              </button>
-              {tagsWithCount.map(({ tag }) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag)}
-                  className={cn(
-                    "shrink-0 rounded-full px-3 py-1.5 text-sm transition-colors",
-                    selectedTag === tag
-                      ? "bg-foreground text-background"
-                      : "bg-muted text-muted-foreground"
-                  )}
-                >
-                  {tag}
-                </button>
+            onClick={() => handleTagSelect(null)}
+            className={cn(
+              "shrink-0 rounded-full px-3 py-1.5 text-sm transition-colors",
+              !selectedTag
+                ? "bg-foreground text-background"
+                : "bg-muted text-muted-foreground"
+            )}
+          >
+            全部
+          </button>
+          {tagsWithCount.map(({ tag }) => (
+            <button
+              key={tag}
+              onClick={() => handleTagSelect(tag)}
+              className={cn(
+                "shrink-0 rounded-full px-3 py-1.5 text-sm transition-colors",
+                selectedTag === tag
+                  ? "bg-foreground text-background"
+                  : "bg-muted text-muted-foreground"
+              )}
+            >
+              {tag}
+            </button>
               ))}
             </div>
           </div>
@@ -108,12 +137,12 @@ export default function CategoryPage() {
                 {selectedTag || "全部资源"}
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                {filteredSites.length} 个资源
+                已显示 {sitesToDisplay.length} / {filteredSites.length} 个资源
               </p>
             </header>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              {filteredSites.map((site) => (
+              {sitesToDisplay.map((site) => (
                 <a
                   key={site.url}
                   href={site.url}
@@ -145,6 +174,19 @@ export default function CategoryPage() {
                 </a>
               ))}
             </div>
+            
+            {/* 加载更多 */}
+            {hasMore && (
+              <div className="mt-8">
+                {isLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <p className="text-center text-sm text-muted-foreground">
+                    滚动加载更多...
+                  </p>
+                )}
+              </div>
+            )}
 
             {filteredSites.length === 0 && (
               <div className="py-16 text-center">

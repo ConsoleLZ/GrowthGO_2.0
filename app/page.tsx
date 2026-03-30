@@ -1,23 +1,62 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo, useCallback } from "react"
 import { Search } from "lucide-react"
 import { NavHeader } from "@/components/nav-header"
 import { SiteCardGrid } from "@/components/site-card"
+import { LoadingSpinner } from "@/components/loading-spinner"
 import { sites } from "@/lib/data"
 import { Input } from "@/components/ui/input"
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
+
+const ITEMS_PER_PAGE = 20
 
 export default function HomePage() {
   const [query, setQuery] = useState("")
+  const [page, setPage] = useState(1)
   
-  const featuredSites = sites.filter((site) => site.recommend)
-  const filteredSites = query
-    ? sites.filter(
+  const featuredSites = useMemo(() => sites.filter((site) => site.recommend), [])
+  
+  const filteredSites = useMemo(() => {
+    if (query) {
+      return sites.filter(
         (site) =>
           site.name.toLowerCase().includes(query.toLowerCase()) ||
           site.description.toLowerCase().includes(query.toLowerCase())
       )
-    : null
+    }
+    return null
+  }, [query])
+
+  // 懒加载逻辑
+  const allSitesToDisplay = useMemo(() => {
+    if (filteredSites) {
+      return filteredSites.slice(0, page * ITEMS_PER_PAGE)
+    }
+    return sites.slice(0, page * ITEMS_PER_PAGE)
+  }, [filteredSites, page])
+
+  const hasMore = useMemo(() => {
+    if (filteredSites) {
+      return allSitesToDisplay.length < filteredSites.length
+    }
+    return allSitesToDisplay.length < sites.length
+  }, [allSitesToDisplay.length, filteredSites, sites.length])
+
+  const handleLoadMore = useCallback(() => {
+    setPage(prev => prev + 1)
+  }, [])
+
+  const { isLoading } = useInfiniteScroll({
+    hasMore,
+    onLoadMore: handleLoadMore
+  })
+
+  // 搜索时重置分页
+  const handleSearchChange = useCallback((value: string) => {
+    setQuery(value)
+    setPage(1)
+  }, [])
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,7 +79,7 @@ export default function HomePage() {
               type="text"
               placeholder="搜索资源..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="h-11 pl-10 bg-muted/50 border-0 focus-visible:ring-1"
             />
           </div>
@@ -52,12 +91,25 @@ export default function HomePage() {
             <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
               搜索结果 ({filteredSites.length})
             </h2>
-            {filteredSites.length > 0 ? (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {filteredSites.map((site) => (
-                  <SiteCardGrid key={site.url} site={site} />
-                ))}
-              </div>
+            {allSitesToDisplay.length > 0 ? (
+              <>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {allSitesToDisplay.map((site) => (
+                    <SiteCardGrid key={site.url} site={site} />
+                  ))}
+                </div>
+                {hasMore && (
+                  <div className="mt-8">
+                    {isLoading ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <p className="text-center text-sm text-muted-foreground">
+                        滚动加载更多...
+                      </p>
+                    )}
+                  </div>
+                )}
+              </>
             ) : (
               <p className="text-sm text-muted-foreground">未找到相关资源</p>
             )}
@@ -77,6 +129,8 @@ export default function HomePage() {
                 ))}
               </div>
             </section>
+            
+            {/* All Sites with Lazy Loading */}
           </>
         )}
       </main>
