@@ -166,9 +166,31 @@ export default function HomePage() {
 
       <footer className="border-t border-border/50">
         <div className="mx-auto max-w-3xl px-6 py-8">
-          <p className="text-xs text-muted-foreground">
-            <a href="https://consolelz.github.io/" target="_blank">我的博客</a>
-          </p>
+          <div className="flex items-center mb-4 gap-6">
+            <p className="text-xs text-muted-foreground">
+              <a href="https://consolelz.github.io/" target="_blank">
+                我的博客 - 个人笔记
+              </a>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              <a href="https://juejin.cn/user/1295692732053241" target="_blank">
+                掘金 - 技术文章
+              </a>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              <a
+                href="https://v.douyin.com/zocGwtB8qq0/ 1@7.com"
+                target="_blank"
+              >
+                抖音 - 个人生活
+              </a>
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-muted-foreground">
+              邮箱：17347187569@163.com
+            </p>
+          </div>
         </div>
       </footer>
     </div>
