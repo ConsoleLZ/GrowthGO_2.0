@@ -2798,8 +2798,8 @@ export const sites: Site[] = [
 
 
 export const stats = {
-  totalSites: 367,
-  totalCategories: 26,
+  totalSites: sites.length,
+  totalCategories: Object.keys(tags).length,
   totalVisits: 1184,
-  runningDays: 130,
+  runningStart: '2026-03-31 12:00',
 };

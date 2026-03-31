@@ -1,23 +1,57 @@
-"use client"
+"use client";
 
-import { NavHeader } from "@/components/nav-header"
-import { sites, stats } from "@/lib/data"
-import { useMemo } from "react"
+import { NavHeader } from "@/components/nav-header";
+import { sites, stats } from "@/lib/data";
+import { useMemo, useState, useEffect } from "react"; // 1. 引入 useEffect
 
 export default function StatsPage() {
   const tagStats = useMemo(() => {
-    const tagCount: Record<string, number> = {}
+    const tagCount: Record<string, number> = {};
     sites.forEach((site) => {
       site.tags.forEach((tag) => {
-        tagCount[tag] = (tagCount[tag] || 0) + 1
-      })
-    })
+        tagCount[tag] = (tagCount[tag] || 0) + 1;
+      });
+    });
     return Object.entries(tagCount)
       .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-  }, [])
+      .sort((a, b) => b.count - a.count);
+  }, []);
 
-  const maxCount = Math.max(...tagStats.map((t) => t.count))
+  const maxCount = Math.max(...tagStats.map((t) => t.count));
+
+  const [runningDays, setRunningDays] = useState("...");
+
+  // 2. 使用 useEffect 处理副作用
+  useEffect(() => {
+    const startTime = new Date(stats.runningStart).getTime();
+    let timer: NodeJS.Timeout | null = null;
+
+    const updateRuntime = () => {
+      const now = new Date().getTime();
+      const diff = now - startTime;
+
+      if (diff < 0) {
+        setRunningDays("尚未开始");
+        return;
+      }
+
+      const seconds = Math.floor(diff / 1000) % 60;
+      const minutes = Math.floor(diff / 60000) % 60;
+      const hours = Math.floor(diff / 3600000) % 24;
+      const days = Math.floor(diff / 86400000);
+
+      setRunningDays(`${days}天${hours}小时${minutes}分钟${seconds}秒`);
+    };
+
+    // 立即执行一次，然后启动定时器
+    updateRuntime();
+    timer = setInterval(updateRuntime, 1000);
+
+    // 3. 清理函数：组件卸载时清除定时器
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, []); // 空依赖数组确保只在挂载时运行一次
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,9 +60,7 @@ export default function StatsPage() {
       <main className="mx-auto max-w-3xl px-6">
         <section className="py-16">
           <h1 className="text-3xl font-semibold tracking-tight">统计</h1>
-          <p className="mt-2 text-muted-foreground">
-            站点数据一览
-          </p>
+          <p className="mt-2 text-muted-foreground">站点数据一览</p>
         </section>
 
         {/* Stats Grid */}
@@ -40,15 +72,19 @@ export default function StatsPage() {
             </div>
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">分类数</p>
-              <p className="mt-1 text-3xl font-semibold">{stats.totalCategories}</p>
+              <p className="mt-1 text-3xl font-semibold">
+                {stats.totalCategories}
+              </p>
             </div>
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">访问量</p>
-              <p className="mt-1 text-3xl font-semibold">{stats.totalVisits.toLocaleString()}</p>
+              <p className="mt-1 text-3xl font-semibold">
+                {stats.totalVisits.toLocaleString()}
+              </p>
             </div>
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">运行时间</p>
-              <p className="mt-1 text-3xl font-semibold">{stats.runningDays}天</p>
+              <p className="mt-1 text-3xl font-semibold">{runningDays}</p>
             </div>
           </div>
         </section>
@@ -79,5 +115,5 @@ export default function StatsPage() {
         </section>
       </main>
     </div>
-  )
+  );
 }
