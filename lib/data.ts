@@ -2800,6 +2800,5 @@ export const sites: Site[] = [
 export const stats = {
   totalSites: sites.length,
   totalCategories: Object.keys(tags).length,
-  totalVisits: 1184,
   runningStart: '2026-03-31 12:00',
 };

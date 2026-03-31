@@ -3,6 +3,7 @@
 import { NavHeader } from "@/components/nav-header";
 import { sites, stats } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
+import Script from "next/script";
 
 export default function StatsPage() {
   const tagStats = useMemo(() => {
@@ -77,8 +78,11 @@ export default function StatsPage() {
             </div>
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">访问量</p>
-              <p className="mt-1 text-2xl font-semibold">
-                {stats.totalVisits.toLocaleString()}
+              <p
+                id="busuanzi_value_site_pv"
+                className="mt-1 text-2xl font-semibold"
+              >
+                ...
               </p>
             </div>
             <div className="rounded-lg border border-border/50 p-6">
@@ -113,6 +117,11 @@ export default function StatsPage() {
           </div>
         </section>
       </main>
+
+      <Script
+        src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+        strategy="lazyOnload"
+      />
     </div>
   );
 }
