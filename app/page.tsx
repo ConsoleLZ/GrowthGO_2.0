@@ -167,7 +167,7 @@ export default function HomePage() {
       <footer className="border-t border-border/50">
         <div className="mx-auto max-w-3xl px-6 py-8">
           <p className="text-xs text-muted-foreground">
-            <a href="https://consolelz.github.io/">我的博客</a>
+            <a href="https://consolelz.github.io/" target="_blank">我的博客</a>
           </p>
         </div>
       </footer>
