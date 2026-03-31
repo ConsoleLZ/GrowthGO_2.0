@@ -5,6 +5,7 @@ export interface Site {
   description: string
   tags: string[]
   recommend?: boolean
+  quickAccess?: boolean
 }
 
 // 所有的标签
@@ -49,6 +50,14 @@ export const tags = {
 
 // recommend: true
 export const sites: Site[] = [
+  {
+    name: "豆包",
+    ico: "https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/chat/favicon.png",
+    url: "https://www.doubao.com/",
+    description: "一个基于人工智能的聊天机器人，可以帮助用户解决问题。",
+    tags: [tags.ai],
+    quickAccess: true
+  },
   {
     name: "Typora",
     ico: "https://typora.io/img/favicon-32.png",
@@ -628,7 +637,8 @@ export const sites: Site[] = [
     ico: "https://drop.ioiox.com/images/favicon-96x96.png",
     url: "https://drop.ioiox.com/",
     description: "局域网文件传输",
-    tags: [tags.tools]
+    tags: [tags.tools],
+    quickAccess: true
   },
   {
     name: "GrabCAD",
@@ -966,7 +976,8 @@ export const sites: Site[] = [
     ico: "https://www.deepseek.com/favicon.ico",
     url: "https://www.deepseek.com/",
     description: "全新体验，无限可能",
-    tags: [tags.ai]
+    tags: [tags.ai],
+    quickAccess: true
   },
   {
     name: "excalidraw / excalidraw",
@@ -1012,7 +1023,8 @@ export const sites: Site[] = [
     url: "https://hellogithub.com/",
     description:
       "HelloGitHub 开源社区，专注于发现和分享有趣、入门级的开源项目。在这里，探索开源技术解决方案，体验开源的乐趣，自荐或推荐开源项目，开启你的开源之旅。",
-    tags: [tags.openSource, tags.learning, tags.community]
+    tags: [tags.openSource, tags.learning, tags.community],
+    quickAccess: true
   },
   {
     name: "google在线字体",
@@ -1832,7 +1844,8 @@ export const sites: Site[] = [
     url: "https://www.tongyi.com/",
     description:
       "阿里达摩院推出的大模型，拥有千亿参数，可用于智能问答、知识检索、文案创作等场景",
-    tags: [tags.ai]
+    tags: [tags.ai],
+    quickAccess: true
   },
   {
     name: "星火大模型",
@@ -1923,7 +1936,8 @@ export const sites: Site[] = [
     url: "https://github.com/",
     description: "全球领先的人工智能开发者平台",
     tags: [tags.cloud, tags.community, tags.projectManagement],
-    recommend: true
+    recommend: true,
+    quickAccess: true
   },
   {
     name: "Gitee",
@@ -2015,7 +2029,8 @@ export const sites: Site[] = [
     url: "https://juejin.cn/",
     description: "一个很好的开发者社区，可以看看大佬的各种文章",
     tags: [tags.learning, tags.community],
-    recommend: true
+    recommend: true,
+    quickAccess: true
   },
   {
     name: "CSDN",
