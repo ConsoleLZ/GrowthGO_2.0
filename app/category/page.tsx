@@ -76,8 +76,8 @@ export default function CategoryPage() {
     <div className="min-h-screen bg-background">
       <NavHeader />
 
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="flex gap-12 py-12">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-12 py-6 md:py-12">
           {/* Left Sidebar - Fixed Tags with Independent Scroll */}
           <aside className="hidden w-56 shrink-0 md:block">
             <div className="fixed top-24 h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin">
@@ -116,41 +116,43 @@ export default function CategoryPage() {
             </div>
           </aside>
 
-          {/* Mobile Tags - Horizontal Scroll */}
-          <div className="mb-6 overflow-x-auto pb-2 md:hidden">
-            <div className="flex gap-2">
-              <button
-            onClick={() => handleTagSelect(null)}
-            className={cn(
-              "shrink-0 rounded-full px-3 py-1.5 text-sm transition-colors",
-              !selectedTag
-                ? "bg-foreground text-background"
-                : "bg-muted text-muted-foreground"
-            )}
-          >
-            全部
-          </button>
-          {tagsWithCount.map(({ tag }) => (
-            <button
-              key={tag}
-              onClick={() => handleTagSelect(tag)}
-              className={cn(
-                "shrink-0 rounded-full px-3 py-1.5 text-sm transition-colors",
-                selectedTag === tag
-                  ? "bg-foreground text-background"
-                  : "bg-muted text-muted-foreground"
-              )}
-            >
-              {tag}
-            </button>
-              ))}
+          {/* Mobile Tags - Horizontal Scroll with Better Styling */}
+          <div className="md:hidden">
+            <div className="mb-4 overflow-x-auto pb-2">
+              <div className="flex gap-2 min-w-max">
+                <button
+                  onClick={() => handleTagSelect(null)}
+                  className={cn(
+                    "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all",
+                    !selectedTag
+                      ? "bg-foreground text-background shadow-sm"
+                      : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                  )}
+                >
+                  全部
+                </button>
+                {tagsWithCount.map(({ tag, count }) => (
+                  <button
+                    key={tag}
+                    onClick={() => handleTagSelect(tag)}
+                    className={cn(
+                      "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all",
+                      selectedTag === tag
+                        ? "bg-foreground text-background shadow-sm"
+                        : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                    )}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Main Content */}
           <main className="min-w-0 flex-1">
-            <header className="mb-8">
-              <h1 className="text-2xl font-semibold tracking-tight">
+            <header className="mb-6 md:mb-8">
+              <h1 className="text-xl md:text-2xl font-semibold tracking-tight">
                 {selectedTag || "全部资源"}
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -158,29 +160,29 @@ export default function CategoryPage() {
               </p>
             </header>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 md:gap-4 md:grid-cols-2">
               {sitesToDisplay.map((site) => (
                 <a
                   key={site.url}
                   href={site.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-border hover:shadow-sm"
+                  className="group rounded-lg md:rounded-xl border border-border/50 bg-card p-3 md:p-4 transition-all hover:border-border hover:shadow-sm"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted overflow-hidden">
+                    <div className="flex h-8 w-8 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-lg bg-muted overflow-hidden">
                       <img 
                         src={site.ico} 
                         alt={site.name}
-                        className="h-6 w-6 object-contain"
+                        className="h-4 w-4 md:h-6 md:w-6 object-contain"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none'
-                          e.currentTarget.parentElement!.innerHTML = `<span class="text-sm font-medium">${site.name.charAt(0)}</span>`
+                          e.currentTarget.parentElement!.innerHTML = `<span class="text-xs md:text-sm font-medium">${site.name.charAt(0)}</span>`
                         }}
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-medium leading-tight group-hover:text-primary">
+                      <h3 className="text-sm md:text-base font-medium leading-tight group-hover:text-primary">
                         {site.name}
                       </h3>
                       <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
