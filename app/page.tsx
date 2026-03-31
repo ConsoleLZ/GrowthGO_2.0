@@ -79,7 +79,7 @@ export default function HomePage() {
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
             前端、硬件、AI等各种实用网站和工具
           </h1>
-          <p className="mt-3 text-muted-foreground">
+          <p className="mt-3 text-muted-foreground font-mono">
             宝剑锋从磨砺出，梅花香自苦寒来。
           </p>
           

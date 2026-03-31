@@ -17,7 +17,7 @@ export function NavHeader() {
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-6">
-        <Link href="/" className="text-base font-medium tracking-tight">
+        <Link href="/" className="text-base font-serif tracking-tight">
           小哲的一些宝藏
         </Link>
 
