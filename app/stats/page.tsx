@@ -2,7 +2,7 @@
 
 import { NavHeader } from "@/components/nav-header";
 import { sites, stats } from "@/lib/data";
-import { useMemo, useState, useEffect } from "react"; // 1. 引入 useEffect
+import { useMemo, useState, useEffect } from "react";
 
 export default function StatsPage() {
   const tagStats = useMemo(() => {
@@ -21,7 +21,6 @@ export default function StatsPage() {
 
   const [runningDays, setRunningDays] = useState("...");
 
-  // 2. 使用 useEffect 处理副作用
   useEffect(() => {
     const startTime = new Date(stats.runningStart).getTime();
     let timer: NodeJS.Timeout | null = null;
@@ -68,23 +67,23 @@ export default function StatsPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">收录数</p>
-              <p className="mt-1 text-3xl font-semibold">{stats.totalSites}</p>
+              <p className="mt-1 text-2xl font-semibold">{stats.totalSites}</p>
             </div>
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">分类数</p>
-              <p className="mt-1 text-3xl font-semibold">
+              <p className="mt-1 text-2xl font-semibold">
                 {stats.totalCategories}
               </p>
             </div>
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">访问量</p>
-              <p className="mt-1 text-3xl font-semibold">
+              <p className="mt-1 text-2xl font-semibold">
                 {stats.totalVisits.toLocaleString()}
               </p>
             </div>
             <div className="rounded-lg border border-border/50 p-6">
               <p className="text-sm text-muted-foreground">运行时间</p>
-              <p className="mt-1 text-3xl font-semibold">{runningDays}</p>
+              <p className="mt-1 text-2xl font-semibold">{runningDays}</p>
             </div>
           </div>
         </section>
