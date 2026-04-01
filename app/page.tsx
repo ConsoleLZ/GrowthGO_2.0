@@ -80,44 +80,44 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <NavHeader />
 
-      <main className="mx-auto max-w-3xl px-6">
+      <main className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Hero */}
-        <section className="py-16 md:py-24">
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+        <section className="py-12 md:py-16 lg:py-24">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight md:text-4xl">
             前端、硬件、AI等各种实用网站和工具
           </h1>
-          <p className="mt-3 text-muted-foreground font-mono">
+          <p className="mt-2 sm:mt-3 text-sm sm:text-base text-muted-foreground font-mono">
             宝剑锋从磨砺出，梅花香自苦寒来。
           </p>
 
           {/* Search */}
-          <div className="relative mt-8">
+          <div className="relative mt-6 sm:mt-8">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
               placeholder="搜索资源..."
               value={query}
               onChange={(e) => handleSearchChange(e.target.value)}
-              className="h-11 pl-10 bg-muted/50 border-0 focus-visible:ring-1"
+              className="h-10 sm:h-11 pl-10 bg-muted/50 border-0 focus-visible:ring-1 text-sm sm:text-base"
             />
           </div>
         </section>
 
         {/* Search Results */}
         {filteredSites && (
-          <section className="pb-12">
+          <section className="pb-8 md:pb-12">
             <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
               搜索结果 ({filteredSites.length})
             </h2>
             {allSitesToDisplay.length > 0 ? (
               <>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {allSitesToDisplay.map((site) => (
                     <SiteCardGrid key={site.url} site={site} />
                   ))}
                 </div>
                 {hasMore && (
-                  <div className="mt-8">
+                  <div className="mt-6 md:mt-8">
                     {isLoading ? (
                       <LoadingSpinner />
                     ) : (
@@ -137,22 +137,22 @@ export default function HomePage() {
         {/* Featured Sites */}
         {!filteredSites && (
           <>
-            <section className="pb-12">
+            <section className="pb-8 md:pb-12">
               <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
                 快速访问
               </h2>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {quickAccessSites.map((site) => (
                   <SiteCardGrid key={site.url} site={site} />
                 ))}
               </div>
             </section>
 
-            <section className="pb-12">
+            <section className="pb-8 md:pb-12">
               <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
                 精选推荐
               </h2>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {featuredSites.map((site) => (
                   <SiteCardGrid key={site.url} site={site} />
                 ))}
@@ -165,8 +165,8 @@ export default function HomePage() {
       </main>
 
       <footer className="border-t border-border/50">
-        <div className="mx-auto max-w-3xl px-6 py-8">
-          <div className="flex items-center mb-4 gap-6">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-6 md:py-8">
+          <div className="flex flex-col sm:flex-row sm:items-center mb-4 gap-4 sm:gap-6">
             <p className="text-xs text-muted-foreground">
               <a href="https://consolelz.github.io/" target="_blank">
                 我的博客 - 个人笔记
@@ -189,6 +189,9 @@ export default function HomePage() {
           <div className="flex items-center gap-4">
             <p className="text-xs text-muted-foreground">
               邮箱：17347187569@163.com
+            </p>
+            <p className="text-xs text-muted-foreground">
+              <a href="https://github.com/ConsoleLZ/GrowthGO_2.0" target="_blank">开源地址</a>
             </p>
           </div>
         </div>
