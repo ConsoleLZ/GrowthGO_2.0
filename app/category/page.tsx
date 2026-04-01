@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react"
 import { NavHeader } from "@/components/nav-header"
 import { SiteCard } from "@/components/site-card"
+import { LazyImage } from "@/components/lazy-image"
 import { LoadingSpinner } from "@/components/loading-spinner"
 import { sites } from "@/lib/data"
 import { cn } from "@/lib/utils"
@@ -171,14 +172,11 @@ export default function CategoryPage() {
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex h-8 w-8 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-lg bg-muted overflow-hidden">
-                      <img 
-                        src={site.ico} 
+                      <LazyImage
+                        src={site.ico}
                         alt={site.name}
                         className="h-4 w-4 md:h-6 md:w-6 object-contain"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                          e.currentTarget.parentElement!.innerHTML = `<span class="text-xs md:text-sm font-medium">${site.name.charAt(0)}</span>`
-                        }}
+                        fallback={<span className="text-xs md:text-sm font-medium">{site.name.charAt(0)}</span>}
                       />
                     </div>
                     <div className="min-w-0 flex-1">

@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowUpRight } from "lucide-react"
+import { LazyImage } from "@/components/lazy-image"
 import type { Site } from "@/lib/data"
 
 interface SiteCardProps {
@@ -49,8 +50,13 @@ export function SiteCardGrid({ site }: SiteCardProps) {
       className="group block rounded-lg border border-border/50 p-4 transition-colors hover:border-border hover:bg-muted/30"
     >
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted text-sm font-medium">
-          {site.name.charAt(0)}
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted overflow-hidden">
+          <LazyImage
+            src={site.ico}
+            alt={site.name}
+            className="h-5 w-5 object-contain"
+            fallback={<span className="text-sm font-medium">{site.name.charAt(0)}</span>}
+          />
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-medium truncate">{site.name}</h3>
