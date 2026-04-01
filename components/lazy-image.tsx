@@ -53,7 +53,7 @@ export function LazyImage({ src, alt, className = '', fallback, onError }: LazyI
   return (
     <img
       ref={imgRef}
-      src={isVisible ? src : ''}
+      src={isVisible ? src : undefined}
       alt={alt}
       className={className}
       onError={handleError}
