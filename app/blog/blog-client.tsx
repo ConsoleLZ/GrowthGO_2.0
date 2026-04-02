@@ -167,34 +167,42 @@ export default function BlogClient({ posts }: BlogClientProps) {
             </div>
 
             {/* Articles Grid */}
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {filteredPosts.map((post) => (
-                <Card key={post.slug} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="p-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <Link href={`/blog/${post.slug}`}>
-                          <CardTitle className="text-lg hover:text-primary transition-colors line-clamp-2">
-                            {post.title}
-                          </CardTitle>
-                        </Link>
-                        <CardDescription className="mt-1 line-clamp-2">
-                          {post.description}
-                        </CardDescription>
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {post.tags.map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
+                <Link 
+                  key={post.slug} 
+                  href={`/blog/${post.slug}`}
+                  className="group block rounded-lg border border-border/50 p-4 transition-colors hover:border-border hover:bg-muted/30"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                        {post.description}
+                      </p>
+                      <div className="mt-2 flex items-center gap-1.5">
+                        {post.tags.slice(0, 2).map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs text-muted-foreground"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {post.tags.length > 2 && (
+                          <span className="text-xs text-muted-foreground">
+                            +{post.tags.length - 2}
+                          </span>
+                        )}
                       </div>
-                      <Badge variant="secondary" className="shrink-0 text-xs">
-                        {new Date(post.date).toLocaleDateString('zh-CN')}
-                      </Badge>
                     </div>
-                  </CardHeader>
-                </Card>
+                    <div className="shrink-0 text-xs text-muted-foreground">
+                      {new Date(post.date).toLocaleDateString('zh-CN')}
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
 
