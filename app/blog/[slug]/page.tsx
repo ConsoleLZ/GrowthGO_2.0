@@ -1,0 +1,62 @@
+import { notFound } from "next/navigation"
+import { NavHeader } from "@/components/nav-header"
+import { getPostBySlug, getAllPosts } from "@/lib/posts"
+import { Badge } from "@/components/ui/badge"
+
+interface Props {
+  params: {
+    slug: string
+  }
+}
+
+export async function generateStaticParams() {
+  const posts = getAllPosts()
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+
+export default async function BlogPostPage({ params }: Props) {
+  const post = await getPostBySlug(params.slug)
+
+  if (!post) {
+    notFound()
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <NavHeader />
+      
+      <main className="mx-auto max-w-3xl px-6 py-8">
+        <article className="prose prose-lg max-w-none dark:prose-invert">
+          <header className="mb-8">
+            <h1 className="text-4xl font-bold tracking-tight mb-4">
+              {post.title}
+            </h1>
+            
+            <div className="flex items-center gap-4 text-muted-foreground mb-4">
+              <time dateTime={post.date}>
+                {new Date(post.date).toLocaleDateString('zh-CN')}
+              </time>
+              <span>•</span>
+              <span>{post.readingTime} 分钟阅读</span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-6">
+              {post.tags.map((tag) => (
+                <Badge key={tag} variant="outline">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </header>
+
+          <div 
+            className="prose prose-lg max-w-none dark:prose-invert"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        </article>
+      </main>
+    </div>
+  )
+}
