@@ -245,35 +245,6 @@ export default function HomeClient({ posts }: HomeClientProps) {
                 ))}
               </div>
             </section>
-
-            {/* All Sites with Lazy Loading */}
-            <section className="pb-8 md:pb-12">
-              <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
-                全部资源
-              </h2>
-              {allSitesToDisplay.length > 0 ? (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {allSitesToDisplay.map((site) => (
-                      <SiteCardGrid key={site.url} site={site} />
-                    ))}
-                  </div>
-                  {hasMore && (
-                    <div className="mt-6 md:mt-8">
-                      {isLoading ? (
-                        <LoadingSpinner />
-                      ) : (
-                        <p className="text-center text-sm text-muted-foreground">
-                          滚动加载更多...
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="text-sm text-muted-foreground">暂无资源</p>
-              )}
-            </section>
           </>
         )}
       </main>
