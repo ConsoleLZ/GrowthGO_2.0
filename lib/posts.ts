@@ -41,7 +41,10 @@ export function getAllPosts(): Omit<Post, 'content'>[] {
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
-  return posts
+  return posts.map(post => ({
+    ...post,
+    readingTime: 0
+  }))
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {

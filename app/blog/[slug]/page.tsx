@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { NavHeader } from "@/components/nav-header"
-import { getPostBySlug, getAllPosts } from "@/lib/posts"
+import { getPostBySlug, getAllPosts, getAllSlugs } from "@/lib/posts"
 import { Badge } from "@/components/ui/badge"
 
 interface Props {
@@ -10,14 +10,15 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const posts = getAllPosts()
-  return posts.map((post) => ({
-    slug: post.slug,
+  const slugs = getAllSlugs()
+  return slugs.map((slug) => ({
+    slug: slug,
   }))
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPostBySlug(params.slug)
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
 
   if (!post) {
     notFound()

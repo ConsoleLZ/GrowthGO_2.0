@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/", label: "首页" },
-  { href: "/blog", label: "博客" },
+  { href: "/blog", label: "文章" },
   { href: "/category", label: "分类" },
   { href: "/stats", label: "统计" },
 ]
