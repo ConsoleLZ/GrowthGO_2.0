@@ -5,10 +5,6 @@ date: "2024-01-20"
 tags: ["Next.js", "Markdown", "博客", "教程"]
 ---
 
-# 使用 Next.js 构建 Markdown 博客
-
-在本文中，我将详细介绍如何使用 Next.js 构建一个支持 Markdown 的个人博客系统。
-
 ## 项目结构
 
 首先，让我们看一下项目的目录结构：
