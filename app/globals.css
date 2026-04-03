@@ -49,6 +49,8 @@
   border-radius: 3px;
 }
 
+
+
 .scrollbar-thin::-webkit-scrollbar-thumb {
   background: oklch(0.8 0 0);
   border-radius: 3px;

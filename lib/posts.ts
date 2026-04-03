@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import rehypeHighlight from 'rehype-highlight'
 
 const postsDirectory = path.join(process.cwd(), 'content/posts')
 
@@ -60,6 +61,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
     const processedContent = await remark()
       .use(html)
+      .use(rehypeHighlight)
       .process(matterResult.content)
     const contentHtml = processedContent.toString()
 

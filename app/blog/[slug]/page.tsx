@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { NavHeader } from "@/components/nav-header"
 import { getPostBySlug, getAllPosts, getAllSlugs } from "@/lib/posts"
 import { Badge } from "@/components/ui/badge"
+import MarkdownContent from "../markdown-content"
 
 interface Props {
   params: {
@@ -52,10 +53,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </header>
 
-          <div 
-            className="prose prose-lg max-w-none dark:prose-invert"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          <MarkdownContent content={post.content} />
         </article>
       </main>
     </div>

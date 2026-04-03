@@ -1,0 +1,220 @@
+/* Markdown 文章样式优化 */
+
+/* 基础样式重置 */
+.prose {
+  color: hsl(var(--foreground));
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: hsl(var(--foreground));
+}
+
+.prose h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: hsl(var(--foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: hsl(var(--foreground));
+}
+
+.prose p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+.prose ul, .prose ol {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1.625rem;
+}
+
+.prose li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.prose blockquote {
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+  border-left: 0.25rem solid hsl(var(--border));
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background: hsl(var(--muted) / 0.1);
+}
+
+.prose code {
+  background: hsl(var(--muted));
+  color: hsl(var(--primary));
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+}
+
+.prose pre {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.prose pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+.prose th, .prose td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.prose th {
+  background: hsl(var(--muted));
+  font-weight: 600;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.prose a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  color: hsl(var(--primary) / 0.8);
+}
+
+/* 代码高亮样式 */
+.prose pre {
+  position: relative;
+}
+
+.prose pre::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* 代码高亮主题 - 适配深色/浅色模式 */
+.prose .hljs {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.prose .hljs-comment,
+.prose .hljs-quote {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+.prose .hljs-keyword,
+.prose .hljs-selector-tag,
+.prose .hljs-built_in,
+.prose .hljs-name {
+  color: hsl(var(--primary));
+}
+
+.prose .hljs-string,
+.prose .hljs-title,
+.prose .hljs-section,
+.prose .hljs-attribute {
+  color: hsl(var(--success));
+}
+
+.prose .hljs-literal,
+.prose .hljs-template-tag,
+.prose .hljs-template-variable,
+.prose .hljs-type {
+  color: hsl(var(--destructive));
+}
+
+.prose .hljs-number {
+  color: hsl(var(--warning));
+}
+
+.prose .hljs-symbol,
+.prose .hljs-bullet,
+.prose .hljs-meta {
+  color: hsl(var(--info));
+}
+
+.prose .hljs-variable,
+.prose .hljs-attr {
+  color: hsl(var(--accent));
+}
+
+/* 深色模式优化 */
+.prose.dark .hljs {
+  background: hsl(var(--muted) / 0.8);
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .prose {
+    font-size: 0.875rem;
+  }
+  
+  .prose h1 {
+    font-size: 1.875rem;
+  }
+  
+  .prose h2 {
+    font-size: 1.5rem;
+  }
+  
+  .prose h3 {
+    font-size: 1.25rem;
+  }
+  
+  .prose pre {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+}
