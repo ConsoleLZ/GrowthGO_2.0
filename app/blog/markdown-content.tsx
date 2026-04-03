@@ -1,6 +1,6 @@
 "use client"
 
-import "./markdown-styles.css"
+import "./typora-compatible-styles.css"
 
 interface MarkdownContentProps {
   content: string
@@ -9,7 +9,7 @@ interface MarkdownContentProps {
 export default function MarkdownContent({ content }: MarkdownContentProps) {
   return (
     <div 
-      className="markdown-content prose prose-lg max-w-none dark:prose-invert"
+      className="markdown-content"
       dangerouslySetInnerHTML={{ __html: content }}
     />
   )
