@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { TableOfContents } from "./table-of-contents"
 
@@ -26,7 +26,8 @@ export function MobileTocDrawer({ content }: MobileTocDrawerProps) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-80 bg-background dark:bg-background">
-        <div className="pt-6">
+        <SheetTitle className="sr-only">文章大纲</SheetTitle>
+        <div className="pt-6 px-4">
           <TableOfContents content={content} />
         </div>
       </SheetContent>
