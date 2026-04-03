@@ -317,3 +317,17 @@
         --table-n2-bg-color: #2d2e30;
     }
 }
+
+/* next-themes 深色模式支持 */
+.dark .markdown-content {
+    --text-color: #e8eaed;
+    --bg-color: #202124;
+    --code-block-bg-color: #2d2e30;
+    --code-block-color: #e8eaed;
+    --title-color: #e8eaed;
+    --a-color: #8ab4f8;
+    --table-border-color: #5f6368;
+    --table-header-bg-color: #3c4043;
+    --table-bg-color: #202124;
+    --table-n2-bg-color: #2d2e30;
+}

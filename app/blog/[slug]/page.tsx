@@ -28,7 +28,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background dark:bg-background">
       <NavHeader />
       
       <div className="mx-auto max-w-7xl px-6 py-8">
@@ -42,11 +42,11 @@ export default async function BlogPostPage({ params }: Props) {
           <main className="flex-1 min-w-0">
             <article className="prose prose-lg max-w-none dark:prose-invert">
               <header className="mb-8">
-                <h1 className="text-4xl font-bold tracking-tight mb-4">
+                <h1 className="text-4xl font-bold tracking-tight mb-4 text-foreground dark:text-foreground">
                   {post.title}
                 </h1>
                 
-                <div className="flex items-center gap-4 text-muted-foreground mb-4">
+                <div className="flex items-center gap-4 text-muted-foreground mb-4 dark:text-muted-foreground">
                   <time dateTime={post.date}>
                     {new Date(post.date).toLocaleDateString('zh-CN')}
                   </time>
@@ -56,7 +56,7 @@ export default async function BlogPostPage({ params }: Props) {
 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {post.tags.map((tag) => (
-                    <Badge key={tag} variant="outline">
+                    <Badge key={tag} variant="outline" className="dark:border-muted-foreground dark:text-muted-foreground">
                       {tag}
                     </Badge>
                   ))}

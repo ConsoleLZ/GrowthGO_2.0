@@ -229,3 +229,110 @@
     background-color: #67060c;
   }
 }
+
+/* next-themes 深色模式支持 */
+.dark .markdown-content .hljs {
+  color: #e1e4e8;
+  background: #2d2e30;
+}
+
+.dark .markdown-content .hljs-doctag,
+.dark .markdown-content .hljs-keyword,
+.dark .markdown-content .hljs-meta .hljs-keyword,
+.dark .markdown-content .hljs-template-tag,
+.dark .markdown-content .hljs-template-variable,
+.dark .markdown-content .hljs-type,
+.dark .markdown-content .hljs-variable.language_
+{
+  color: #ff7b72;
+}
+
+.dark .markdown-content .hljs-title,
+.dark .markdown-content .hljs-title.class_,
+.dark .markdown-content .hljs-title.class_.inherited__,
+.dark .markdown-content .hljs-title.function_
+{
+  color: #d2a8ff;
+}
+
+.dark .markdown-content .hljs-attr,
+.dark .markdown-content .hljs-attribute,
+.dark .markdown-content .hljs-literal,
+.dark .markdown-content .hljs-meta,
+.dark .markdown-content .hljs-number,
+.dark .markdown-content .hljs-operator,
+.dark .markdown-content .hljs-variable,
+.dark .markdown-content .hljs-selector-attr,
+.dark .markdown-content .hljs-selector-class,
+.dark .markdown-content .hljs-selector-id
+{
+  color: #79c0ff;
+}
+
+.dark .markdown-content .hljs-regexp,
+.dark .markdown-content .hljs-string,
+.dark .markdown-content .hljs-meta .hljs-string
+{
+  color: #a5d6ff;
+}
+
+.dark .markdown-content .hljs-built_in,
+.dark .markdown-content .hljs-symbol
+{
+  color: #ffa657;
+}
+
+.dark .markdown-content .hljs-comment,
+.dark .markdown-content .hljs-code,
+.dark .markdown-content .hljs-formula
+{
+  color: #8b949e;
+}
+
+.dark .markdown-content .hljs-name,
+.dark .markdown-content .hljs-quote,
+.dark .markdown-content .hljs-selector-tag,
+.dark .markdown-content .hljs-selector-pseudo
+{
+  color: #7ee787;
+}
+
+.dark .markdown-content .hljs-subst
+{
+  color: #e1e4e8;
+}
+
+.dark .markdown-content .hljs-section
+{
+  color: #79c0ff;
+  font-weight: bold;
+}
+
+.dark .markdown-content .hljs-bullet
+{
+  color: #f2cc60;
+}
+
+.dark .markdown-content .hljs-emphasis
+{
+  color: #e1e4e8;
+  font-style: italic;
+}
+
+.dark .markdown-content .hljs-strong
+{
+  color: #e1e4e8;
+  font-weight: bold;
+}
+
+.dark .markdown-content .hljs-addition
+{
+  color: #7ee787;
+  background-color: #033a16;
+}
+
+.dark .markdown-content .hljs-deletion
+{
+  color: #ff7b72;
+  background-color: #67060c;
+}

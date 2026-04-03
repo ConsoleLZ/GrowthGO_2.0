@@ -108,7 +108,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
   return (
     <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
       <div className="space-y-2">
-        <h3 className="text-sm font-semibold text-muted-foreground mb-4">
+        <h3 className="text-sm font-semibold text-muted-foreground mb-4 dark:text-muted-foreground">
           文章大纲
         </h3>
         <nav className="space-y-1">
@@ -116,10 +116,10 @@ export function TableOfContents({ content }: TableOfContentsProps) {
             <button
               key={heading.id}
               onClick={() => scrollToHeading(heading.id)}
-              className={`block w-full text-left text-sm transition-colors hover:text-foreground ${
+              className={`block w-full text-left text-sm transition-colors hover:text-foreground dark:hover:text-foreground ${
                 activeId === heading.id
-                  ? "text-foreground font-medium"
-                  : "text-muted-foreground"
+                  ? "text-foreground font-medium dark:text-foreground"
+                  : "text-muted-foreground dark:text-muted-foreground"
               } ${
                 heading.level === 2 ? "pl-0" :
                 heading.level === 3 ? "pl-4" :

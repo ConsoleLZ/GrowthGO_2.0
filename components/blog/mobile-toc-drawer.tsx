@@ -19,13 +19,13 @@ export function MobileTocDrawer({ content }: MobileTocDrawerProps) {
         <Button 
           variant="outline" 
           size="sm" 
-          className="lg:hidden fixed bottom-6 right-6 z-50 shadow-lg"
+          className="lg:hidden fixed bottom-6 right-6 z-50 shadow-lg bg-background dark:bg-background"
         >
           <Menu className="h-4 w-4 mr-2" />
           大纲
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-80">
+      <SheetContent side="left" className="w-80 bg-background dark:bg-background">
         <div className="pt-6">
           <TableOfContents content={content} />
         </div>
