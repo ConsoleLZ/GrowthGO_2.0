@@ -18,6 +18,7 @@ interface Post {
   date: string
   tags: string[]
   readingTime: number
+  recommend?: boolean
 }
 
 interface HomeClientProps {

@@ -9,6 +9,7 @@ interface Post {
   date: string
   tags: string[]
   readingTime: number
+  recommend?: boolean
 }
 
 interface FeaturedPostsProps {
@@ -17,8 +18,9 @@ interface FeaturedPostsProps {
 }
 
 export function FeaturedPosts({ posts, maxPosts = 3 }: FeaturedPostsProps) {
-  // 筛选精选文章：按日期倒序，取最新的几篇
+  // 筛选精选文章：只显示recommend为true的文章，按日期倒序，取最新的几篇
   const featuredPosts = posts
+    .filter(post => post.recommend === true)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, maxPosts)
 

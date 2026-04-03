@@ -46,6 +46,7 @@ export function getAllPosts(): Omit<Post, 'content'>[] {
         date: matterResult.data.date || new Date().toISOString(),
         tags: matterResult.data.tags || [],
         readingTime,
+        recommend: matterResult.data.recommend || false,
       }
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

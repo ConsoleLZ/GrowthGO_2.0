@@ -3,6 +3,7 @@ title: "使用 Next.js 构建 Markdown 博客"
 description: "详细讲解如何使用 Next.js 和 Markdown 构建个人博客系统"
 date: "2024-01-20"
 tags: ["Next.js", "Markdown", "博客", "教程"]
+recommend: true
 ---
 
 ## 项目结构
