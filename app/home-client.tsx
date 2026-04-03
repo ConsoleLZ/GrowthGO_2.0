@@ -6,6 +6,7 @@ import Link from "next/link";
 import { NavHeader } from "@/components/nav-header";
 import { SiteCardGrid } from "@/components/site-card";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { FeaturedPosts } from "@/components/blog/featured-posts";
 import { sites } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
@@ -16,6 +17,7 @@ interface Post {
   description: string
   date: string
   tags: string[]
+  readingTime: number
 }
 
 interface HomeClientProps {
@@ -219,6 +221,11 @@ export default function HomeClient({ posts }: HomeClientProps) {
               <p className="text-sm text-muted-foreground">未找到相关资源</p>
             )}
           </section>
+        )}
+
+        {/* Featured Posts */}
+        {!searchResults && posts.length > 0 && (
+          <FeaturedPosts posts={posts} maxPosts={3} />
         )}
 
         {/* Featured Sites */}

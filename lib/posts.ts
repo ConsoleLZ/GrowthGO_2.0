@@ -35,20 +35,22 @@ export function getAllPosts(): Omit<Post, 'content'>[] {
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const matterResult = matter(fileContents)
 
+      // 计算阅读时间（假设平均阅读速度 200 字/分钟）
+      const wordCount = matterResult.content.split(/\s+/).length
+      const readingTime = Math.ceil(wordCount / 200)
+
       return {
         slug,
         title: matterResult.data.title || 'Untitled',
         description: matterResult.data.description || '',
         date: matterResult.data.date || new Date().toISOString(),
         tags: matterResult.data.tags || [],
+        readingTime,
       }
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
-  return posts.map(post => ({
-    ...post,
-    readingTime: 0
-  }))
+  return posts
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
