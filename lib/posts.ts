@@ -4,6 +4,7 @@ import matter from 'gray-matter'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import rehypeSlug from 'rehype-slug'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 
@@ -64,6 +65,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     const processedContent = await unified()
       .use(remarkParse)
       .use(remarkRehype)
+      .use(rehypeSlug)
       .use(rehypeHighlight)
       .use(rehypeStringify)
       .process(matterResult.content)
