@@ -1,9 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import { remark } from 'remark'
-import html from 'remark-html'
-import highlight from 'remark-highlight.js'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeStringify from 'rehype-stringify'
 
 const postsDirectory = path.join(process.cwd(), 'content/posts')
 
@@ -59,9 +61,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const matterResult = matter(fileContents)
 
-    const processedContent = await remark()
-      .use(html)
-      .use(highlight as any)
+    const processedContent = await unified()
+      .use(remarkParse)
+      .use(remarkRehype)
+      .use(rehypeHighlight)
+      .use(rehypeStringify)
       .process(matterResult.content)
     const contentHtml = processedContent.toString()
 

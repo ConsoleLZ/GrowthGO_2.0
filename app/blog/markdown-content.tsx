@@ -1,6 +1,7 @@
 "use client"
 
 import "./typora-compatible-styles.css"
+import "./highlight-styles.css"
 
 interface MarkdownContentProps {
   content: string
