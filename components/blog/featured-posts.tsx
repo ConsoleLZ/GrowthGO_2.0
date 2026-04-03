@@ -1,6 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 interface Post {
   slug: string
@@ -14,17 +16,30 @@ interface Post {
 
 interface FeaturedPostsProps {
   posts: Post[]
-  maxPosts?: number
+  initialPosts?: number
+  loadMorePosts?: number
 }
 
-export function FeaturedPosts({ posts, maxPosts = 3 }: FeaturedPostsProps) {
-  // 筛选精选文章：只显示recommend为true的文章，按日期倒序，取最新的几篇
-  const featuredPosts = posts
+export function FeaturedPosts({ posts, initialPosts = 4, loadMorePosts = 4 }: FeaturedPostsProps) {
+  const [visibleCount, setVisibleCount] = useState(initialPosts)
+  
+  // 筛选精选文章：只显示recommend为true的文章，按日期倒序
+  const allFeaturedPosts = posts
     .filter(post => post.recommend === true)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, maxPosts)
+  
+  // 当前可见的文章
+  const visiblePosts = allFeaturedPosts.slice(0, visibleCount)
+  
+  // 是否还有更多文章可以加载
+  const hasMore = visibleCount < allFeaturedPosts.length
+  
+  // 加载更多文章
+  const handleLoadMore = () => {
+    setVisibleCount(prev => prev + loadMorePosts)
+  }
 
-  if (featuredPosts.length === 0) {
+  if (allFeaturedPosts.length === 0) {
     return null
   }
 
@@ -32,7 +47,7 @@ export function FeaturedPosts({ posts, maxPosts = 3 }: FeaturedPostsProps) {
     <section className="pb-8 md:pb-12">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          精选文章
+          精选文章 ({allFeaturedPosts.length})
         </h2>
         <Link 
           href="/blog" 
@@ -43,7 +58,7 @@ export function FeaturedPosts({ posts, maxPosts = 3 }: FeaturedPostsProps) {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {featuredPosts.map((post) => (
+        {visiblePosts.map((post) => (
           <Link 
             key={post.slug} 
             href={`/blog/${post.slug}`}
@@ -80,6 +95,20 @@ export function FeaturedPosts({ posts, maxPosts = 3 }: FeaturedPostsProps) {
           </Link>
         ))}
       </div>
+      
+      {/* 加载更多按钮 */}
+      {hasMore && (
+        <div className="mt-6 text-center">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleLoadMore}
+            className="text-xs"
+          >
+            加载更多 ({allFeaturedPosts.length - visibleCount} 篇)
+          </Button>
+        </div>
+      )}
     </section>
   )
 }
