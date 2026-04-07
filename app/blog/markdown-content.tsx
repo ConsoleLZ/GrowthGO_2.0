@@ -2,6 +2,7 @@
 
 import "./typora-compatible-styles.css"
 import "./highlight-styles.css"
+import "./katex-styles.css"
 
 interface MarkdownContentProps {
   content: string

@@ -3,9 +3,11 @@ import path from 'path'
 import matter from 'gray-matter'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
+import remarkMath from 'remark-math'
 import remarkRehype from 'remark-rehype'
 import rehypeSlug from 'rehype-slug'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 
 const postsDirectory = path.join(process.cwd(), 'content/posts')
@@ -67,9 +69,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
     const processedContent = await unified()
       .use(remarkParse)
+      .use(remarkMath)
       .use(remarkRehype)
       .use(rehypeSlug)
       .use(rehypeHighlight)
+      .use(rehypeKatex)
       .use(rehypeStringify)
       .process(matterResult.content)
     const contentHtml = processedContent.toString()
