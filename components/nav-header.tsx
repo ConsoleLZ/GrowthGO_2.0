@@ -84,10 +84,6 @@ function MobileNav() {
               </Link>
             ))}
           </nav>
-          
-          <div className="px-6 pt-6 border-t border-border/30">
-            <ThemeToggle />
-          </div>
         </div>
       </SheetContent>
     </Sheet>
@@ -106,7 +102,7 @@ function DesktopNav() {
           className={cn(
             "text-sm font-medium transition-all duration-200 px-2 py-1 rounded-md",
             pathname === item.href
-              ? "text-foreground bg-accent shadow-sm"
+              ? "text-foreground"
               : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
           )}
         >
@@ -131,7 +127,14 @@ export function NavHeader() {
           小哲的一些宝藏
         </Link>
 
-        {isMobile ? <MobileNav /> : <DesktopNav />}
+        {isMobile ? (
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <MobileNav />
+          </div>
+        ) : (
+          <DesktopNav />
+        )}
       </div>
     </header>
   )
