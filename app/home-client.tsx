@@ -117,7 +117,10 @@ export default function HomeClient({ posts }: HomeClientProps) {
         {/* Hero */}
         <section className="py-12 md:py-16 lg:py-24">
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight md:text-4xl">
-            前端、硬件、AI等各种实用网站和工具
+            个人笔记文章 &&
+          </h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight md:text-4xl">
+            前端、AI等各种实用网站和工具
           </h1>
           <p className="mt-2 sm:mt-3 text-sm sm:text-base text-muted-foreground font-mono">
             宝剑锋从磨砺出，梅花香自苦寒来。
@@ -226,7 +229,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
 
         {/* Featured Posts */}
         {!searchResults && posts.length > 0 && (
-          <FeaturedPosts posts={posts} maxPosts={3} />
+          <FeaturedPosts posts={posts} />
         )}
 
         {/* Featured Sites */}
