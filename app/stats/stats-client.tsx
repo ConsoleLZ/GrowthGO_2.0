@@ -74,13 +74,14 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
         {/* Header */}
         <section className="py-12">
           <h1 className="text-3xl font-bold tracking-tight">数据统计</h1>
-          <p className="mt-2 text-muted-foreground"></p>
         </section>
 
         {/* 核心数据统计 */}
         <section className="pb-8">
-          <h3 className="text-sm mb-4">数据总览</h3>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+          {/* <h3 className="text-sm mb-4">数据总览</h3> */}
+          
+          {/* 第一行：基础数据 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">导航数量</p>
               <p className="mt-1 text-xl font-bold">{stats.totalSites}</p>
@@ -97,6 +98,10 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
               <p className="text-xs text-muted-foreground">网站标签</p>
               <p className="mt-1 text-xl font-bold">{articleStats.totalSiteTags}</p>
             </div>
+          </div>
+          
+          {/* 第二行：访问和运行时间 */}
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
             <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">访问统计</p>
               <p id="busuanzi_value_site_pv" className="mt-1 text-xl font-bold">...</p>
