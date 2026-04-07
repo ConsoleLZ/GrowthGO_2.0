@@ -81,29 +81,29 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
         <section className="pb-8">
           <h3 className="text-sm mb-4">数据总览</h3>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20">
-              <p className="text-xs text-muted-foreground">文章总数</p>
-              <p className="mt-1 text-xl font-bold text-blue-600 dark:text-blue-400">{articleStats.totalArticles}</p>
+            <div className="rounded-lg border border-border/50 p-4">
+              <p className="text-xs text-muted-foreground">导航数量</p>
+              <p className="mt-1 text-xl font-bold">{stats.totalSites}</p>
             </div>
-            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20">
-              <p className="text-xs text-muted-foreground">网站收录</p>
-              <p className="mt-1 text-xl font-bold text-green-600 dark:text-green-400">{stats.totalSites}</p>
+            <div className="rounded-lg border border-border/50 p-4">
+              <p className="text-xs text-muted-foreground">笔记数量</p>
+              <p className="mt-1 text-xl font-bold">{articleStats.totalArticles}</p>
             </div>
-            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20">
+            <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">文章标签</p>
-              <p className="mt-1 text-xl font-bold text-purple-600 dark:text-purple-400">{articleStats.totalArticleTags}</p>
+              <p className="mt-1 text-xl font-bold">{articleStats.totalArticleTags}</p>
             </div>
-            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950/20 dark:to-pink-900/20">
+            <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">网站标签</p>
-              <p className="mt-1 text-xl font-bold text-pink-600 dark:text-pink-400">{articleStats.totalSiteTags}</p>
+              <p className="mt-1 text-xl font-bold">{articleStats.totalSiteTags}</p>
             </div>
-            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-950/20 dark:to-indigo-900/20">
+            <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">访问统计</p>
-              <p id="busuanzi_value_site_pv" className="mt-1 text-xl font-bold text-indigo-600 dark:text-indigo-400">加载中...</p>
+              <p id="busuanzi_value_site_pv" className="mt-1 text-xl font-bold">...</p>
             </div>
-            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20">
+            <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">运行时间</p>
-              <p className="mt-1 text-sm font-semibold text-orange-600 dark:text-orange-400">{runningDays}</p>
+              <p className="mt-1 text-sm font-semibold">{runningDays}</p>
             </div>
           </div>
         </section>
@@ -112,10 +112,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-12">
           {/* 文章标签分布 */}
           <div className="rounded-lg border border-border/50 p-6">
-            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              文章标签分布
-            </h3>
+            <h3 className="text-sm font-semibold mb-4">文章标签分布</h3>
             <div className="space-y-3">
               {articleTagStats.map((tag) => (
                 <div key={tag.name} className="flex items-center gap-3">
@@ -123,7 +120,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
                   <div className="flex-1">
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
                       <div
-                        className="h-full bg-blue-500 rounded-full transition-all"
+                        className="h-full bg-foreground/80 rounded-full transition-all"
                         style={{ width: `${(tag.count / Math.max(...articleTagStats.map(t => t.count))) * 100}%` }}
                       />
                     </div>
@@ -138,10 +135,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
 
           {/* 网站标签分布 */}
           <div className="rounded-lg border border-border/50 p-6">
-            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              网站标签分布
-            </h3>
+            <h3 className="text-sm font-semibold mb-4">网站标签分布</h3>
             <div className="space-y-3">
               {siteTagStats.map((tag) => (
                 <div key={tag.name} className="flex items-center gap-3">
@@ -149,7 +143,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
                   <div className="flex-1">
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
                       <div
-                        className="h-full bg-green-500 rounded-full transition-all"
+                        className="h-full bg-foreground/80 rounded-full transition-all"
                         style={{ width: `${(tag.count / maxSiteTagCount) * 100}%` }}
                       />
                     </div>
@@ -164,7 +158,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
         </section>
 
         {/* 文章详细信息 */}
-        <section className="pb-12">
+        {/* <section className="pb-12">
           <h3 className="text-sm mb-4">文章字数统计</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-lg border border-border/50 p-4">
@@ -176,7 +170,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
               <p className="mt-1 text-lg font-semibold">{articleStats.avgWordsPerArticle.toLocaleString()} 字</p>
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
 
       <Script
