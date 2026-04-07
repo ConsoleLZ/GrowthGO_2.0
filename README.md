@@ -7,15 +7,6 @@
 <h3 align="center">个人导航网站 + 个人笔记系统</h3>
 
 <p align="center">
-  <a href="#特性">特性</a> • 
-  <a href="#快速开始">快速开始</a> • 
-  <a href="#部署">部署</a> • 
-  <a href="#项目结构">项目结构</a> • 
-  <a href="#贡献">贡献</a> • 
-  <a href="#许可证">许可证</a>
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/badge/Next.js-14.0-black?style=for-the-badge&logo=next.js" alt="Next.js">
   <img src="https://img.shields.io/badge/React-18.2-blue?style=for-the-badge&logo=react" alt="React">
   <img src="https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript" alt="TypeScript">
@@ -164,19 +155,9 @@ GrowthGO-2.0/
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-## 🙏 致谢
-
-感谢以下开源项目的支持：
-- [Next.js](https://nextjs.org/) - React框架
-- [Tailwind CSS](https://tailwindcss.com/) - CSS框架
-- [Radix UI](https://www.radix-ui.com/) - 无障碍UI组件
-- [Lucide](https://lucide.dev/) - 图标库
-- [KaTeX](https://katex.org/) - 数学公式渲染
-
 ## 📞 联系
 
-- 项目主页：https://github.com/ConsoleLZ/GrowthGO-2.0
-- 问题反馈：https://github.com/ConsoleLZ/GrowthGO-2.0/issues
+我的邮箱：17347187569@163.com
 
 ---
 
