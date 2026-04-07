@@ -8,7 +8,8 @@ import Script from "next/script";
 interface StatsPageProps {
   articleStats: {
     totalArticles: number;
-    totalTags: number;
+    totalArticleTags: number;
+    totalSiteTags: number;
     totalWords: number;
     avgWordsPerArticle: number;
   };
@@ -72,14 +73,14 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
       <main className="mx-auto max-w-4xl px-6">
         {/* Header */}
         <section className="py-12">
-          <h1 className="text-3xl font-bold tracking-tight">网站统计</h1>
-          <p className="mt-2 text-muted-foreground">GrowthGO 2.0 数据总览</p>
+          <h1 className="text-3xl font-bold tracking-tight">数据统计</h1>
+          <p className="mt-2 text-muted-foreground"></p>
         </section>
 
         {/* 核心数据统计 */}
         <section className="pb-8">
-          <h2 className="text-sm font-semibold mb-4">核心数据</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <h3 className="text-sm mb-4">数据总览</h3>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20">
               <p className="text-xs text-muted-foreground">文章总数</p>
               <p className="mt-1 text-xl font-bold text-blue-600 dark:text-blue-400">{articleStats.totalArticles}</p>
@@ -90,7 +91,15 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
             </div>
             <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20">
               <p className="text-xs text-muted-foreground">文章标签</p>
-              <p className="mt-1 text-xl font-bold text-purple-600 dark:text-purple-400">{articleStats.totalTags}</p>
+              <p className="mt-1 text-xl font-bold text-purple-600 dark:text-purple-400">{articleStats.totalArticleTags}</p>
+            </div>
+            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950/20 dark:to-pink-900/20">
+              <p className="text-xs text-muted-foreground">网站标签</p>
+              <p className="mt-1 text-xl font-bold text-pink-600 dark:text-pink-400">{articleStats.totalSiteTags}</p>
+            </div>
+            <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-950/20 dark:to-indigo-900/20">
+              <p className="text-xs text-muted-foreground">访问统计</p>
+              <p id="busuanzi_value_site_pv" className="mt-1 text-xl font-bold text-indigo-600 dark:text-indigo-400">加载中...</p>
             </div>
             <div className="rounded-lg border border-border/50 p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20">
               <p className="text-xs text-muted-foreground">运行时间</p>
@@ -156,8 +165,8 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
 
         {/* 文章详细信息 */}
         <section className="pb-12">
-          <h3 className="text-sm font-semibold mb-4">文章统计详情</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <h3 className="text-sm mb-4">文章字数统计</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">总字数</p>
               <p className="mt-1 text-lg font-semibold">{articleStats.totalWords.toLocaleString()}</p>
@@ -165,10 +174,6 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
             <div className="rounded-lg border border-border/50 p-4">
               <p className="text-xs text-muted-foreground">平均每篇文章</p>
               <p className="mt-1 text-lg font-semibold">{articleStats.avgWordsPerArticle.toLocaleString()} 字</p>
-            </div>
-            <div className="rounded-lg border border-border/50 p-4">
-              <p className="text-xs text-muted-foreground">访问统计</p>
-              <p id="busuanzi_value_site_pv" className="mt-1 text-lg font-semibold">加载中...</p>
             </div>
           </div>
         </section>
