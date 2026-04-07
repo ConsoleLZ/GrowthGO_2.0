@@ -205,7 +205,7 @@
 
 /* 水平分割线 */
 .markdown-content hr {
-    height: 2px;
+    height: 0px;
     padding: 0;
     margin: 16px 0;
     background-color: var(--horizontal-divider-color);
