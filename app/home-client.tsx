@@ -117,7 +117,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
         {/* Hero */}
         <section className="py-12 md:py-16 lg:py-24">
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight md:text-4xl">
-            个人笔记文章 &&
+            个人100+笔记文章 &&
           </h1>
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight md:text-4xl">
             前端、AI等各种实用网站和工具
