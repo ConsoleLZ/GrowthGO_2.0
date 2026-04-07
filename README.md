@@ -13,6 +13,10 @@
   <img src="https://img.shields.io/badge/Tailwind-4.2-38bdf8?style=for-the-badge&logo=tailwindcss" alt="Tailwind CSS">
 </p>
 
+## 预览
+
+[https://www.xiaozhe.me/](https://www.xiaozhe.me/)
+
 ## 🌟 特性
 
 ### 📚 个人笔记系统
