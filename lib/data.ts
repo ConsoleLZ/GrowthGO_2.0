@@ -1831,14 +1831,6 @@ export const sites: Site[] = [
     tags: [tags.ai]
   },
   {
-    name: "豆包",
-    ico:
-      "https://p9-flow-imagex-sign.byteimg.com/ocean-cloud-tos/FileBizType.BIZ_BOT_ICON/4180773176086868_1709203591079450233_5Y6fJgvsfc.jpeg~tplv-a9rns2rl98-icon-tiny.jpeg?rk3s=9956f44f&x-expires=1719224007&x-signature=9IuG%2Bqi7IY2zIKhKL8%2FmdgUc9tI%3D",
-    url: "https://www.doubao.com/",
-    description: "豆包 - 抖音旗下 AI 智能助手",
-    tags: [tags.ai]
-  },
-  {
     name: "通义千问",
     ico: "https://acd-assets.alicdn.com/acd_work/tongyi-portal/assets/logo.svg",
     url: "https://www.tongyi.com/",

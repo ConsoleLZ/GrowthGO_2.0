@@ -5,6 +5,8 @@ import { NavHeader } from "@/components/nav-header"
 import { SiteCard } from "@/components/site-card"
 import { LazyImage } from "@/components/lazy-image"
 import { LoadingSpinner } from "@/components/loading-spinner"
+import { Input } from "@/components/ui/input"
+import { Search } from "lucide-react"
 import { sites } from "@/lib/data"
 import { cn } from "@/lib/utils"
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
@@ -13,6 +15,7 @@ const ITEMS_PER_PAGE = 20
 
 export default function CategoryPage() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [page, setPage] = useState(1)
 
   const tagsWithCount = useMemo(() => {
@@ -28,9 +31,25 @@ export default function CategoryPage() {
   }, [])
 
   const filteredSites = useMemo(() => {
-    if (!selectedTag) return sites
-    return sites.filter((site) => site.tags.includes(selectedTag))
-  }, [selectedTag])
+    let result = sites
+    
+    // 标签筛选
+    if (selectedTag) {
+      result = result.filter(site => site.tags.includes(selectedTag))
+    }
+    
+    // 搜索筛选
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(site => 
+        site.name.toLowerCase().includes(query) ||
+        site.description.toLowerCase().includes(query) ||
+        site.tags.some(tag => tag.toLowerCase().includes(query))
+      )
+    }
+    
+    return result
+  }, [selectedTag, searchQuery])
 
   // 懒加载逻辑
   const sitesToDisplay = useMemo(() => {
@@ -61,10 +80,14 @@ export default function CategoryPage() {
     }
   }, [isLoading, resetLoading])
 
-  // 切换标签时重置分页并滚动到顶部
+  // 搜索或标签变化时重置分页
+  useEffect(() => {
+    setPage(1)
+  }, [searchQuery, selectedTag])
+
+  // 切换标签时滚动到顶部
   const handleTagSelect = useCallback((tag: string | null) => {
     setSelectedTag(tag)
-    setPage(1)
     
     // 滚动到页面顶部
     window.scrollTo({
@@ -160,6 +183,18 @@ export default function CategoryPage() {
                 已显示 {sitesToDisplay.length} / {filteredSites.length} 个资源
               </p>
             </header>
+
+            {/* Search Box */}
+            <div className="relative mb-6 md:mb-8">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="搜索资源..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-10 sm:h-11 pl-10 bg-muted/50 border-0 focus-visible:ring-1 text-sm sm:text-base"
+              />
+            </div>
 
             <div className="grid gap-3 md:gap-4 md:grid-cols-2">
               {sitesToDisplay.map((site) => (
