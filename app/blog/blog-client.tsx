@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import Link from "next/link"
 import { NavHeader } from "@/components/nav-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
+import { LoadingSpinner } from "@/components/loading-spinner"
 
 interface Post {
   slug: string
@@ -24,6 +26,7 @@ interface BlogClientProps {
 export default function BlogClient({ posts }: BlogClientProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const [visibleCount, setVisibleCount] = useState(12) // 初始显示12篇文章
 
   // 获取所有标签及其计数
   const tagsWithCount = useMemo(() => {
@@ -59,6 +62,40 @@ export default function BlogClient({ posts }: BlogClientProps) {
     
     return result
   }, [posts, selectedTag, searchQuery])
+
+  // 当前可见的文章
+  const visiblePosts = useMemo(() => {
+    return filteredPosts.slice(0, visibleCount)
+  }, [filteredPosts, visibleCount])
+
+  // 是否还有更多文章可以加载
+  const hasMore = visibleCount < filteredPosts.length
+
+  // 加载更多文章
+  const handleLoadMore = useCallback(() => {
+    setVisibleCount(prev => prev + 12)
+  }, [])
+
+  // 使用无限滚动hook
+  const { isLoading, resetLoading } = useInfiniteScroll({
+    hasMore,
+    onLoadMore: handleLoadMore,
+  })
+
+  // 数据加载完成后重置加载状态
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        resetLoading()
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [isLoading, resetLoading])
+
+  // 搜索或标签变化时重置分页
+  useEffect(() => {
+    setVisibleCount(12)
+  }, [searchQuery, selectedTag])
 
   // 切换标签时滚动到顶部
   const handleTagSelect = useCallback((tag: string | null) => {
@@ -150,9 +187,9 @@ export default function BlogClient({ posts }: BlogClientProps) {
 
             {/* Header and Search */}
             <div className="mb-8">
-              <h1 className="text-3xl font-bold tracking-tight">博客文章</h1>
+              <h1 className="text-3xl font-bold tracking-tight">一些零散的个人笔记</h1>
               <p className="mt-2 text-muted-foreground">
-                分享技术心得、项目经验和学习笔记
+                分享技术心得、项目经验和学习记录
               </p>
             </div>
 
@@ -169,7 +206,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
 
             {/* Articles Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {filteredPosts.map((post) => (
+              {visiblePosts.map((post) => (
                 <Link 
                   key={post.slug} 
                   href={`/blog/${post.slug}`}
@@ -207,7 +244,20 @@ export default function BlogClient({ posts }: BlogClientProps) {
               ))}
             </div>
 
-            {filteredPosts.length === 0 && (
+            {/* 加载状态 */}
+            {hasMore && (
+              <div className="mt-6 text-center">
+                {isLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    滚动到底部加载更多... ({filteredPosts.length - visiblePosts.length} 篇)
+                  </p>
+                )}
+              </div>
+            )}
+
+            {visiblePosts.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">没有找到相关文章</p>
               </div>
