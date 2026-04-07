@@ -51,6 +51,8 @@ export default async function BlogPostPage({ params }: Props) {
                     {new Date(post.date).toLocaleDateString('zh-CN')}
                   </time>
                   <span>•</span>
+                  <span>{post.wordCount} 字</span>
+                  <span>•</span>
                   <span>{post.readingTime} 分钟阅读</span>
                 </div>
 
