@@ -153,3 +153,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.vempty {
+  display: none !important;
+}

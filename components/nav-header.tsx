@@ -14,7 +14,7 @@ const navItems = [
   { href: "/category", label: "分类" },
   { href: "/blog", label: "笔记" },
   { href: "/stats", label: "统计" },
-  { href: "/guestbook", label: "留言" },
+  { href: "/guestbook", label: "留言板" },
 ]
 
 function MobileNav() {
