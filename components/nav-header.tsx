@@ -95,7 +95,7 @@ function DesktopNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="hidden md:flex items-center gap-6">
+    <nav className="hidden md:flex items-center gap-4">
       {navItems.map((item) => (
         <Link
           key={item.href}
