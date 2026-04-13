@@ -57,7 +57,7 @@ export function FeaturedPosts({ posts, initialPosts = 6, loadMorePosts = 6 }: Fe
         </Link>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {visiblePosts.map((post) => (
           <Link 
             key={post.slug} 
