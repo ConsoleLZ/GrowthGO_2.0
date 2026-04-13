@@ -113,7 +113,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
     <div className="min-h-screen bg-background">
       <NavHeader />
 
-      <main className="mx-auto max-w-3xl px-4 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <section className="py-12 md:py-16 lg:py-24">
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight md:text-4xl">
@@ -150,7 +150,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
             {searchResults.posts.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-sm font-medium mb-3">文章</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                   {searchResults.posts.map((post) => (
                     <Link 
                       key={post.slug} 
@@ -197,7 +197,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
                 <h3 className="text-sm font-medium mb-3">网站</h3>
                 {allSitesToDisplay.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                       {allSitesToDisplay.map((site) => (
                         <SiteCardGrid key={site.url} site={site} />
                       ))}
@@ -239,7 +239,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
               <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
                 快速访问
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {quickAccessSites.map((site) => (
                   <SiteCardGrid key={site.url} site={site} />
                 ))}
@@ -250,7 +250,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
               <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-4">
                 精选推荐
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {featuredSites.map((site) => (
                   <SiteCardGrid key={site.url} site={site} />
                 ))}
