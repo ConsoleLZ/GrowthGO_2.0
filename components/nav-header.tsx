@@ -120,7 +120,7 @@ export function NavHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-sm border-b border-border/40 supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link 
           href="/" 
           className="text-base font-serif tracking-tight hover:opacity-80 transition-opacity duration-200"

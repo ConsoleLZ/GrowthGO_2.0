@@ -261,7 +261,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
       </main>
 
       <footer className="border-t border-border/50">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-6 md:py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 md:py-8">
           <div className="flex flex-col sm:flex-row sm:items-center mb-4 gap-4 sm:gap-6">
             <p className="text-xs text-muted-foreground">
               <a href="https://consolelz.github.io/" target="_blank">
