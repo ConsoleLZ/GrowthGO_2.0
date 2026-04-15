@@ -12,13 +12,6 @@ const navItems = [
   { href: "#contact", label: "联系" },
 ]
 
-const pageLinks = [
-  { href: "/category", label: "分类" },
-  { href: "/blog", label: "笔记" },
-  { href: "/stats", label: "统计" },
-  { href: "/guestbook", label: "留言板" },
-]
-
 export function ResumeNavigation() {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -44,24 +37,11 @@ export function ResumeNavigation() {
                 </li>
               ))}
             </ul>
-            <div className="h-4 w-px bg-border" />
-            <ul className="flex items-center gap-6">
-              {pageLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
             <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2">
+          <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -86,20 +66,6 @@ export function ResumeNavigation() {
                   >
                     {item.label}
                   </a>
-                </li>
-              ))}
-            </ul>
-            <div className="h-px bg-border my-2" />
-            <ul className="space-y-3">
-              {pageLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {item.label}
-                  </Link>
                 </li>
               ))}
             </ul>
