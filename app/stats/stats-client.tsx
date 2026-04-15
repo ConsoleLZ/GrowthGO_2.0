@@ -1,6 +1,6 @@
 "use client";
 
-import { NavHeader } from "@/components/nav-header";
+import { SimpleNavigation } from "@/components/simple-navigation";
 import { sites, stats } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
 
@@ -67,7 +67,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
 
   return (
     <div className="min-h-screen bg-background">
-      <NavHeader />
+      <SimpleNavigation />
 
       <main className="mx-auto max-w-4xl px-6">
         {/* Header */}

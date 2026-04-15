@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from "react"
 import Link from "next/link"
-import { NavHeader } from "@/components/nav-header"
+import { SimpleNavigation } from "@/components/simple-navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -108,7 +108,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <NavHeader />
+      <SimpleNavigation />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col md:flex-row gap-6 md:gap-12 py-6 md:py-12">

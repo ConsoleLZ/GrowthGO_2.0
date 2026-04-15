@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { NavHeader } from "@/components/nav-header"
+import { SimpleNavigation } from "@/components/simple-navigation"
 
 declare global {
   interface Window {
@@ -56,7 +56,7 @@ export function GuestbookClient() {
 
   return (
     <div className="min-h-screen bg-background">
-      <NavHeader />
+      <SimpleNavigation />
       
       <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-8">
