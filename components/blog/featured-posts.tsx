@@ -20,7 +20,7 @@ interface FeaturedPostsProps {
   loadMorePosts?: number
 }
 
-export function FeaturedPosts({ posts, initialPosts = 6, loadMorePosts = 6 }: FeaturedPostsProps) {
+export function FeaturedPosts({ posts, initialPosts = 9999, loadMorePosts = 100 }: FeaturedPostsProps) {
   const [visibleCount, setVisibleCount] = useState(initialPosts)
   
   // 筛选精选文章：只显示recommend为true的文章，按日期倒序
