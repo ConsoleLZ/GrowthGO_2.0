@@ -3,7 +3,6 @@
 import { NavHeader } from "@/components/nav-header";
 import { sites, stats } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
-import Script from "next/script";
 
 interface StatsPageProps {
   articleStats: {
@@ -177,11 +176,6 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
           </div>
         </section> */}
       </main>
-
-      <Script
-        src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
-        strategy="lazyOnload"
-      />
     </div>
   );
 }
