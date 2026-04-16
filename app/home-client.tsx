@@ -10,7 +10,7 @@ import { ResumeFooter } from "@/components/resume-footer"
 
 export default function HomeClient() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pt-20">
       <ResumeNavigation />
       <ResumeHeroSection />
       <ResumeAboutSection />

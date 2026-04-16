@@ -69,7 +69,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
     <div className="min-h-screen bg-background">
       <SimpleNavigation />
 
-      <main className="mx-auto max-w-4xl px-6">
+      <main className="pt-20 mx-auto max-w-4xl px-6">
         {/* Header */}
         <section className="py-12">
           <h1 className="text-3xl font-bold tracking-tight">数据统计</h1>

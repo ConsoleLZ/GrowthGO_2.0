@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { NavHeader } from "@/components/nav-header"
+import { SimpleNavigation } from "@/components/simple-navigation"
 import { getPostBySlug, getAllPosts, getAllSlugs } from "@/lib/posts"
 import { Badge } from "@/components/ui/badge"
 import { TableOfContents } from "@/components/blog/table-of-contents"
@@ -29,9 +29,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background dark:bg-background">
-      <NavHeader />
+      <SimpleNavigation />
       
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="pt-20 mx-auto max-w-7xl px-6 py-8">
         <div className="flex gap-8">
           {/* 侧边栏大纲 - 桌面端 */}
           <aside className="hidden lg:block w-64 flex-shrink-0">

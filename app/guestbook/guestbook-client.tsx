@@ -58,7 +58,7 @@ export function GuestbookClient() {
     <div className="min-h-screen bg-background">
       <SimpleNavigation />
       
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="pt-20 mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-8">
           <div className="text-center">
             <h1 className="text-xl font-serif tracking-tight">

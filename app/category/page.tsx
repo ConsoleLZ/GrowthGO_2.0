@@ -100,7 +100,7 @@ export default function CategoryPage() {
     <div className="min-h-screen bg-background">
       <SimpleNavigation />
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="pt-20 mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col md:flex-row gap-6 md:gap-12 py-6 md:py-12">
           {/* Left Sidebar - Fixed Tags with Independent Scroll */}
           <aside className="hidden w-56 shrink-0 md:block">
