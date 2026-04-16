@@ -1,13 +1,22 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Noto_Serif_SC } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import Script from 'next/script'
 import './globals.css'
 
+// 西文字体 - 只加载拉丁字母子集
 const inter = Inter({ 
   subsets: ["latin"],
   variable: "--font-inter",
+  display: 'swap',
+});
+
+// 中文字体 - 思源宋体，专业稳重
+const notoSerif = Noto_Serif_SC({
+  subsets: ["latin"],
+  weight: ['400', '600', '700'],
+  variable: "--font-noto-serif",
   display: 'swap',
 });
 
@@ -24,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
+    <html lang="zh-CN" suppressHydrationWarning className={`${inter.variable} ${notoSerif.variable}`}>
       <body className="font-sans antialiased">
         <ThemeProvider
           attribute="class"
