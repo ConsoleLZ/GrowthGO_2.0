@@ -16,7 +16,7 @@ const pageLinks = [
 
 export function ResumeHeroSection() {
   return (
-    <section className="min-h-screen flex flex-col justify-center px-6 pt-20">
+    <section className="min-h-screen flex flex-col justify-center px-6">
       <div className="max-w-6xl mx-auto w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="space-y-6">
