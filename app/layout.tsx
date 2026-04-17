@@ -21,8 +21,8 @@ const notoSerif = Noto_Serif_SC({
 });
 
 export const metadata: Metadata = {
-  title: '小哲的个人导航网站',
-  description: '精选开发者资源导航',
+  title: '关于小哲的一些信息',
+  description: '小哲的个人简历，关于小哲的一些信息，包括技能、项目、运维等，还有一些导航网站，和个人笔记',
   generator: 'v0.app',
   icons: '/favicon.ico'
 }
