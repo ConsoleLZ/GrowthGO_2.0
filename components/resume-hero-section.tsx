@@ -1,14 +1,12 @@
 import Link from "next/link"
-import { Github, Mail, ArrowDown, Folder, FileText, BarChart3, MessageSquare } from "lucide-react"
+import { Github, Mail, ArrowDown, Send, FileText, BarChart3, MessageSquare } from "lucide-react"
 
 const socialLinks = [
-  { href: "https://consolelz.github.io/", icon: Github, label: "我的博客" },
-  { href: "https://juejin.cn/user/1295692732053241", icon: Mail, label: "掘金" },
   { href: "mailto:17347187569@163.com", icon: Mail, label: "Email" },
 ]
 
 const pageLinks = [
-  { href: "/category", label: "分类", icon: Folder },
+  { href: "/category", label: "导航", icon: Send },
   { href: "/blog", label: "笔记", icon: FileText },
   { href: "/stats", label: "统计", icon: BarChart3 },
   { href: "/guestbook", label: "留言板", icon: MessageSquare },
@@ -28,12 +26,12 @@ export function ResumeHeroSection() {
                 小哲
               </h1>
               <h2 className="text-xl md:text-2xl text-muted-foreground font-light">
-                前端开发者 & 终身学习者
+                前端终结者 & 电子工程菜鸟
               </h2>
             </div>
 
             <p className="text-muted-foreground leading-relaxed max-w-md">
-              专注于构建高性能、可访问的用户界面，创造优雅的数字体验。
+              一个喜欢解决难题的疯子，越难的东西只会让我更加兴奋
             </p>
 
             <div className="grid grid-cols-2 gap-3">
@@ -67,15 +65,7 @@ export function ResumeHeroSection() {
 
           <div className="space-y-8">
             <div className="space-y-6 text-muted-foreground leading-relaxed">
-              <p>
-                我是一名热衷于创造优秀用户体验的开发者，相信技术应该服务于人。我的工作融合了深思熟虑的设计与稳健的工程实现。
-              </p>
-              <p>
-                在过去的几年里，我一直在探索前端技术的边界，从基础的HTML/CSS到现代的React/Next.js应用，都有深入的实践。
-              </p>
-              <p>
-                我喜欢分享技术知识，也喜欢探索新的技术领域。如果你也对技术充满热情，欢迎与我交流！
-              </p>
+              ？？？
             </div>
           </div>
         </div>

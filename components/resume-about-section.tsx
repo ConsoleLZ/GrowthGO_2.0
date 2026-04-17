@@ -1,8 +1,8 @@
 const skills = [
-  { category: "语言", items: ["TypeScript", "JavaScript", "Python", "HTML/CSS"] },
-  { category: "框架", items: ["React", "Vue.js", "Next.js", "Node.js"] },
-  { category: "工具", items: ["Git", "Webpack", "Vite", "Docker"] },
-  { category: "设计", items: ["Figma", "响应式设计", "无障碍设计"] },
+  { category: "语言", items: ["HTML/CSS", "JavaScript", "C语言"] },
+  { category: "技术栈", items: ["React", "Vue", "Git", "TypeScript", "Vite", "TailwindCSS", "WebSocket", "Node.js", "Express", "各种组件库", "单片机软件开发", "上位机开发", "基础电路设计"] },
+  { category: "移动端开发", items: ["uni-app", "React Native"] },
+  { category: "运维", items: ["Linux", "Nginx", "Docker", "使用过一些常用的可视化运维面板（宝塔等）"] },
 ]
 
 export function ResumeAboutSection() {
