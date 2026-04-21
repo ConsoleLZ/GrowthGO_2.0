@@ -74,7 +74,7 @@ export function ResumeHeroSection() {
                 <img
                   src="/avatar.jpg"
                   alt="小哲的头像"
-                  className="w-full h-full object-cover rounded-full shadow-2xl border-4 border-background"
+                  className="w-full h-full object-cover rounded-full border-4 border-background"
                 />
                 
                 {/* 头像装饰圆环 */}
