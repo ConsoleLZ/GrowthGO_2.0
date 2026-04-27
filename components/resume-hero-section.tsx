@@ -26,7 +26,7 @@ export function ResumeHeroSection() {
                 小哲
               </h1>
               <h2 className="text-xl md:text-2xl text-muted-foreground font-light">
-                前端终结者 & 电子工程菜鸟
+                前端爱好者 & 电子工程菜鸟
               </h2>
             </div>
 
@@ -66,7 +66,7 @@ export function ResumeHeroSection() {
           <div className="relative flex flex-col items-center lg:items-center">
             <div className="relative w-64 h-64">
               {/* 头像背景装饰 */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-2xl"></div>
+              {/* <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-2xl"></div> */}
               
               {/* 头像容器 */}
               <div className="relative w-full h-full">
@@ -78,11 +78,11 @@ export function ResumeHeroSection() {
                 />
                 
                 {/* 头像装饰圆环 */}
-                <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-pulse"></div>
+                {/* <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-pulse"></div> */}
                 
                 {/* 装饰点 */}
-                <div className="absolute -top-2 -right-2 w-4 h-4 bg-primary rounded-full animate-ping"></div>
-                <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-secondary rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+                {/* <div className="absolute -top-2 -right-2 w-4 h-4 bg-primary rounded-full animate-ping"></div>
+                <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-secondary rounded-full animate-ping" style={{ animationDelay: '1s' }}></div> */}
               </div>
             </div>
           </div>
