@@ -14,28 +14,41 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
 const ITEMS_PER_PAGE = 20
 
 export default function CategoryPage() {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const [selectedTag, setSelectedTag] = useState<string | null>("推荐")
   const [searchQuery, setSearchQuery] = useState("")
   const [page, setPage] = useState(1)
 
   const tagsWithCount = useMemo(() => {
     const tagMap = new Map<string, number>()
+    let recommendCount = 0
     sites.forEach((site) => {
+      if (site.recommend) {
+        recommendCount++
+      }
       site.tags.forEach((tag) => {
         tagMap.set(tag, (tagMap.get(tag) || 0) + 1)
       })
     })
-    return Array.from(tagMap.entries())
+    const otherTags = Array.from(tagMap.entries())
       .sort((a, b) => b[1] - a[1])
       .map(([tag, count]) => ({ tag, count }))
+    return [
+      { tag: "推荐", count: recommendCount },
+      { tag: "全部", count: sites.length },
+      ...otherTags
+    ]
   }, [])
 
   const filteredSites = useMemo(() => {
     let result = sites
     
     // 标签筛选
-    if (selectedTag) {
-      result = result.filter(site => site.tags.includes(selectedTag))
+    if (selectedTag && selectedTag !== "全部") {
+      if (selectedTag === "推荐") {
+        result = result.filter(site => site.recommend)
+      } else {
+        result = result.filter(site => site.tags.includes(selectedTag))
+      }
     }
     
     // 搜索筛选
@@ -86,7 +99,7 @@ export default function CategoryPage() {
   }, [searchQuery, selectedTag])
 
   // 切换标签时滚动到顶部
-  const handleTagSelect = useCallback((tag: string | null) => {
+  const handleTagSelect = useCallback((tag: string) => {
     setSelectedTag(tag)
     
     // 滚动到页面顶部
@@ -109,18 +122,6 @@ export default function CategoryPage() {
                 分类标签
               </h2>
               <nav className="space-y-1 pr-4">
-                <button
-                  onClick={() => handleTagSelect(null)}
-                  className={cn(
-                    "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
-                    !selectedTag
-                      ? "bg-foreground text-background"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  )}
-                >
-                  <span>全部</span>
-                  <span className="text-xs opacity-60">{sites.length}</span>
-                </button>
                 {tagsWithCount.map(({ tag, count }) => (
                   <button
                     key={tag}
@@ -144,17 +145,6 @@ export default function CategoryPage() {
           <div className="md:hidden">
             <div className="mb-4 overflow-x-auto pb-2">
               <div className="flex gap-2 min-w-max">
-                <button
-                  onClick={() => handleTagSelect(null)}
-                  className={cn(
-                    "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all",
-                    !selectedTag
-                      ? "bg-foreground text-background shadow-sm"
-                      : "bg-muted/50 text-muted-foreground hover:bg-muted"
-                  )}
-                >
-                  全部
-                </button>
                 {tagsWithCount.map(({ tag, count }) => (
                   <button
                     key={tag}
