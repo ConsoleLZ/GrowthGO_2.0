@@ -51,6 +51,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "Animal Island UI",
+    ico: "https://guokaigdg.github.io/animal-island-ui/assets/favicon-DDUaTMDA.ico",
+    url: "https://guokaigdg.github.io/animal-island-ui/#/",
+    description: "Animal风格的 React 组件库，基于 TypeScript + Vite 构建，让 Web 应用充满温暖质感",
+    tags: [tags.component]
+  },
+  {
     name: "豆包",
     ico: "https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/chat/favicon.png",
     url: "https://www.doubao.com/",
