@@ -141,3 +141,8 @@ export function getAllSlugs(): string[] {
     .filter(fileName => fileName.endsWith('.md'))
     .map(fileName => fileName.replace(/\.md$/, ''))
 }
+
+export function hasTableOfContents(contentHtml: string): boolean {
+  const regex = /<h[2-4][^>]*>/g
+  return regex.test(contentHtml)
+}

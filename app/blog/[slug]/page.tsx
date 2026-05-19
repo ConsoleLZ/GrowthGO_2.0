@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { SimpleNavigation } from "@/components/simple-navigation"
-import { getPostBySlug, getAllPosts, getAllSlugs } from "@/lib/posts"
+import { getPostBySlug, getAllPosts, getAllSlugs, hasTableOfContents } from "@/lib/posts"
 import { Badge } from "@/components/ui/badge"
 import { TableOfContents } from "@/components/blog/table-of-contents"
 import { MobileTocDrawer } from "@/components/blog/mobile-toc-drawer"
@@ -27,6 +27,8 @@ export default async function BlogPostPage({ params }: Props) {
     notFound()
   }
 
+  const hasToc = hasTableOfContents(post.content)
+
   return (
     <div className="min-h-screen bg-background dark:bg-background">
       <SimpleNavigation />
@@ -34,9 +36,11 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="pt-20 mx-auto max-w-7xl px-6 py-8">
         <div className="flex gap-8">
           {/* 侧边栏大纲 - 桌面端 */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <TableOfContents content={post.content} />
-          </aside>
+          {hasToc && (
+            <aside className="hidden lg:block w-64 flex-shrink-0">
+              <TableOfContents content={post.content} />
+            </aside>
+          )}
           
           {/* 主内容区域 */}
           <main className="flex-1 min-w-0">
@@ -72,7 +76,7 @@ export default async function BlogPostPage({ params }: Props) {
       </div>
       
       {/* 移动端大纲抽屉 */}
-      <MobileTocDrawer content={post.content} />
+      {hasToc && <MobileTocDrawer content={post.content} />}
     </div>
   )
 }
