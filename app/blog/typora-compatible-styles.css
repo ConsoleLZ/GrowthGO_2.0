@@ -68,8 +68,13 @@
     word-wrap: normal;
     background-color: var(--code-block-bg-color);
     color: var(--code-block-color);
+    border: .1em solid #e8eaed;
     line-height: 1.5;
     overflow-x: auto;
+}
+
+.dark .markdown-content pre {
+    border: none;
 }
 
 .markdown-content pre code {
