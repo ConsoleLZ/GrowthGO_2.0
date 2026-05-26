@@ -302,21 +302,7 @@
     }
 }
 
-/* 暗色模式支持 */
-@media (prefers-color-scheme: dark) {
-    .markdown-content {
-        --text-color: #e8eaed;
-        --bg-color: #202124;
-        --code-block-bg-color: #2d2e30;
-        --code-block-color: #e8eaed;
-        --title-color: #e8eaed;
-        --a-color: #8ab4f8;
-        --table-border-color: #5f6368;
-        --table-header-bg-color: #3c4043;
-        --table-bg-color: #202124;
-        --table-n2-bg-color: #2d2e30;
-    }
-}
+
 
 /* 代码块包装器 */
 .markdown-content .code-block-wrapper {
@@ -363,24 +349,7 @@
     color: #2e7d32;
 }
 
-/* 暗色模式下的复制按钮 */
-@media (prefers-color-scheme: dark) {
-    .markdown-content .copy-btn {
-        background-color: rgba(45, 46, 48, 0.95);
-        border-color: #5f6368;
-        color: #e1e4e8;
-    }
 
-    .markdown-content .copy-btn:hover {
-        background-color: #3c4043;
-    }
-
-    .markdown-content .copy-btn.copied {
-        background-color: #1b5e20;
-        border-color: #4caf50;
-        color: #a5d6a7;
-    }
-}
 
 .dark .markdown-content .copy-btn {
     background-color: rgba(45, 46, 48, 0.95);
