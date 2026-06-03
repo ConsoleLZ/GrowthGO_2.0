@@ -51,6 +51,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "AIDA64",
+    ico: "https://www.aida64.com/favicon.ico",
+    url: "https://www.aida64.com/",
+    description: "系统硬件信息检测、诊断与基准测试工具",
+    tags: [tags.tools]
+  },
+  {
     name: "Animal Island UI",
     ico: "https://guokaigdg.github.io/animal-island-ui/assets/favicon-DDUaTMDA.ico",
     url: "https://guokaigdg.github.io/animal-island-ui/#/",
