@@ -2,31 +2,20 @@ import { ArrowUpRight } from "lucide-react"
 
 const experiences = [
   {
-    period: "2023 — 至今",
-    title: "前端开发者",
-    company: "独立开发者",
-    companyUrl: "https://consolelz.github.io/",
+    period: "2025 — 至今",
+    title: "电子工程师-软件方向",
+    company: "深圳市芯连心电子科技有限公司",
+    companyUrl: "http://www.chipmindmcu.com/",
     description:
-      "专注于个人项目和开源贡献，持续学习新技术，分享技术文章和经验。",
-    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+      "",
   },
   {
-    period: "2021 — 2023",
+    period: "2024 ~ 2025",
     title: "前端工程师",
-    company: "某科技公司",
-    companyUrl: "#",
+    company: "武汉木仓科技",
+    companyUrl: "https://www.mucang.cn/",
     description:
-      "参与多个Web应用的前端开发，负责组件设计和性能优化，提升用户体验。",
-    skills: ["Vue.js", "Webpack", "SASS", "JavaScript"],
-  },
-  {
-    period: "2019 — 2021",
-    title: "初级前端开发",
-    company: "创业公司",
-    companyUrl: "#",
-    description:
-      "从零开始学习前端开发，参与移动端H5页面开发，积累了丰富的实践经验。",
-    skills: ["HTML5", "CSS3", "JavaScript", "Git"],
+      `公司的氛围还可以，我的直系领导很负责，学习了很多代码规范和思路，学习了架构的搭建，前端性能优化，微前端等等知识，第一次感受到前端还有这么多东西，并不是所谓的“切图崽”`,
   },
 ]
 
@@ -74,17 +63,6 @@ export function ResumeExperienceSection() {
                 <p className="text-muted-foreground leading-relaxed">
                   {exp.description}
                 </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {exp.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1 text-xs bg-secondary text-secondary-foreground rounded-full"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
               </div>
             </article>
           ))}
