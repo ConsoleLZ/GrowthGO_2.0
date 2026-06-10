@@ -2197,7 +2197,7 @@ export const sites: Site[] = [
   {
     name: "一元机场",
     ico: "",
-    url: "https://xn--4gq62f52gdss.ink/",
+    url: "一元.com",
     description: "要科学上网哦",
     tags: [tags.other]
   },
