@@ -51,6 +51,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "WizTree",
+    ico: "https://wiztree.world/favicon.ico",
+    url: "https://wiztree.world/zh/",
+    description: "最快的磁盘空间分析器",
+    tags: [tags.tools]
+  },
+  {
     name: "AIDA64",
     ico: "https://www.aida64.com/favicon.ico",
     url: "https://www.aida64.com/",
