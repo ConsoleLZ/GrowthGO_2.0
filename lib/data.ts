@@ -51,6 +51,14 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "TRAE Work",
+    ico: "https://lf-cdn.marscode.cn/obj/marscode-bucket-cn/goofy_deploy_edenx/ide/trae-mono/favicon.png",
+    url: "https://work.trae.cn/",
+    description: "TRAE Work 是一款 AI 原生工作台，提供网页版、桌面版和移动版三种形态，并设有为不同用户群体设计的 Work 与 Code 双模式。TRAE Work 的能力在原有 TRAE IDE SOLO 模式的基础上得到了进一步提升，旨在为用户提供统一、高效、可定制的 AI 协作体验，覆盖从专业开发到日常办公的各类场景。",
+    tags: [tags.ai],
+    recommend: true
+  },
+  {
     name: "WizTree",
     ico: "https://wiztree.world/favicon.ico",
     url: "https://wiztree.world/zh/",
