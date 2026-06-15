@@ -10,6 +10,112 @@ import rehypeHighlight from 'rehype-highlight'
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 
+function rehypeInlineAttrs() {
+  return (tree: any) => {
+    const walk = (node: any, parent: any = null, index: number = -1): number | void => {
+      if (node.type === 'text') {
+        const value: string = node.value
+        const re = /\{:([^}]+)\}/g
+        if (!re.test(value)) return
+        re.lastIndex = 0
+
+        const attrsRe = /(\w[\w-]*)\s*=\s*"([^"]*)"|(\w[\w-]*)\s*=\s*'([^']*)'|\.(\w[\w-]*)|#(\w[\w-]*)/g
+
+        const parseAttrs = (raw: string): Record<string, any> => {
+          const attrs: Record<string, any> = {}
+          let m: RegExpExecArray | null
+          attrsRe.lastIndex = 0
+          while ((m = attrsRe.exec(raw)) !== null) {
+            if (m[1] !== undefined) attrs[m[1]] = m[2]
+            else if (m[3] !== undefined) attrs[m[3]] = m[4]
+            else if (m[5] !== undefined) {
+              attrs.class = (attrs.class ? attrs.class + ' ' : '') + m[5]
+            } else if (m[6] !== undefined) {
+              attrs.id = m[6]
+            }
+          }
+          return attrs
+        }
+
+        const apply = (target: any, attrs: Record<string, any>) => {
+          target.properties = target.properties || {}
+          for (const [k, val] of Object.entries(attrs)) {
+            if (k === 'class') {
+              const existing = target.properties.className
+              if (Array.isArray(existing)) existing.push(val)
+              else if (typeof existing === 'string') target.properties.className = [existing, val]
+              else target.properties.className = [val]
+            } else {
+              target.properties[k] = val
+            }
+          }
+        }
+
+        const wrapText = (textNode: any, attrs: Record<string, any>): any => {
+          const wrapper: any = {
+            type: 'element',
+            tagName: 'span',
+            properties: {},
+            children: [{ type: 'text', value: textNode.value }],
+          }
+          apply(wrapper, attrs)
+          return wrapper
+        }
+
+        const newChildren: any[] = []
+        let lastIdx = 0
+        let match: RegExpExecArray | null
+
+        while ((match = re.exec(value)) !== null) {
+          const before = value.slice(lastIdx, match.index)
+          if (before) newChildren.push({ type: 'text', value: before })
+
+          const attrs = parseAttrs(match[1])
+
+          let target: any = newChildren.length > 0 ? newChildren[newChildren.length - 1] : null
+          let targetFromParent = false
+          if (!target && parent && Array.isArray(parent.children) && index > 0) {
+            target = parent.children[index - 1]
+            targetFromParent = true
+          }
+
+          if (target && target.type === 'element') {
+            apply(target, attrs)
+          } else if (target && target.type === 'text') {
+            const wrapped = wrapText(target, attrs)
+            if (targetFromParent && parent && Array.isArray(parent.children)) {
+              parent.children[index - 1] = wrapped
+            } else {
+              newChildren[newChildren.length - 1] = wrapped
+            }
+          }
+
+          lastIdx = match.index + match[0].length
+        }
+
+        if (lastIdx < value.length) {
+          newChildren.push({ type: 'text', value: value.slice(lastIdx) })
+        }
+
+        if (parent && Array.isArray(parent.children)) {
+          parent.children.splice(index, 1, ...newChildren)
+          return index + newChildren.length - 1
+        }
+        return
+      }
+
+      if (Array.isArray(node.children)) {
+        for (let i = 0; i < node.children.length; i++) {
+          const next = walk(node.children[i], node, i)
+          if (typeof next === 'number') i = next
+        }
+      }
+    }
+
+    walk(tree)
+  }
+}
+
 // 准确的中文字数统计函数
 function countChineseCharacters(text: string): number {
   // 移除markdown语法标记
@@ -25,16 +131,16 @@ function countChineseCharacters(text: string): number {
     .replace(/\n/g, ' ') // 将换行符替换为空格
     .replace(/\s+/g, ' ') // 合并多个空格
     .trim();
-  
+
   // 统计中文字符（包括中文标点）
   const chineseCharCount = (cleanText.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length;
-  
+
   // 统计英文字符（单词）
   const englishWordCount = (cleanText.match(/[a-zA-Z]+/g) || []).length;
-  
+
   // 统计数字
   const numberCount = (cleanText.match(/\b\d+\b/g) || []).length;
-  
+
   // 总字数 = 中文字符数 + 英文单词数 + 数字数
   return chineseCharCount + englishWordCount + numberCount;
 }
@@ -91,7 +197,7 @@ export function getAllPosts(): Omit<Post, 'content'>[] {
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
     const fullPath = path.join(postsDirectory, `${slug}.md`)
-    
+
     if (!fs.existsSync(fullPath)) {
       return null
     }
@@ -102,11 +208,12 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     const processedContent = await unified()
       .use(remarkParse)
       .use(remarkMath)
-      .use(remarkRehype)
+      .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeSlug)
+      .use(rehypeInlineAttrs)
       .use(rehypeHighlight)
       .use(rehypeKatex)
-      .use(rehypeStringify)
+      .use(rehypeStringify, { allowDangerousHtml: true })
       .process(matterResult.content)
     const contentHtml = processedContent.toString()
 

@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三相无刷直流电机 · 六步换相仿真</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0e14;
+    --bg-card: #141722;
+    --bg-card-hover: #1a1e2e;
+    --border: #2a2f42;
+    --fg: #e4e6f0;
+    --fg-dim: #8a8fa8;
+    --accent-a: #ff6b35;
+    --accent-b: #00c9a7;
+    --accent-c: #4d8bf5;
+    --accent-a-dim: rgba(255,107,53,0.15);
+    --accent-b-dim: rgba(0,201,167,0.15);
+    --accent-c-dim: rgba(77,139,245,0.15);
+    --glow-a: rgba(255,107,53,0.4);
+    --glow-b: rgba(0,201,167,0.4);
+    --glow-c: rgba(77,139,245,0.4);
+    --danger: #ff4757;
+    --success: #2ed573;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Noto Sans SC', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(42,47,66,0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42,47,66,0.3) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header h1 {
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent-a), var(--accent-b), var(--accent-c));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: var(--fg-dim);
+    font-size: 0.95rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  /* Main Grid */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .card:hover {
+    border-color: rgba(255,107,53,0.3);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,107,53,0.3), transparent);
+  }
+
+  .card-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    box-shadow: 0 0 8px var(--glow-a);
+  }
+
+  /* Motor Canvas */
+  .motor-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 420px;
+  }
+
+  #motorCanvas {
+    border-radius: 12px;
+  }
+
+  /* Step Indicator */
+  .step-indicator {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .step-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .step-box.active {
+    border-color: var(--accent-a);
+    background: var(--accent-a-dim);
+    box-shadow: 0 0 20px rgba(255,107,53,0.15);
+  }
+
+  .step-box .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--fg-dim);
+    margin-bottom: 4px;
+  }
+
+  .step-box.active .step-num {
+    color: var(--accent-a);
+  }
+
+  .step-box .step-phases {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .phase-a { color: var(--accent-a); }
+  .phase-b { color: var(--accent-b); }
+  .phase-c { color: var(--accent-c); }
+
+  /* Waveform Canvas */
+  .wave-wrapper {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #waveCanvas {
+    flex: 1;
+    border-radius: 8px;
+    width: 100%;
+  }
+
+  .wave-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 12px;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--fg-dim);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* Bottom Section */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .control-label {
+    font-size: 0.8rem;
+    color: var(--fg-dim);
+    min-width: 60px;
+    font-weight: 400;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn:hover {
+    border-color: var(--accent-a);
+    background: var(--accent-a-dim);
+  }
+
+  .btn.active {
+    border-color: var(--accent-a);
+    background: var(--accent-a);
+    color: #fff;
+    box-shadow: 0 0 16px rgba(255,107,53,0.3);
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 6px;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--glow-a);
+  }
+
+  .speed-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent-a);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* Hall Sensor State */
+  .hall-state {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hall-bit {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .hall-bit.on {
+    border-color: var(--success);
+    background: rgba(46,213,115,0.1);
+    box-shadow: 0 0 12px rgba(46,213,115,0.2);
+  }
+
+  .hall-bit .hall-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--fg-dim);
+    margin-bottom: 2px;
+  }
+
+  .hall-bit .hall-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--fg-dim);
+  }
+
+  .hall-bit.on .hall-val {
+    color: var(--success);
+  }
+
+  /* Phase Current Bars */
+  .phase-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .phase-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .phase-bar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 24px;
+  }
+
+  .phase-bar-track {
+    flex: 1;
+    height: 24px;
+    background: var(--bg);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .phase-bar-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 5px;
+    transition: all 0.15s ease;
+    left: 50%;
+  }
+
+  .phase-bar-fill.positive {
+    left: 50%;
+    border-radius: 0 5px 5px 0;
+  }
+
+  .phase-bar-fill.negative {
+    right: 50%;
+    border-radius: 5px 0 0 5px;
+  }
+
+  .phase-bar-center {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--fg-dim);
+    transform: translateX(-0.5px);
+  }
+
+  .phase-bar-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--fg-dim);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* Info Panel */
+  .info-panel {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--fg-dim);
+  }
+
+  .info-panel .highlight {
+    color: var(--accent-a);
+    font-weight: 600;
+  }
+
+  .info-panel .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    margin: 2px 0;
+  }
+
+  .tag-a { background: var(--accent-a-dim); color: var(--accent-a); }
+  .tag-b { background: var(--accent-b-dim); color: var(--accent-b); }
+  .tag-c { background: var(--accent-c-dim); color: var(--accent-c); }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.6rem; }
+    .step-indicator { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Animation */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .running-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px rgba(46,213,115,0.5);
+    animation: pulse 1s ease-in-out infinite;
+    margin-left: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <h1>三相无刷直流电机换相仿真</h1>
+    <p>Three-Phase BLDC Motor &middot; Six-Step Commutation Simulation</p>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="main-grid">
+    <!-- Motor Visualization -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>电机截面图</div>
+      <div class="motor-wrapper">
+        <canvas id="motorCanvas" width="400" height="400"></canvas>
+      </div>
+      <div class="step-indicator" id="stepIndicator"></div>
+    </div>
+
+    <!-- Waveform -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>相电流波形 <span class="running-indicator" id="runIndicator" style="display:none;"></span></div>
+      <div class="wave-wrapper">
+        <canvas id="waveCanvas" width="600" height="280"></canvas>
+        <div class="wave-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent-a)"></div>Phase A</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent-b)"></div>Phase B</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent-c)"></div>Phase C</div>
+        </div>
+      </div>
+
+      <!-- Phase Current Bars -->
+      <div style="margin-top:20px;">
+        <div class="card-title"><span class="dot"></span>瞬时相电流</div>
+        <div class="phase-bars">
+          <div class="phase-bar-row">
+            <span class="phase-bar-label phase-a">A</span>
+            <div class="phase-bar-track">
+              <div class="phase-bar-center"></div>
+              <div class="phase-bar-fill" id="barA" style="background:var(--accent-a);"></div>
+            </div>
+            <span class="phase-bar-value" id="barValA">0%</span>
+          </div>
+          <div class="phase-bar-row">
+            <span class="phase-bar-label phase-b">B</span>
+            <div class="phase-bar-track">
+              <div class="phase-bar-center"></div>
+              <div class="phase-bar-fill" id="barB" style="background:var(--accent-b);"></div>
+            </div>
+            <span class="phase-bar-value" id="barValB">0%</span>
+          </div>
+          <div class="phase-bar-row">
+            <span class="phase-bar-label phase-c">C</span>
+            <div class="phase-bar-track">
+              <div class="phase-bar-center"></div>
+              <div class="phase-bar-fill" id="barC" style="background:var(--accent-c);"></div>
+            </div>
+            <span class="phase-bar-value" id="barValC">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Grid -->
+  <div class="bottom-grid">
+    <!-- Controls -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>控制面板</div>
+      <div class="controls">
+        <div class="control-row">
+          <span class="control-label">运行</span>
+          <div class="btn-group">
+            <button class="btn active" id="btnPlay" onclick="togglePlay()">▶ 播放</button>
+            <button class="btn" id="btnPause" onclick="togglePause()">⏸ 暂停</button>
+            <button class="btn" id="btnStep" onclick="stepOnce()">⏭ 单步</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <span class="control-label">速度</span>
+          <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1" oninput="updateSpeed(this.value)">
+          <span class="speed-val" id="speedVal">1.0x</span>
+        </div>
+        <div class="control-row">
+          <span class="control-label">模式</span>
+          <div class="btn-group">
+            <button class="btn active" id="btnAuto" onclick="setMode('auto')">自动换相</button>
+            <button class="btn" id="btnManual" onclick="setMode('manual')">手动换相</button>
+          </div>
+        </div>
+        <div class="control-row">
+          <span class="control-label">显示</span>
+          <div class="btn-group">
+            <button class="btn active" id="btnField" onclick="toggleOption('field')">磁场</button>
+            <button class="btn active" id="btnRotor" onclick="toggleOption('rotor')">转子</button>
+            <button class="btn active" id="btnCoils" onclick="toggleOption('coils')">绕组</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hall Sensors -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>霍尔传感器状态</div>
+      <div class="hall-state" id="hallState">
+        <div class="hall-bit" id="hallH1"><span class="hall-label">H1</span><span class="hall-val">0</span></div>
+        <div class="hall-bit" id="hallH2"><span class="hall-label">H2</span><span class="hall-val">0</span></div>
+        <div class="hall-bit" id="hallH3"><span class="hall-label">H3</span><span class="hall-val">0</span></div>
+      </div>
+      <div style="margin-top:20px;">
+        <div class="card-title"><span class="dot"></span>当前换相信息</div>
+        <div class="info-panel" id="commInfo">
+          <p>点击 <span class="highlight">播放</span> 开始仿真</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>工作原理</div>
+      <div class="info-panel">
+        <p>三相无刷直流电机通过 <span class="highlight">六步换相</span> 驱动，每一步中两相导通、一相悬空。</p>
+        <br>
+        <p><span class="tag tag-a">A+</span> A相上桥导通 &nbsp;
+        <span class="tag tag-a">A−</span> A相下桥导通</p>
+        <p><span class="tag tag-b">B+</span> B相上桥导通 &nbsp;
+        <span class="tag tag-b">B−</span> B相下桥导通</p>
+        <p><span class="tag tag-c">C+</span> C相上桥导通 &nbsp;
+        <span class="tag tag-c">C−</span> C相下桥导通</p>
+        <br>
+        <p>霍尔传感器检测转子位置，每 <span class="highlight">60°电角度</span> 切换一次导通相，形成旋转磁场拖动转子同步旋转。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  三相无刷直流电机六步换相仿真 - 核心逻辑
+// ============================================================
+
+// --- 六步换相表 ---
+// 每步: [A相状态, B相状态, C相状态, 霍尔H1, 霍尔H2, 霍尔H3]
+// 状态: +1 = 上桥导通, -1 = 下桥导通, 0 = 悬空 (高阻)
+const COMMUTATION_TABLE = [
+  { name: 'Step 1', a:  1, b: -1, c:  0, hall: [1,0,1], desc: 'A+ → B−' },
+  { name: 'Step 2', a:  1, b:  0, c: -1, hall: [1,0,0], desc: 'A+ → C−' },
+  { name: 'Step 3', a:  0, b:  1, c: -1, hall: [1,1,0], desc: 'B+ → C−' },
+  { name: 'Step 4', a: -1, b:  1, c:  0, hall: [0,1,0], desc: 'B+ → A−' },
+  { name: 'Step 5', a: -1, b:  0, c:  1, hall: [0,1,1], desc: 'C+ → A−' },
+  { name: 'Step 6', a:  0, b: -1, c:  1, hall: [0,0,1], desc: 'C+ → B−' },
+];
+
+// --- 全局状态 ---
+let currentStep = 0;
+let isPlaying = true;
+let speed = 1.0;
+let mode = 'auto';
+let showField = true;
+let showRotor = true;
+let showCoils = true;
+let rotorAngle = 0;        // 转子机械角度 (弧度)
+let stepProgress = 0;      // 当前步内进度 0~1
+let waveHistory = [];       // 波形历史
+const WAVE_LENGTH = 300;    // 波形显示长度
+
+// --- Canvas 上下文 ---
+const motorCanvas = document.getElementById('motorCanvas');
+const motorCtx = motorCanvas.getContext('2d');
+const waveCanvas = document.getElementById('waveCanvas');
+const waveCtx = waveCanvas.getContext('2d');
+
+// HiDPI 支持
+function setupHiDPI(canvas, ctx, w, h) {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  ctx.scale(dpr, dpr);
+}
+setupHiDPI(motorCanvas, motorCtx, 400, 400);
+setupHiDPI(waveCanvas, waveCtx, 600, 280);
+
+// --- 初始化步进指示器 ---
+function initStepIndicator() {
+  const container = document.getElementById('stepIndicator');
+  container.innerHTML = '';
+  COMMUTATION_TABLE.forEach((step, i) => {
+    const box = document.createElement('div');
+    box.className = 'step-box' + (i === 0 ? ' active' : '');
+    box.id = 'stepBox' + i;
+    box.onclick = () => { if (mode === 'manual') { currentStep = i; stepProgress = 0; } };
+    box.innerHTML = `
+      <div class="step-num">${step.name}</div>
+      <div class="step-phases">
+        ${formatPhaseState(step.a, 'A', 'phase-a')}<br>
+        ${formatPhaseState(step.b, 'B', 'phase-b')}<br>
+        ${formatPhaseState(step.c, 'C', 'phase-c')}
+      </div>
+    `;
+    container.appendChild(box);
+  });
+}
+
+function formatPhaseState(val, label, cls) {
+  if (val === 1) return `<span class="${cls}">${label}+</span>`;
+  if (val === -1) return `<span class="${cls}">${label}−</span>`;
+  return `<span style="color:var(--fg-dim)">${label}○</span>`;
+}
+
+// ============================================================
+//  电机截面图绘制
+// ============================================================
+function drawMotor() {
+  const ctx = motorCtx;
+  const W = 400, H = 400;
+  const cx = W / 2, cy = H / 2;
+  ctx.clearRect(0, 0, W, H);
+
+  const step = COMMUTATION_TABLE[currentStep];
+
+  // --- 外壳 ---
+  const outerR = 170;
+  ctx.beginPath();
+  ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+  ctx.strokeStyle = '#3a3f55';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // 外壳填充
+  ctx.beginPath();
+  ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+  const shellGrad = ctx.createRadialGradient(cx, cy, outerR - 20, cx, cy, outerR);
+  shellGrad.addColorStop(0, '#1a1e2e');
+  shellGrad.addColorStop(1, '#2a2f42');
+  ctx.fillStyle = shellGrad;
+  ctx.fill();
+
+  // --- 定子铁芯 (6个齿) ---
+  if (showCoils) {
+    drawStatorTeeth(ctx, cx, cy, outerR - 8, step);
+  }
+
+  // --- 定子绕组 ---
+  if (showCoils) {
+    drawStatorCoils(ctx, cx, cy, step);
+  }
+
+  // --- 气隙圆 ---
+  ctx.beginPath();
+  ctx.arc(cx, cy, 95, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // --- 转子 (永磁体) ---
+  if (showRotor) {
+    drawRotor(ctx, cx, cy, rotorAngle);
+  }
+
+  // --- 磁场方向 ---
+  if (showField) {
+    drawMagneticField(ctx, cx, cy, step);
+  }
+
+  // --- 中心轴 ---
+  ctx.beginPath();
+  ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+  const axGrad = ctx.createRadialGradient(cx - 3, cy - 3, 2, cx, cy, 12);
+  axGrad.addColorStop(0, '#555');
+  axGrad.addColorStop(1, '#222');
+  ctx.fillStyle = axGrad;
+  ctx.fill();
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // --- 角度标注 ---
+  drawAngleMark(ctx, cx, cy);
+}
+
+function drawStatorTeeth(ctx, cx, cy, outerR, step) {
+  const toothInner = 100;
+  const toothWidth = 28;
+  const phases = [
+    { angle: -Math.PI / 2, color: 'var(--accent-a)', rawColor: '#ff6b35', label: 'A' },
+    { angle: -Math.PI / 2 + (2 * Math.PI / 3), color: 'var(--accent-b)', rawColor: '#00c9a7', label: 'B' },
+    { angle: -Math.PI / 2 + (4 * Math.PI / 3), color: 'var(--accent-c)', rawColor: '#4d8bf5', label: 'C' },
+  ];
+
+  phases.forEach((ph, idx) => {
+    // 每相两个齿 (相差180°)
+    for (let k = 0; k < 2; k++) {
+      const angle = ph.angle + k * Math.PI;
+      const isActive = (idx === 0 && step.a !== 0) || (idx === 1 && step.b !== 0) || (idx === 2 && step.c !== 0);
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      // 齿形状
+      ctx.beginPath();
+      ctx.moveTo(toothInner, -toothWidth / 2);
+      ctx.lineTo(outerR - 4, -toothWidth / 2 - 6);
+      ctx.lineTo(outerR - 4, toothWidth / 2 + 6);
+      ctx.lineTo(toothInner, toothWidth / 2);
+      ctx.closePath();
+
+      if (isActive) {
+        const glow = ctx.createLinearGradient(toothInner, 0, outerR, 0);
+        glow.addColorStop(0, ph.rawColor + '40');
+        glow.addColorStop(1, ph.rawColor + '15');
+        ctx.fillStyle = glow;
+      } else {
+        ctx.fillStyle = '#1e2233';
+      }
+      ctx.fill();
+      ctx.strokeStyle = isActive ? ph.rawColor + '80' : '#2a2f42';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  });
+}
+
+function drawStatorCoils(ctx, cx, cy, step) {
+  const coilR = 82;
+  const phases = [
+    { angle: -Math.PI / 2, color: '#ff6b35', val: step.a, label: 'A' },
+    { angle: -Math.PI / 2 + (2 * Math.PI / 3), color: '#00c9a7', val: step.b, label: 'B' },
+    { angle: -Math.PI / 2 + (4 * Math.PI / 3), color: '#4d8bf5', val: step.c, label: 'C' },
+  ];
+
+  phases.forEach((ph) => {
+    for (let k = 0; k < 2; k++) {
+      const angle = ph.angle + k * Math.PI;
+      const x = cx + Math.cos(angle) * coilR;
+      const y = cy + Math.sin(angle) * coilR;
+
+      const isActive = ph.val !== 0;
+      const isPositive = ph.val > 0;
+
+      // 线圈圆
+      ctx.beginPath();
+      ctx.arc(x, y, 14, 0, Math.PI * 2);
+
+      if (isActive) {
+        const grad = ctx.createRadialGradient(x, y, 2, x, y, 14);
+        grad.addColorStop(0, ph.color + 'cc');
+        grad.addColorStop(1, ph.color + '30');
+        ctx.fillStyle = grad;
+
+        // 发光效果
+        ctx.shadowColor = ph.color;
+        ctx.shadowBlur = 15;
+      } else {
+        ctx.fillStyle = '#1a1e2e';
+        ctx.shadowBlur = 0;
+      }
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = isActive ? ph.color + 'aa' : '#2a2f42';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // 电流方向符号
+      if (isActive) {
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 14px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(isPositive ? '⊗' : '⊙', x, y);
+      }
+    }
+  });
+}
+
+function drawRotor(ctx, cx, cy, angle) {
+  const rotorR = 75;
+  const polePairs = 2; // 4极转子
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+
+  for (let i = 0; i < polePairs * 2; i++) {
+    const startAngle = (i * Math.PI) / polePairs - Math.PI / polePairs;
+    const endAngle = startAngle + Math.PI / polePairs;
+    const isN = i % 2 === 0;
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, rotorR, startAngle, endAngle);
+    ctx.closePath();
+
+    const grad = ctx.createRadialGradient(0, 0, 10, 0, 0, rotorR);
+    if (isN) {
+      grad.addColorStop(0, '#ff4444');
+      grad.addColorStop(1, '#cc2222');
+    } else {
+      grad.addColorStop(0, '#4488ff');
+      grad.addColorStop(1, '#2244cc');
+    }
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // 极性标签
+    const midAngle = (startAngle + endAngle) / 2;
+    const lx = Math.cos(midAngle) * rotorR * 0.55;
+    const ly = Math.sin(midAngle) * rotorR * 0.55;
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = 'bold 18px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(isN ? 'N' : 'S', lx, ly);
+  }
+
+  // 转子外圈
+  ctx.beginPath();
+  ctx.arc(0, 0, rotorR, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawMagneticField(ctx, cx, cy, step) {
+  // 合成磁场方向 (由当前导通相决定)
+  // 简化模型：磁场方向 = 导通两相中间角度
+  const fieldAngle = getFieldAngle(step);
+
+  // 画几条磁力线
+  ctx.save();
+  ctx.translate(cx, cy);
+
+  for (let i = -2; i <= 2; i++) {
+    const offset = i * 0.15;
+    const a = fieldAngle + offset;
+
+    // 从定子到转子的磁力线
+    const startR = 160;
+    const endR = 80;
+
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(a) * startR, Math.sin(a) * startR);
+
+    // 弯曲的磁力线
+    const cp1x = Math.cos(a + 0.1) * (startR * 0.7);
+    const cp1y = Math.sin(a + 0.1) * (startR * 0.7);
+    const cp2x = Math.cos(a - 0.05) * (endR * 1.3);
+    const cp2y = Math.sin(a - 0.05) * (endR * 1.3);
+    const endX = Math.cos(a) * endR;
+    const endY = Math.sin(a) * endR;
+
+    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+
+    ctx.strokeStyle = `rgba(255,107,53,${0.15 - Math.abs(i) * 0.03})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // 箭头
+    const arrowR = 120;
+    const ax = Math.cos(a) * arrowR;
+    const ay = Math.sin(a) * arrowR;
+    const arrowSize = 5;
+    const perpA = a + Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(ax + Math.cos(a) * arrowSize, ay + Math.sin(a) * arrowSize);
+    ctx.lineTo(ax + Math.cos(perpA) * arrowSize * 0.5, ay + Math.sin(perpA) * arrowSize * 0.5);
+    ctx.lineTo(ax - Math.cos(perpA) * arrowSize * 0.5, ay - Math.sin(perpA) * arrowSize * 0.5);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(255,107,53,${0.25 - Math.abs(i) * 0.05})`;
+    ctx.fill();
+  }
+
+  // 磁场方向大箭头
+  const arrowLen = 50;
+  const arrowStartR = 35;
+  const asx = Math.cos(fieldAngle) * arrowStartR;
+  const asy = Math.sin(fieldAngle) * arrowStartR;
+  const aex = Math.cos(fieldAngle) * (arrowStartR + arrowLen);
+  const aey = Math.sin(fieldAngle) * (arrowStartR + arrowLen);
+
+  ctx.beginPath();
+  ctx.moveTo(asx, asy);
+  ctx.lineTo(aex, aey);
+  ctx.strokeStyle = 'rgba(255,107,53,0.6)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // 箭头头部
+  const headLen = 10;
+  const headAngle = 0.4;
+  ctx.beginPath();
+  ctx.moveTo(aex, aey);
+  ctx.lineTo(aex - Math.cos(fieldAngle - headAngle) * headLen, aey - Math.sin(fieldAngle - headAngle) * headLen);
+  ctx.moveTo(aex, aey);
+  ctx.lineTo(aex - Math.cos(fieldAngle + headAngle) * headLen, aey - Math.sin(fieldAngle + headAngle) * headLen);
+  ctx.stroke();
+
+  // B 标签
+  ctx.fillStyle = 'rgba(255,107,53,0.8)';
+  ctx.font = 'bold 13px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const bx = Math.cos(fieldAngle) * (arrowStartR + arrowLen + 14);
+  const by = Math.sin(fieldAngle) * (arrowStartR + arrowLen + 14);
+  ctx.fillText('B', bx, by);
+
+  ctx.restore();
+}
+
+function getFieldAngle(step) {
+  // 定子合成磁场方向
+  // A相轴: -90°, B相轴: 30°, C相轴: 150°
+  const phaseAngles = [-Math.PI / 2, Math.PI / 2 + Math.PI / 6, Math.PI / 2 - Math.PI / 6];
+  const vals = [step.a, step.b, step.c];
+
+  let fx = 0, fy = 0;
+  for (let i = 0; i < 3; i++) {
+    fx += vals[i] * Math.cos(phaseAngles[i]);
+    fy += vals[i] * Math.sin(phaseAngles[i]);
+  }
+
+  return Math.atan2(fy, fx);
+}
+
+function drawAngleMark(ctx, cx, cy) {
+  // 电角度标注
+  const deg = ((rotorAngle * 180 / Math.PI) % 360).toFixed(0);
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '11px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText(`θ = ${deg}°`, cx, cy + 195);
+}
+
+// ============================================================
+//  波形绘制
+// ============================================================
+function drawWaveform() {
+  const ctx = waveCtx;
+  const W = 600, H = 280;
+  ctx.clearRect(0, 0, W, H);
+
+  // 背景
+  ctx.fillStyle = '#0c0e14';
+  ctx.fillRect(0, 0, W, H);
+
+  // 网格
+  ctx.strokeStyle = 'rgba(42,47,66,0.5)';
+  ctx.lineWidth = 0.5;
+  for (let y = 0; y < H; y += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+  for (let x = 0; x < W; x += 30) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+  }
+
+  // 零线
+  const zeroY = H / 2;
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, zeroY);
+  ctx.lineTo(W, zeroY);
+  ctx.stroke();
+
+  // Y轴标签
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px JetBrains Mono';
+  ctx.textAlign = 'left';
+  ctx.fillText('+I', 4, 30);
+  ctx.fillText('0', 4, zeroY - 4);
+  ctx.fillText('−I', 4, H - 10);
+
+  if (waveHistory.length < 2) return;
+
+  const step = COMMUTATION_TABLE[currentStep];
+  const colors = ['#ff6b35', '#00c9a7', '#4d8bf5'];
+  const phases = [step.a, step.b, step.c];
+
+  // 绘制波形
+  for (let p = 0; p < 3; p++) {
+    ctx.beginPath();
+    ctx.strokeStyle = colors[p];
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.85;
+
+    const startIdx = Math.max(0, waveHistory.length - WAVE_LENGTH);
+    for (let i = startIdx; i < waveHistory.length; i++) {
+      const x = W - (waveHistory.length - i) * (W / WAVE_LENGTH);
+      const val = waveHistory[i][p];
+      const y = zeroY - val * (zeroY - 30);
+
+      if (i === startIdx) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // 当前步分界线
+  const lastX = W;
+  ctx.beginPath();
+  ctx.moveTo(lastX, 0);
+  ctx.lineTo(lastX, H);
+  ctx.strokeStyle = 'rgba(255,107,53,0.3)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ============================================================
+//  UI 更新
+// ============================================================
+function updateUI() {
+  const step = COMMUTATION_TABLE[currentStep];
+
+  // 步进指示器
+  for (let i = 0; i < 6; i++) {
+    const box = document.getElementById('stepBox' + i);
+    box.className = 'step-box' + (i === currentStep ? ' active' : '');
+  }
+
+  // 霍尔传感器
+  step.hall.forEach((val, i) => {
+    const el = document.getElementById('hallH' + (i + 1));
+    el.className = 'hall-bit' + (val ? ' on' : '');
+    el.querySelector('.hall-val').textContent = val;
+  });
+
+  // 相电流条
+  updateBar('barA', 'barValA', step.a);
+  updateBar('barB', 'barValB', step.b);
+  updateBar('barC', 'barValC', step.c);
+
+  // 换相信息
+  const info = document.getElementById('commInfo');
+  info.innerHTML = `
+    <p>当前: <span class="highlight">${step.name}</span> — ${step.desc}</p>
+    <br>
+    <p>导通回路:</p>
+    <p>${getActivePhaseHTML(step)}</p>
+    <br>
+    <p>霍尔编码: <span class="highlight">${step.hall.join('')}</span> (二进制)</p>
+    <p>电角度: <span class="highlight">${(currentStep * 60).toFixed(0)}° ~ ${(currentStep * 60 + 60).toFixed(0)}°</span></p>
+  `;
+}
+
+function updateBar(barId, valId, val) {
+  const bar = document.getElementById(barId);
+  const valEl = document.getElementById(valId);
+
+  if (val > 0) {
+    bar.className = 'phase-bar-fill positive';
+    bar.style.width = (val * 50) + '%';
+    bar.style.left = '50%';
+    bar.style.right = 'auto';
+    valEl.textContent = '+' + (val * 100) + '%';
+  } else if (val < 0) {
+    bar.className = 'phase-bar-fill negative';
+    bar.style.width = (-val * 50) + '%';
+    bar.style.right = '50%';
+    bar.style.left = 'auto';
+    valEl.textContent = (val * 100) + '%';
+  } else {
+    bar.className = 'phase-bar-fill';
+    bar.style.width = '0%';
+    bar.style.left = '50%';
+    bar.style.right = 'auto';
+    valEl.textContent = '0%';
+  }
+}
+
+function getActivePhaseHTML(step) {
+  const parts = [];
+  if (step.a === 1) parts.push('<span class="tag tag-a">A+ 上桥</span>');
+  if (step.a === -1) parts.push('<span class="tag tag-a">A− 下桥</span>');
+  if (step.b === 1) parts.push('<span class="tag tag-b">B+ 上桥</span>');
+  if (step.b === -1) parts.push('<span class="tag tag-b">B− 下桥</span>');
+  if (step.c === 1) parts.push('<span class="tag tag-c">C+ 上桥</span>');
+  if (step.c === -1) parts.push('<span class="tag tag-c">C− 下桥</span>');
+  const floatPhase = [];
+  if (step.a === 0) floatPhase.push('<span class="tag" style="background:rgba(255,255,255,0.05);color:var(--fg-dim)">A 悬空</span>');
+  if (step.b === 0) floatPhase.push('<span class="tag" style="background:rgba(255,255,255,0.05);color:var(--fg-dim)">B 悬空</span>');
+  if (step.c === 0) floatPhase.push('<span class="tag" style="background:rgba(255,255,255,0.05);color:var(--fg-dim)">C 悬空</span>');
+  return parts.join(' ') + ' ' + floatPhase.join(' ');
+}
+
+// ============================================================
+//  控制函数
+// ============================================================
+function togglePlay() {
+  isPlaying = true;
+  document.getElementById('btnPlay').className = 'btn active';
+  document.getElementById('btnPause').className = 'btn';
+  document.getElementById('runIndicator').style.display = 'inline-block';
+}
+
+function togglePause() {
+  isPlaying = false;
+  document.getElementById('btnPause').className = 'btn active';
+  document.getElementById('btnPlay').className = 'btn';
+  document.getElementById('runIndicator').style.display = 'none';
+}
+
+function stepOnce() {
+  isPlaying = false;
+  document.getElementById('btnPause').className = 'btn active';
+  document.getElementById('btnPlay').className = 'btn';
+  document.getElementById('runIndicator').style.display = 'none';
+  advanceStep();
+}
+
+function updateSpeed(val) {
+  speed = parseFloat(val);
+  document.getElementById('speedVal').textContent = speed.toFixed(1) + 'x';
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btnAuto').className = 'btn' + (m === 'auto' ? ' active' : '');
+  document.getElementById('btnManual').className = 'btn' + (m === 'manual' ? ' active' : '');
+}
+
+function toggleOption(opt) {
+  if (opt === 'field') { showField = !showField; document.getElementById('btnField').className = 'btn' + (showField ? ' active' : ''); }
+  if (opt === 'rotor') { showRotor = !showRotor; document.getElementById('btnRotor').className = 'btn' + (showRotor ? ' active' : ''); }
+  if (opt === 'coils') { showCoils = !showCoils; document.getElementById('btnCoils').className = 'btn' + (showCoils ? ' active' : ''); }
+}
+
+function advanceStep() {
+  currentStep = (currentStep + 1) % 6;
+  stepProgress = 0;
+}
+
+// ============================================================
+//  动画主循环
+// ============================================================
+let lastTime = 0;
+const BASE_STEP_DURATION = 1200; // 每步基础时长(ms)
+
+function animate(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  const dt = timestamp - lastTime;
+  lastTime = timestamp;
+
+  if (isPlaying && mode === 'auto') {
+    const stepDuration = BASE_STEP_DURATION / speed;
+    stepProgress += dt / stepDuration;
+
+    if (stepProgress >= 1) {
+      stepProgress -= 1;
+      currentStep = (currentStep + 1) % 6;
+    }
+
+    // 转子角度：每步旋转60°电角度
+    // 对于4极电机 (2对极)，电角度 = 机械角度 × 极对数
+    // 这里简化显示，转子每步旋转30°机械角度
+    rotorAngle += (dt / stepDuration) * (Math.PI / 6);
+  }
+
+  // 记录波形数据
+  const step = COMMUTATION_TABLE[currentStep];
+  // 每帧记录一个点
+  if (isPlaying) {
+    waveHistory.push([step.a, step.b, step.c]);
+    if (waveHistory.length > WAVE_LENGTH * 2) {
+      waveHistory = waveHistory.slice(-WAVE_LENGTH);
+    }
+  }
+
+  // 绘制
+  drawMotor();
+  drawWaveform();
+  updateUI();
+
+  requestAnimationFrame(animate);
+}
+
+// ============================================================
+//  启动
+// ============================================================
+initStepIndicator();
+document.getElementById('runIndicator').style.display = 'inline-block';
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
