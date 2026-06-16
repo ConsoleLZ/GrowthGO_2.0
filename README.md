@@ -104,6 +104,11 @@ pnpm dev
 
 访问 http://localhost:3000 查看效果。
 
+
+5. **markdown特殊语法**
+
+- 如果需要跳转到某个html: `[跳转链接](/static-html/demo.html){:target="_blank"}`
+
 ## 🌐 部署
 
 ### Vercel（推荐）
