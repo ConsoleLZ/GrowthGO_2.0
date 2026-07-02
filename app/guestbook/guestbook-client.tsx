@@ -60,10 +60,11 @@ export function GuestbookClient() {
       
       <main className="pt-20 mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="space-y-8">
-          <div className="text-center">
-            <h1 className="text-xl font-serif tracking-tight">
-              留言板
-            </h1>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">留言板</h1>
+            <p className="mt-2 text-muted-foreground">
+              欢迎留下你的想法，我会尽快回复
+            </p>
           </div>
 
           <div id="vcomments" ref={valineRef} className="min-h-[400px]">
