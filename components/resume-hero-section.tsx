@@ -1,25 +1,41 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Github, Mail, ArrowDown, Send, FileText, BarChart3, MessageSquare, Sparkles, Zap, Code2 } from "lucide-react"
+import Link from "next/link";
+import {
+  Github,
+  Mail,
+  ArrowDown,
+  Send,
+  FileText,
+  BarChart3,
+  MessageSquare,
+  Sparkles,
+  Zap,
+  Code2,
+} from "lucide-react";
 
 const socialLinks = [
   { href: "mailto:17347187569@163.com", icon: Mail, label: "Email" },
   { href: "https://github.com/ConsoleLZ", icon: Github, label: "GitHub" },
-]
+];
 
 const pageLinks = [
   { href: "/category", label: "导航", icon: Send, desc: "精选资源" },
   { href: "/blog", label: "笔记", icon: FileText, desc: "技术文章" },
   { href: "/stats", label: "统计", icon: BarChart3, desc: "数据看板" },
-  { href: "/guestbook", label: "留言板", icon: MessageSquare, desc: "来打个招呼" },
-]
+  {
+    href: "/guestbook",
+    label: "留言板",
+    icon: MessageSquare,
+    desc: "来打个招呼",
+  },
+];
 
 const highlights = [
   { icon: Code2, text: "前端开发" },
   { icon: Zap, text: "电子工程" },
   { icon: Sparkles, text: "持续学习" },
-]
+];
 
 export function ResumeHeroSection() {
   return (
@@ -52,7 +68,8 @@ export function ResumeHeroSection() {
                 </span>
               </h1>
               <h2 className="text-2xl md:text-3xl text-foreground/80 font-light animate-fade-in-up animation-delay-300">
-                前端爱好者 <span className="text-highlight">·</span> 电子工程探索者
+                前端爱好者 <span className="text-highlight">·</span>{" "}
+                电子工程探索者
               </h2>
             </div>
 
@@ -82,45 +99,33 @@ export function ResumeHeroSection() {
                   className="group relative flex flex-col gap-1 p-4 rounded-xl border border-border bg-card/30 hover:bg-card hover:border-highlight/30 hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="flex items-center gap-2">
-                    <link.icon size={18} className="text-highlight group-hover:scale-110 transition-transform" />
+                    <link.icon
+                      size={18}
+                      className="text-highlight group-hover:scale-110 transition-transform"
+                    />
                     <span className="font-medium">{link.label}</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">{link.desc}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {link.desc}
+                  </span>
                 </Link>
               ))}
             </div>
 
-            <div className="flex items-center gap-4 pt-2 animate-fade-in-up animation-delay-700">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group p-3 rounded-xl border border-border bg-card/30 hover:bg-highlight hover:border-highlight hover:text-highlight-foreground transition-all duration-300"
-                  aria-label={link.label}
-                >
-                  <link.icon size={20} className="group-hover:scale-110 transition-transform" />
-                </a>
-              ))}
-              <a
-                href="mailto:17347187569@163.com"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-foreground text-background font-medium hover:opacity-90 transition-opacity"
-              >
-                <Mail size={18} />
-                <span>联系我</span>
-              </a>
-            </div>
+            {/* <div className="flex items-center gap-4 pt-2 animate-fade-in-up animation-delay-700">
+              <Mail size={18} />
+              <span>联系我：17347187569@163.com</span>
+            </div> */}
           </div>
 
           <div className="lg:col-span-4 relative animate-fade-in-right animation-delay-300">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-br from-highlight/20 via-transparent to-highlight/10 rounded-[3rem] blur-2xl" />
-              
+
               <div className="relative aspect-square max-w-sm mx-auto">
                 <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-highlight/30 to-highlight/5 rotate-6" />
                 <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-tl from-foreground/5 to-transparent -rotate-3" />
-                
+
                 <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border-2 border-border/50 shadow-2xl">
                   <img
                     src="/avatar.jpg"
@@ -146,7 +151,7 @@ export function ResumeHeroSection() {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground animate-fade-in-up animation-delay-800">
+        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground animate-fade-in-up animation-delay-800">
           <span className="text-xs tracking-[0.2em] uppercase">Scroll</span>
           <div className="relative">
             <ArrowDown size={16} className="animate-bounce" />
@@ -154,5 +159,5 @@ export function ResumeHeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
