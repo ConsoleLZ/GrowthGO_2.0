@@ -124,7 +124,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
                   <div className="flex-1">
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
                       <div
-                        className="h-full bg-foreground/80 rounded-full transition-all"
+                        className="h-full bg-highlight rounded-full transition-all"
                         style={{ width: `${(tag.count / Math.max(...articleTagStats.map(t => t.count))) * 100}%` }}
                       />
                     </div>
@@ -147,7 +147,7 @@ export default function StatsClient({ articleStats, articleTagStats }: StatsPage
                   <div className="flex-1">
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
                       <div
-                        className="h-full bg-foreground/80 rounded-full transition-all"
+                        className="h-full bg-highlight rounded-full transition-all"
                         style={{ width: `${(tag.count / maxSiteTagCount) * 100}%` }}
                       />
                     </div>

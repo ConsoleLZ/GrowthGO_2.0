@@ -129,7 +129,7 @@ export default function CategoryPage() {
                     className={cn(
                       "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
                       selectedTag === tag
-                        ? "bg-foreground text-background"
+                        ? "bg-highlight text-highlight-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
@@ -152,7 +152,7 @@ export default function CategoryPage() {
                     className={cn(
                       "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all",
                       selectedTag === tag
-                        ? "bg-foreground text-background shadow-sm"
+                        ? "bg-highlight text-highlight-foreground shadow-sm"
                         : "bg-muted/50 text-muted-foreground hover:bg-muted"
                     )}
                   >
@@ -182,7 +182,7 @@ export default function CategoryPage() {
                 placeholder="搜索资源..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 sm:h-11 pl-10 bg-muted/50 border-0 focus-visible:ring-1 text-sm sm:text-base"
+                className="h-10 sm:h-11 pl-10 bg-muted/50 border-0 focus-visible:ring-highlight/50 text-sm sm:text-base"
               />
             </div>
 
@@ -205,7 +205,7 @@ export default function CategoryPage() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-sm md:text-base font-medium leading-tight group-hover:text-primary">
+                      <h3 className="text-sm md:text-base font-medium leading-tight group-hover:text-highlight">
                         {site.name}
                       </h3>
                       <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">

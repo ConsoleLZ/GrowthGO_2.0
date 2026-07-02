@@ -69,7 +69,7 @@ export function GuestbookClient() {
           <div id="vcomments" ref={valineRef} className="min-h-[400px]">
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-highlight mx-auto mb-4"></div>
                 <p className="text-muted-foreground">正在加载留言系统...</p>
               </div>
             </div>
