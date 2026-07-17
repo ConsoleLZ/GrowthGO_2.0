@@ -1,0 +1,231 @@
+/* 
+ * highlight.js 语法高亮样式 - GitHub主题
+ * 适配Typora主题风格
+ */
+
+/* 代码块基础样式 */
+.markdown-content pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+
+.markdown-content code.hljs {
+  padding: 3px 5px;
+}
+
+/* GitHub主题样式 */
+.markdown-content .hljs {
+  color: var(--fg);
+  background: var(--surface);
+}
+
+.markdown-content .hljs-doctag,
+.markdown-content .hljs-keyword,
+.markdown-content .hljs-meta .hljs-keyword,
+.markdown-content .hljs-template-tag,
+.markdown-content .hljs-template-variable,
+.markdown-content .hljs-type,
+.markdown-content .hljs-variable.language_
+{
+  color: #d73a49;
+}
+
+.markdown-content .hljs-title,
+.markdown-content .hljs-title.class_,
+.markdown-content .hljs-title.class_.inherited__,
+.markdown-content .hljs-title.function_
+{
+  color: #6f42c1;
+}
+
+.markdown-content .hljs-attr,
+.markdown-content .hljs-attribute,
+.markdown-content .hljs-literal,
+.markdown-content .hljs-meta,
+.markdown-content .hljs-number,
+.markdown-content .hljs-operator,
+.markdown-content .hljs-variable,
+.markdown-content .hljs-selector-attr,
+.markdown-content .hljs-selector-class,
+.markdown-content .hljs-selector-id
+{
+  color: #005cc5;
+}
+
+.markdown-content .hljs-regexp,
+.markdown-content .hljs-string,
+.markdown-content .hljs-meta .hljs-string
+{
+  color: #032f62;
+}
+
+.markdown-content .hljs-built_in,
+.markdown-content .hljs-symbol
+{
+  color: #e36209;
+}
+
+.markdown-content .hljs-comment,
+.markdown-content .hljs-code,
+.markdown-content .hljs-formula
+{
+  color: #6a737d;
+}
+
+.markdown-content .hljs-name,
+.markdown-content .hljs-quote,
+.markdown-content .hljs-selector-tag,
+.markdown-content .hljs-selector-pseudo
+{
+  color: #22863a;
+}
+
+.markdown-content .hljs-subst
+{
+  color: #24292e;
+}
+
+.markdown-content .hljs-section
+{
+  color: #005cc5;
+  font-weight: bold;
+}
+
+.markdown-content .hljs-bullet
+{
+  color: #735c0f;
+}
+
+.markdown-content .hljs-emphasis
+{
+  color: #24292e;
+  font-style: italic;
+}
+
+.markdown-content .hljs-strong
+{
+  color: #24292e;
+  font-weight: bold;
+}
+
+.markdown-content .hljs-addition
+{
+  color: #22863a;
+  background-color: #f0fff4;
+}
+
+.markdown-content .hljs-deletion
+{
+  color: #b31d28;
+  background-color: #ffeef0;
+}
+
+
+
+/* next-themes 深色模式支持 */
+.dark .markdown-content .hljs {
+  color: #e1e4e8;
+  background: #2d2e30;
+}
+
+.dark .markdown-content .hljs-doctag,
+.dark .markdown-content .hljs-keyword,
+.dark .markdown-content .hljs-meta .hljs-keyword,
+.dark .markdown-content .hljs-template-tag,
+.dark .markdown-content .hljs-template-variable,
+.dark .markdown-content .hljs-type,
+.dark .markdown-content .hljs-variable.language_
+{
+  color: #ff7b72;
+}
+
+.dark .markdown-content .hljs-title,
+.dark .markdown-content .hljs-title.class_,
+.dark .markdown-content .hljs-title.class_.inherited__,
+.dark .markdown-content .hljs-title.function_
+{
+  color: #d2a8ff;
+}
+
+.dark .markdown-content .hljs-attr,
+.dark .markdown-content .hljs-attribute,
+.dark .markdown-content .hljs-literal,
+.dark .markdown-content .hljs-meta,
+.dark .markdown-content .hljs-number,
+.dark .markdown-content .hljs-operator,
+.dark .markdown-content .hljs-variable,
+.dark .markdown-content .hljs-selector-attr,
+.dark .markdown-content .hljs-selector-class,
+.dark .markdown-content .hljs-selector-id
+{
+  color: #79c0ff;
+}
+
+.dark .markdown-content .hljs-regexp,
+.dark .markdown-content .hljs-string,
+.dark .markdown-content .hljs-meta .hljs-string
+{
+  color: #a5d6ff;
+}
+
+.dark .markdown-content .hljs-built_in,
+.dark .markdown-content .hljs-symbol
+{
+  color: #ffa657;
+}
+
+.dark .markdown-content .hljs-comment,
+.dark .markdown-content .hljs-code,
+.dark .markdown-content .hljs-formula
+{
+  color: #8b949e;
+}
+
+.dark .markdown-content .hljs-name,
+.dark .markdown-content .hljs-quote,
+.dark .markdown-content .hljs-selector-tag,
+.dark .markdown-content .hljs-selector-pseudo
+{
+  color: #7ee787;
+}
+
+.dark .markdown-content .hljs-subst
+{
+  color: #e1e4e8;
+}
+
+.dark .markdown-content .hljs-section
+{
+  color: #79c0ff;
+  font-weight: bold;
+}
+
+.dark .markdown-content .hljs-bullet
+{
+  color: #f2cc60;
+}
+
+.dark .markdown-content .hljs-emphasis
+{
+  color: #e1e4e8;
+  font-style: italic;
+}
+
+.dark .markdown-content .hljs-strong
+{
+  color: #e1e4e8;
+  font-weight: bold;
+}
+
+.dark .markdown-content .hljs-addition
+{
+  color: #7ee787;
+  background-color: #033a16;
+}
+
+.dark .markdown-content .hljs-deletion
+{
+  color: #ff7b72;
+  background-color: #67060c;
+}
