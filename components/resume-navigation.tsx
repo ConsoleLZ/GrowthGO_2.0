@@ -34,8 +34,8 @@ export function ResumeNavigation() {
     >
       <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
         <Link href="/" className="group flex items-center gap-2">
-          <div className="w-7 h-7 rounded-[8px] bg-accent flex items-center justify-center text-accent-on">
-            <Sparkles size={13} />
+          <div className="w-10 h-10 rounded-[8px] flex items-center justify-center text-accent-on">
+            <img src="/avatar.png" alt="" />
           </div>
           <span className="font-serif text-[16px] font-semibold tracking-tight text-foreground/90 group-hover:text-accent transition-colors">
             小哲
