@@ -51,6 +51,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "HERO SMS",
+    ico: "https://hero-sms.com/img/icons/favicon.svg",
+    url: "https://hero-sms.com/cn",
+    description: "在线接收短信 & 接码平台 | API 访问，在线接收发送到虚拟号码的短信",
+    tags: [tags.other],
+  },
+  {
     name: "Claude Code",
     ico: "https://cdn.sanity.io/images/4zrzovbb/claude-com/369b14e80ac643cc09dccd581ccb91f82b559190-32x32.png",
     url: "https://claude.com/product/claude-code",
