@@ -53,6 +53,8 @@ export default function CategoryPage() {
 
   const sitesToDisplay = useMemo(() => filteredSites.slice(0, page * ITEMS_PER_PAGE), [filteredSites, page])
   const hasMore = sitesToDisplay.length < filteredSites.length
+
+  const quickAccessSites = useMemo(() => sites.filter(site => site.quickAccess), [])
   const handleLoadMore = useCallback(() => setPage(prev => prev + 1), [])
   const { isLoading, resetLoading } = useInfiniteScroll({ hasMore, onLoadMore: handleLoadMore })
 
@@ -74,6 +76,36 @@ export default function CategoryPage() {
     <div className="min-h-screen bg-background">
       <SimpleNavigation />
       <main className="pt-20 mx-auto max-w-6xl px-4 sm:px-6">
+        {quickAccessSites.length > 0 && (
+          <div className="mb-6 md:mb-8">
+            <h2 className="mb-4 text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+              快速访问
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {quickAccessSites.map((site) => (
+                <a
+                  key={site.url}
+                  href={site.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-2 rounded-[8px] border border-border/50 bg-card px-3 py-2 transition-all hover:border-border hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+                >
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] bg-secondary overflow-hidden">
+                    <LazyImage
+                      src={site.ico}
+                      alt={site.name}
+                      className="h-3 w-3 object-contain"
+                      fallback={<span className="text-[10px] font-medium text-muted-foreground">{site.name.charAt(0)}</span>}
+                    />
+                  </div>
+                  <span className="text-[13px] font-medium text-foreground/90 group-hover:text-accent transition-colors">
+                    {site.name}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="flex flex-col md:flex-row gap-6 md:gap-12 py-6 md:py-12">
           {/* Sidebar */}
           <aside className="hidden w-56 shrink-0 md:block">
