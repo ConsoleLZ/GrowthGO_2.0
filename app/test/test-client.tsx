@@ -110,10 +110,6 @@ export default function TestClient() {
           </div>
         </div>
       </div>
-
-      <div className="mt-6 text-center">
-        <p className="text-slate-500 text-xs">测试数据仅供参考</p>
-      </div>
     </div>
   );
 }
