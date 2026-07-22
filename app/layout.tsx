@@ -49,21 +49,31 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         {process.env.NODE_ENV === 'development' && (
-          <>
-            <Script
-              src="https://unpkg.com/vconsole/dist/vconsole.min.js"
-              strategy="afterInteractive"
-            />
-            <Script strategy="afterInteractive">
-              {`
-                (function() {
-                  if (typeof VConsole !== 'undefined') {
-                    new VConsole();
+          <Script strategy="afterInteractive">
+            {`
+              (function() {
+                function initVConsole() {
+                  if (window.VConsole) {
+                    new window.VConsole();
+                  } else {
+                    var script = document.createElement('script');
+                    script.src = 'https://unpkg.com/vconsole/dist/vconsole.min.js';
+                    script.onload = function() {
+                      if (window.VConsole) {
+                        new window.VConsole();
+                      }
+                    };
+                    document.head.appendChild(script);
                   }
-                })();
-              `}
-            </Script>
-          </>
+                }
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', initVConsole);
+                } else {
+                  initVConsole();
+                }
+              })();
+            `}
+          </Script>
         )}
       </body>
     </html>
