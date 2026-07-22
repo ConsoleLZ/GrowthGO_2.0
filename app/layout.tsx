@@ -48,6 +48,23 @@ export default function RootLayout({
           src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
           strategy="afterInteractive"
         />
+        {process.env.NODE_ENV === 'development' && (
+          <>
+            <Script
+              src="https://unpkg.com/vconsole/dist/vconsole.min.js"
+              strategy="afterInteractive"
+            />
+            <Script strategy="afterInteractive">
+              {`
+                (function() {
+                  if (typeof VConsole !== 'undefined') {
+                    new VConsole();
+                  }
+                })();
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   )

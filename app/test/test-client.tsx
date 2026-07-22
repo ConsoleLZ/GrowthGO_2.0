@@ -10,6 +10,8 @@ export default function TestClient() {
     params[key] = value;
   });
 
+  const system = navigator.userAgent;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center space-y-20 p-4 flex-col position-relative">
       <div className="flex items-center justify-center p-4 flex-col">
