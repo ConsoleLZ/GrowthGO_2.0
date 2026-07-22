@@ -1,25 +1,29 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function TestClient() {
   const searchParams = useSearchParams();
+  const [system, setSystem] = useState("");
 
   const params: Record<string, string> = {};
   searchParams.forEach((value, key) => {
     params[key] = value;
   });
 
-  const userAgent = navigator.userAgent;
-  const getSystemName = () => {
-    if (userAgent.includes("Windows")) return "Windows";
-    if (userAgent.includes("iPhone") || userAgent.includes("iPad") || userAgent.includes("iPod")) return "iOS";
-    if (userAgent.includes("Android")) return "Android";
-    if (userAgent.includes("Mac")) return "macOS";
-    if (userAgent.includes("Linux") && !userAgent.includes("Android")) return "Linux";
-    return "Unknown";
-  };
-  const system = getSystemName();
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const getSystemName = () => {
+      if (userAgent.includes("Windows")) return "Windows";
+      if (userAgent.includes("iPhone") || userAgent.includes("iPad") || userAgent.includes("iPod")) return "iOS";
+      if (userAgent.includes("Android")) return "Android";
+      if (userAgent.includes("Mac")) return "macOS";
+      if (userAgent.includes("Linux") && !userAgent.includes("Android")) return "Linux";
+      return "Unknown";
+    };
+    setSystem(getSystemName());
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center space-y-20 p-4 flex-col position-relative">
