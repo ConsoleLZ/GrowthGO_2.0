@@ -9,9 +9,10 @@ import {
   BarChart3,
   MessageSquare,
   Sparkles,
-  Zap,
   Code2,
-  Cpu,
+  Guitar,
+  Gamepad2,
+  Flame
 } from "lucide-react";
 
 const socialLinks = [
@@ -27,14 +28,26 @@ const pageLinks = [
 ];
 
 const highlights = [
-  { icon: Code2, text: "前端开发" },
-  { icon: Cpu, text: "电子工程" },
-  { icon: Zap, text: "持续学习" },
+  { icon: Flame, text: "diy爱好者" },
+  { icon: Code2, text: "代码" },
+  { icon: Guitar, text: "吉他" },
+  { icon: Gamepad2, text: "无畏契约" },
 ];
 
 export function ResumeHeroSection() {
   return (
     <section className="relative min-h-screen flex items-center px-6 bg-[#000000] overflow-hidden" data-od-id="hero">
+      {/* Character background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <img
+          src="/images/img-jf_compressed.png"
+          alt="Background character"
+          className="absolute bottom-20 right-10 h-[85vh] w-auto object-contain opacity-35 md:opacity-45 animate-float"
+          style={{ filter: 'drop-shadow(0 0 60px rgba(0, 255, 255, 0.10)) brightness(1.05)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+      </div>
+
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
