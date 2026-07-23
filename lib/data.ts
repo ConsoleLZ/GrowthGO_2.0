@@ -51,6 +51,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "Dify",
+    ico: "https://dify.ai/favicon.svg",
+    url: "https://dify.ai/",
+    description: "在统一协作画布上构建 Agentic 工作流、RAG Pipeline，有丰富模型和工具集成，支持创建自己的知识库",
+    tags: [tags.ai],
+  },
+  {
     name: "HERO SMS",
     ico: "https://hero-sms.com/img/icons/favicon.svg",
     url: "https://hero-sms.com/cn",
