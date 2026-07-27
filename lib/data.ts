@@ -50,12 +50,20 @@ export const tags = {
 
 // recommend: true
 export const sites: Site[] = [
+    {
+    name: "hermes-agent",
+    ico: "https://hermes-agent.nousresearch.com/icon.png?icon.160vfo.zgihhn.png",
+    url: "https://hermes-agent.nousresearch.com/",
+    description: "这是一款开源的自我进化型 AI Agent，能够与用户共同成长的个人 AI 助手。它内置学习循环机制，可根据过往任务经历自动创建和优化技能（Skills），支持跨会话持久化记忆、自由切换模型和接入多种消息平台。",
+    tags: [tags.ai],
+  },
   {
     name: "Dify",
     ico: "https://dify.ai/favicon.svg",
     url: "https://dify.ai/",
     description: "在统一协作画布上构建 Agentic 工作流、RAG Pipeline，有丰富模型和工具集成，支持创建自己的知识库",
     tags: [tags.ai],
+    recommend: true
   },
   {
     name: "HERO SMS",
