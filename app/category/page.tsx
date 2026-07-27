@@ -5,6 +5,7 @@ import { SimpleNavigation } from "@/components/simple-navigation"
 import { LazyImage } from "@/components/lazy-image"
 import { LoadingSpinner } from "@/components/loading-spinner"
 import { Input } from "@/components/ui/input"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Search } from "lucide-react"
 import { sites } from "@/lib/data"
 import { cn } from "@/lib/utils"
@@ -73,7 +74,8 @@ export default function CategoryPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background">
+    <TooltipProvider>
+      <div className="min-h-screen bg-background">
       <SimpleNavigation />
       <main className="pt-20 mx-auto max-w-6xl px-4 sm:px-6">
         {quickAccessSites.length > 0 && (
@@ -195,9 +197,16 @@ export default function CategoryPage() {
                       <h3 className="text-[14px] md:text-[15px] font-medium leading-tight group-hover:text-accent transition-colors">
                         {site.name}
                       </h3>
-                      <p className="mt-1 line-clamp-2 text-[12px] text-muted-foreground">
-                        {site.description}
-                      </p>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <p className="mt-1 line-clamp-2 text-[12px] text-muted-foreground">
+                            {site.description}
+                          </p>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs">
+                          <p className="text-[12px]">{site.description}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 </a>
@@ -220,6 +229,7 @@ export default function CategoryPage() {
           </main>
         </div>
       </main>
-    </div>
+      </div>
+    </TooltipProvider>
   )
 }
