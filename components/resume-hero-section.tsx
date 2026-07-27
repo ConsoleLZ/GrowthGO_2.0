@@ -38,7 +38,7 @@ export function ResumeHeroSection() {
   return (
     <section className="relative min-h-screen flex items-center px-6 bg-[#000000] overflow-hidden" data-od-id="hero">
       {/* Character background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <img
           src="/images/img-jf_compressed.png"
           alt="Background character"
@@ -46,7 +46,7 @@ export function ResumeHeroSection() {
           style={{ filter: 'drop-shadow(0 0 60px rgba(0, 255, 255, 0.10)) brightness(1.05)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
-      </div>
+      </div> */}
 
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
