@@ -51,6 +51,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "魔方简历",
+    ico: "https://magicv.art/logo.svg",
+    url: "https://magicv.art/zh",
+    description: "魔方简历利用 AI 技术，帮助您快速创建专业的简历。无需注册，免费使用，数据安全存储。",
+    tags: [tags.tools],
+  },
+  {
     name: "Hyperframes",
     ico: "https://hyperframes.heygen.com/favicon.ico",
     url: "https://hyperframes.heygen.com/",
