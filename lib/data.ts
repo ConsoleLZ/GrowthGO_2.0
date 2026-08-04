@@ -30,6 +30,7 @@ export const tags = {
 
   // 技术领域
   ai: "AI",
+  skills: "skills",
   hardware: "硬件",
   game: "游戏",
   security: "安全",
@@ -51,6 +52,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "Img2threejs",
+    ico: "/imgNull.png",
+    url: "https://github.com/img2threejs/img2threejs",
+    description: "图片直接生成3D模型",
+    tags: [tags.skills, tags.development],
+  },
+  {
     name: "魔方简历",
     ico: "https://magicv.art/logo.svg",
     url: "https://magicv.art/zh",
@@ -62,7 +70,7 @@ export const sites: Site[] = [
     ico: "https://hyperframes.heygen.com/favicon.ico",
     url: "https://hyperframes.heygen.com/",
     description: "HyperFrames 让 AI 代理通过编写 HTML、CSS 和 JS 来编写视频。",
-    tags: [tags.ai, tags.web],
+    tags: [tags.ai, tags.skills],
   },
   {
     name: "hermes-agent",
@@ -199,14 +207,14 @@ export const sites: Site[] = [
     ico: "/imgNull.png",
     url: "https://github.com/sickn33/antigravity-awesome-skills",
     description: "skills库",
-    tags: [tags.ai, tags.resources],
+    tags: [tags.ai, tags.resources, tags.skills],
   },
   {
     name: "anthropics / skills",
     ico: "/imgNull.png",
     url: "https://github.com/anthropics/skills",
     description: "skills库",
-    tags: [tags.ai, tags.resources],
+    tags: [tags.ai, tags.resources, tags.skills],
   },
   {
     name: "trae",
