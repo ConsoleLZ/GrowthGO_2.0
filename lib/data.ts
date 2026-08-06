@@ -26,6 +26,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "BaseToolbox",
+    ico: "https://basetoolbox.com/favicon.ico",
+    url: "https://basetoolbox.com/zh/3d-model-compressor/",
+    description: "3D 模型压缩",
+    tags: [tags.tools],
+  },
+  {
     name: "Img2threejs",
     ico: "/imgNull.png",
     url: "https://github.com/img2threejs/img2threejs",

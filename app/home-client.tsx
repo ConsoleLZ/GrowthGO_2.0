@@ -457,16 +457,6 @@ export default function HomeClient() {
             </div>
           </div>
         </section>
-
-        {/* 右下徽章 */}
-        <a
-          href="/"
-          className="group fixed bottom-3 right-3 z-30 flex items-center gap-1.5 rounded-full border border-[#f4f1ea]/10 bg-black/40 px-3 py-1.5 text-[11px] text-[#f4f1ea]/60 backdrop-blur-md transition-colors hover:text-[#f4f1ea]"
-        >
-          <span className="size-1.5 rounded-full bg-[#cb7350]" />
-          <span>Made with</span>
-          <span className="font-semibold text-[#f4f1ea]">intro3d</span>
-        </a>
       </div>
 
       <style>{`
