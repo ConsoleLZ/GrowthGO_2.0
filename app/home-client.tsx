@@ -34,7 +34,7 @@ function Model() {
     const scale = 2.15 / maxDim
     ref.current.scale.setScalar(scale)
     ref.current.position.x = -center.x * scale
-    ref.current.position.y = -center.y * scale
+    ref.current.position.y = -center.y * scale - 0.3
     ref.current.position.z = -center.z * scale
   }, [])
 
@@ -46,9 +46,9 @@ function Model() {
 type Key = { p: number; pos: [number, number, number]; look: [number, number, number] }
 
 const KEYS: Key[] = [
-  { p: 0.0, pos: [-0.4, -0.2, 4.55], look: [0, 0.25, 0] },
-  { p: 0.5, pos: [3.0, 0.3, 2.55], look: [0, 0.25, 0] },
-  { p: 1.0, pos: [-0.3, -0.1, 6.1], look: [0, 0.25, 0] },
+  { p: 0.0, pos: [-0.4, 1.3, 4.55], look: [0, -0.3, 0] },
+  { p: 0.5, pos: [3.0, 1.4, 2.55], look: [0, -0.3, 0] },
+  { p: 1.0, pos: [-0.3, 1.4, 6.1], look: [0, -0.3, 0] },
 ]
 
 const _v = new THREE.Vector3()
@@ -305,7 +305,7 @@ export default function HomeClient() {
       {/* 固定全屏 3D 背景（透明 canvas，DOM 提供暗背景，贴合 intro3d） */}
       <div className="fixed inset-0 z-0">
         <Canvas
-          camera={{ position: [-0.4, -0.2, 4.55], fov: 38 }}
+          camera={{ position: [-0.4, 1.3, 4.55], fov: 38 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true }}
           className="!h-full !w-full"
@@ -340,8 +340,8 @@ export default function HomeClient() {
       <div className="pointer-events-none absolute inset-0 z-20 px-[42px] py-[42px]">
         {/* 左上 */}
         <div className="absolute left-[42px] top-[42px]">
-          <div className="text-[10px] font-normal uppercase leading-tight tracking-[0.26em] text-[#f4f1ea]/60">Your Name</div>
-          <div className="mt-1 text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">Your Title</div>
+          <div className="text-[10px] font-normal uppercase leading-tight tracking-[0.26em] text-[#f4f1ea]/60">xiaozhe</div>
+          <div className="mt-1 text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">一个还在成长的程序员</div>
         </div>
         {/* 右上 */}
         <div className="absolute right-[42px] top-[42px] text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">
@@ -349,7 +349,7 @@ export default function HomeClient() {
         </div>
         {/* 左下 */}
         <div className="absolute left-[42px] bottom-[42px] text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">
-          Work · Craft · Play
+          diy爱好者 · 代码 · 吉他 · 无畏契约
         </div>
         {/* 右侧竖排 */}
         <div className="absolute right-[28px] top-1/2 -translate-y-1/2">
@@ -357,7 +357,7 @@ export default function HomeClient() {
             className="text-[10px] font-normal uppercase tracking-[0.3em] text-[#f4f1ea]/60"
             style={{ writingMode: "vertical-rl" }}
           >
-            Based in Your City
+            广东
           </span>
         </div>
       </div>
@@ -398,10 +398,10 @@ export default function HomeClient() {
         <section className="relative flex h-screen w-full items-center justify-center">
           <div className="pointer-events-none flex flex-col items-center translate-y-[24vh]">
             <h1 className="text-[clamp(36px,7cqw,72px)] font-normal tracking-normal text-[#f4f1ea] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-              xiaozhe
+              xiao zhe
             </h1>
             <p className="mt-3 max-w-[min(560px,86cqw)] text-center text-[clamp(12px,1.3cqw,15px)] leading-relaxed text-[#f4f1ea]/80">
-              superstar
+              Your future is created by what you do today, not tomorrow.
             </p>
             <div className="pointer-events-auto mt-6 flex flex-wrap gap-2">
               {[0, 1, 2].map((i) => (
