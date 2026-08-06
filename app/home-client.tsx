@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useGLTF, Float, Html, useProgress } from "@react-three/drei"
 import * as THREE from "three"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -365,10 +364,7 @@ export default function HomeClient() {
       {/* 最上方功能入口 */}
       <header className="absolute left-1/2 top-[28px] z-30 -translate-x-1/2">
         {isMobile ? (
-          <div className="flex items-center gap-1">
-            <ThemeToggle />
-            <MobileNav />
-          </div>
+          <MobileNav />
         ) : (
           <div className="flex items-center gap-6 rounded-full border border-white/10 bg-black/30 px-4 py-1.5 backdrop-blur-md">
             {navItems.map((item) => (
@@ -380,8 +376,6 @@ export default function HomeClient() {
                 {item.label}
               </Link>
             ))}
-            <div className="h-3 w-px bg-white/15" />
-            <ThemeToggle />
           </div>
         )}
       </header>
