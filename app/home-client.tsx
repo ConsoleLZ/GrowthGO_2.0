@@ -21,7 +21,8 @@ const navItems = [
 /* ─── 3D model ─────────────────────────────────────────────────────── */
 
 function Model() {
-  const { scene } = useGLTF("/glb/me.glb")
+  // 使用 Draco 压缩版本 + Google CDN 解码器，显著减小下载体积
+  const { scene } = useGLTF("/glb/me-draco.glb", "https://www.gstatic.com/draco/v1/decoders/")
   const ref = useRef<THREE.Group>(null)
 
   useEffect(() => {
@@ -245,22 +246,19 @@ function MobileNav() {
 // 滚动后右侧时间线的内容卡片
 const timeline = [
   {
-    tag: "2026 · Milestone",
-    title: "A New Chapter",
-    subtitle: "Add a short subtitle",
-    body: "Share what this moment is about.",
+    title: "技能",
+    subtitle: "正在积攒技能点数",
+    body: "前端：HTML、CSS、JS、Node、Vue、React、Mysql、Redis、Docker等，\n硬件：C语言、单片机各种外设，单片机各种通讯协议（IIC、SPI、USART）、电路设计等",
   },
   {
-    tag: "2025 · Journey",
-    title: "New Beginning",
-    subtitle: "Add a short subtitle",
-    body: "Share what this moment is about.",
+    title: "作品",
+    subtitle: "一个好的作品是经得起时间的考验的",
+    body: "说来惭愧，觉得自己并没有作品拿的出手的，很多东西做的中途就放弃了（各种原因），后续会加油做出至少令自己满意的作品的",
   },
   {
-    tag: "2024 · Growth",
-    title: "Keep Going",
-    subtitle: "Add a short subtitle",
-    body: "Share what this moment is about.",
+    title: "文化水平",
+    subtitle: "一个普通的本科生-湖南人文科技学院",
+    body: "我爱我的大学",
   },
 ]
 
@@ -443,9 +441,6 @@ export default function HomeClient() {
                     {/* 时间线圆点 */}
                     <span className="absolute -left-[6px] top-[6px] size-[11px] rounded-full border border-white/40 bg-[#0a0a0c]" />
                     <div className="flex flex-col">
-                      <div className="text-[13px] font-medium tracking-[0.18em] text-[#f4f1ea]/72">
-                        {item.tag}
-                      </div>
                       <div className="flex items-center gap-3 pt-2.5">
                         <h2 className="text-[clamp(18px,2.4cqw,26px)] leading-[1.15] font-semibold text-[#f4f1ea]">
                           {item.title}
@@ -485,4 +480,4 @@ export default function HomeClient() {
   )
 }
 
-useGLTF.preload("/glb/me.glb")
+useGLTF.preload("/glb/me-draco.glb", "https://www.gstatic.com/draco/v1/decoders/")
