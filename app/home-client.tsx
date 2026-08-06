@@ -31,7 +31,7 @@ function Model() {
     const size = box.getSize(new THREE.Vector3())
     const center = box.getCenter(new THREE.Vector3())
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    const scale = 2.0 / maxDim
+    const scale = 2.15 / maxDim
     ref.current.scale.setScalar(scale)
     ref.current.position.x = -center.x * scale
     ref.current.position.y = -center.y * scale
@@ -46,9 +46,9 @@ function Model() {
 type Key = { p: number; pos: [number, number, number]; look: [number, number, number] }
 
 const KEYS: Key[] = [
-  { p: 0.0, pos: [0, 0.3, 5.6], look: [0, 0.25, 0] },
-  { p: 0.5, pos: [3.8, 0.6, 3.0], look: [0, 0.25, 0] },
-  { p: 1.0, pos: [0, 0.3, 6.8], look: [0, 0.25, 0] },
+  { p: 0.0, pos: [-0.4, -0.2, 4.55], look: [0, 0.25, 0] },
+  { p: 0.5, pos: [3.0, 0.3, 2.55], look: [0, 0.25, 0] },
+  { p: 1.0, pos: [-0.3, -0.1, 6.1], look: [0, 0.25, 0] },
 ]
 
 const _v = new THREE.Vector3()
@@ -95,8 +95,8 @@ function Loader() {
   return (
     <Html center>
       <div className="flex flex-col items-center gap-3 select-none">
-        <div className="w-9 h-9 border-2 border-white/15 border-t-white/80 rounded-full animate-spin" />
-        <div className="text-white/50 text-[11px] tracking-[0.3em] uppercase">
+        <div className="w-9 h-9 border-2 border-[#f4f1ea]/15 border-t-[#f4f1ea]/80 rounded-full animate-spin" />
+        <div className="text-[#f4f1ea]/50 text-[11px] tracking-[0.3em] uppercase">
           {progress.toFixed(0)}%
         </div>
       </div>
@@ -104,18 +104,48 @@ function Loader() {
   )
 }
 
-function Scene({ scrollRef }: { scrollRef: React.MutableRefObject<number> }) {
+function PointerFollow({
+  children,
+  pointerRef,
+}: {
+  children: ReactNode
+  pointerRef: React.MutableRefObject<{ x: number; y: number }>
+}) {
+  const ref = useRef<THREE.Group>(null)
+  useFrame(() => {
+    if (!ref.current) return
+    const p = pointerRef.current
+    const targetY = p.x * 0.16
+    const targetX = -p.y * 0.10
+    ref.current.rotation.y += (targetY - ref.current.rotation.y) * 0.07
+    ref.current.rotation.x += (targetX - ref.current.rotation.x) * 0.07
+  })
+  return <group ref={ref}>{children}</group>
+}
+
+function Scene({
+  scrollRef,
+  pointerRef,
+}: {
+  scrollRef: React.MutableRefObject<number>
+  pointerRef: React.MutableRefObject<{ x: number; y: number }>
+}) {
   return (
     <>
-      <ambientLight intensity={0.55} />
-      <hemisphereLight args={["#ffffff", "#2a2a3a", 0.7]} />
-      <directionalLight position={[5, 7, 4]} intensity={1.7} />
-      <directionalLight position={[-5, 4, -3]} intensity={0.5} color="#aaccff" />
-      <pointLight position={[0, 1, 4]} intensity={0.4} color="#ffd9a8" />
+      <color attach="background" args={["#1f1f22"]} />
+      <ambientLight intensity={1.05} />
+      <hemisphereLight args={["#fff8ee", "#2e2622", 1.3]} />
+      <directionalLight position={[4.5, 6.5, 3.5]} intensity={2.7} color="#fff6e8" />
+      <directionalLight position={[-4, 3.5, 2]} intensity={0.95} color="#ffe6c8" />
+      <directionalLight position={[0, -3, 5]} intensity={0.5} color="#ffd9a8" />
+      <pointLight position={[0, 1.9, 2.8]} intensity={1.35} color="#ffe2b0" />
+      <pointLight position={[-0.3, 1.1, 3.2]} intensity={0.55} color="#ffd4a0" />
       <Suspense fallback={<Loader />}>
-        <Float speed={1.4} rotationIntensity={0.18} floatIntensity={0.45}>
-          <Model />
-        </Float>
+        <PointerFollow pointerRef={pointerRef}>
+          <Float speed={1.3} rotationIntensity={0.12} floatIntensity={0.4}>
+            <Model />
+          </Float>
+        </PointerFollow>
       </Suspense>
       <ScrollCamera scrollRef={scrollRef} />
     </>
@@ -241,6 +271,7 @@ const timeline = [
 export default function HomeClient() {
   const isMobile = useIsMobile()
   const scrollRef = useRef(0)
+  const pointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
   // 内部滚动容器，与 intro3d 一致：3D 固定全屏背景 + 内部 overflow-y-auto 内容
   const scrollElRef = useRef<HTMLDivElement>(null)
 
@@ -256,18 +287,34 @@ export default function HomeClient() {
     return () => el.removeEventListener("scroll", onScroll)
   }, [])
 
+  useEffect(() => {
+    const onPointer = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      pointerRef.current.x = (e.clientX / w) * 2 - 1
+      pointerRef.current.y = -((e.clientY / h) * 2 - 1)
+    }
+    window.addEventListener("pointermove", onPointer, { passive: true })
+    return () => window.removeEventListener("pointermove", onPointer)
+  }, [])
+
   return (
-    <main className="dark relative h-screen w-full overflow-hidden bg-[#0a0a0c] text-white">
+    <main
+      className="dark relative h-screen w-full overflow-hidden bg-[#1f1f22] text-[#f4f1ea]"
+      style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
+    >
       {/* 固定全屏 3D 背景 */}
-      <div className="pointer-events-none fixed inset-0 z-0">
+      <div className="fixed inset-0 z-0">
         <Canvas
-          camera={{ position: [0, 0.3, 5.6], fov: 35 }}
+          camera={{ position: [-0.4, -0.2, 4.55], fov: 38 }}
           dpr={[1, 2]}
-          gl={{ antialias: true, alpha: true }}
+          gl={{ antialias: true, alpha: false }}
+          className="!h-full !w-full"
+          style={{ touchAction: "none" }}
         >
-          <Scene scrollRef={scrollRef} />
+          <Scene scrollRef={scrollRef} pointerRef={pointerRef} />
         </Canvas>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.05)_0%,transparent_60%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,230,200,0.07)_0%,transparent_65%)]" />
       </div>
 
       {/* 四角装饰角标 */}
@@ -294,21 +341,21 @@ export default function HomeClient() {
       <div className="pointer-events-none absolute inset-0 z-20 px-[42px] py-[42px]">
         {/* 左上 */}
         <div className="absolute left-[42px] top-[42px]">
-          <div className="text-[13px] font-medium leading-tight text-white/90">Your Name</div>
-          <div className="text-[11px] tracking-[0.18em] text-white/50">Your Title</div>
+          <div className="text-[10px] font-normal uppercase leading-tight tracking-[0.26em] text-[#f4f1ea]/60">Your Name</div>
+          <div className="mt-1 text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">Your Title</div>
         </div>
         {/* 右上 */}
-        <div className="absolute right-[42px] top-[42px] text-[12px] tracking-[0.18em] text-white/60">
+        <div className="absolute right-[42px] top-[42px] text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">
           Portfolio · 2026
         </div>
         {/* 左下 */}
-        <div className="absolute left-[42px] bottom-[42px] text-[12px] tracking-[0.18em] text-white/60">
+        <div className="absolute left-[42px] bottom-[42px] text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">
           Work · Craft · Play
         </div>
         {/* 右侧竖排 */}
         <div className="absolute right-[28px] top-1/2 -translate-y-1/2">
           <span
-            className="text-[12px] tracking-[0.2em] text-white/50"
+            className="text-[10px] font-normal uppercase tracking-[0.3em] text-[#f4f1ea]/60"
             style={{ writingMode: "vertical-rl" }}
           >
             Based in Your City
@@ -329,7 +376,7 @@ export default function HomeClient() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/55 transition-colors duration-300 hover:text-white"
+                className="text-[10px] font-normal uppercase tracking-[0.2em] text-[#f4f1ea]/55 transition-colors duration-300 hover:text-[#f4f1ea]"
               >
                 {item.label}
               </Link>
@@ -351,10 +398,10 @@ export default function HomeClient() {
         {/* 第一屏：模型居中，文字叠加 */}
         <section className="relative flex h-screen w-full items-center justify-center">
           <div className="pointer-events-none flex flex-col items-center translate-y-[24vh]">
-            <h1 className="text-[clamp(36px,7cqw,72px)] font-medium tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+            <h1 className="text-[clamp(36px,7cqw,72px)] font-normal tracking-normal text-[#f4f1ea] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
               xiaozhe
             </h1>
-            <p className="mt-3 max-w-[min(560px,86cqw)] text-center text-[clamp(12px,1.3cqw,15px)] leading-relaxed text-white/60">
+            <p className="mt-3 max-w-[min(560px,86cqw)] text-center text-[clamp(12px,1.3cqw,15px)] leading-relaxed text-[#f4f1ea]/80">
               superstar
             </p>
             <div className="pointer-events-auto mt-6 flex flex-wrap gap-2">
@@ -362,7 +409,7 @@ export default function HomeClient() {
                 <a
                   key={i}
                   href="#"
-                  className="flex size-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/40 hover:text-white"
+                  className="flex size-9 items-center justify-center rounded-full border border-[#f4f1ea]/15 text-[#f4f1ea]/70 transition-colors hover:border-[#f4f1ea]/40 hover:text-[#f4f1ea]"
                 >
                   <span className="text-[11px]">•</span>
                 </a>
@@ -372,7 +419,7 @@ export default function HomeClient() {
 
           {/* 底部 Scroll down 提示 */}
           <div className="pointer-events-none absolute bottom-[58px] left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.32em] text-white/40">
+            <span className="text-[10px] uppercase tracking-[0.32em] text-[#f4f1ea]/40">
               Scroll down
             </span>
             <span className="relative block h-10 w-px overflow-hidden bg-white/15">
@@ -391,16 +438,16 @@ export default function HomeClient() {
                     {/* 时间线圆点 */}
                     <span className="absolute -left-[6px] top-[6px] size-[11px] rounded-full border border-white/40 bg-[#0a0a0c]" />
                     <div className="flex flex-col">
-                      <div className="text-[13px] font-medium tracking-[0.18em] text-white/70">
+                      <div className="text-[13px] font-medium tracking-[0.18em] text-[#f4f1ea]/72">
                         {item.tag}
                       </div>
                       <div className="flex items-center gap-3 pt-2.5">
-                        <h2 className="text-[clamp(18px,2.4cqw,26px)] leading-[1.15] font-medium text-white">
+                        <h2 className="text-[clamp(18px,2.4cqw,26px)] leading-[1.15] font-semibold text-[#f4f1ea]">
                           {item.title}
                         </h2>
                       </div>
-                      <div className="pt-1.5 text-[15px] text-white/55">{item.subtitle}</div>
-                      <div className="pt-4 text-[14px] leading-[1.5] text-white/50">
+                      <div className="pt-1.5 text-[15px] font-normal text-[#f4f1ea]/80">{item.subtitle}</div>
+                      <div className="pt-4 text-[14px] leading-[1.5] font-normal text-[#f4f1ea]/95">
                         {item.body}
                       </div>
                     </div>
@@ -414,11 +461,11 @@ export default function HomeClient() {
         {/* 右下徽章 */}
         <a
           href="/"
-          className="group fixed bottom-3 right-3 z-30 flex items-center gap-1.5 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-[11px] text-white/60 backdrop-blur-md transition-colors hover:text-white"
+          className="group fixed bottom-3 right-3 z-30 flex items-center gap-1.5 rounded-full border border-[#f4f1ea]/10 bg-black/40 px-3 py-1.5 text-[11px] text-[#f4f1ea]/60 backdrop-blur-md transition-colors hover:text-[#f4f1ea]"
         >
           <span className="size-1.5 rounded-full bg-[#cb7350]" />
           <span>Made with</span>
-          <span className="font-semibold text-white">intro3d</span>
+          <span className="font-semibold text-[#f4f1ea]">intro3d</span>
         </a>
       </div>
 
