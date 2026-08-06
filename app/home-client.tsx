@@ -132,14 +132,13 @@ function Scene({
 }) {
   return (
     <>
-      <color attach="background" args={["#1f1f22"]} />
-      <ambientLight intensity={1.05} />
-      <hemisphereLight args={["#fff8ee", "#2e2622", 1.3]} />
-      <directionalLight position={[4.5, 6.5, 3.5]} intensity={2.7} color="#fff6e8" />
-      <directionalLight position={[-4, 3.5, 2]} intensity={0.95} color="#ffe6c8" />
-      <directionalLight position={[0, -3, 5]} intensity={0.5} color="#ffd9a8" />
-      <pointLight position={[0, 1.9, 2.8]} intensity={1.35} color="#ffe2b0" />
-      <pointLight position={[-0.3, 1.1, 3.2]} intensity={0.55} color="#ffd4a0" />
+      {/* intro3d 风格：透明背景 + 低强度暖光，让模型贴合暗背景 */}
+      <ambientLight intensity={0.4} />
+      <hemisphereLight args={["#fff5e8", "#1a1410", 0.5]} />
+      <directionalLight position={[3, 5, 4]} intensity={0.85} color="#fff2dc" />
+      <directionalLight position={[-3, 2, 2]} intensity={0.3} color="#ffd9a8" />
+      <directionalLight position={[0, -2, 4]} intensity={0.2} color="#ffcaa0" />
+      <pointLight position={[0, 1.4, 2.6]} intensity={0.4} color="#ffdcb0" />
       <Suspense fallback={<Loader />}>
         <PointerFollow pointerRef={pointerRef}>
           <Float speed={1.3} rotationIntensity={0.12} floatIntensity={0.4}>
@@ -300,21 +299,21 @@ export default function HomeClient() {
 
   return (
     <main
-      className="dark relative h-screen w-full overflow-hidden bg-[#1f1f22] text-[#f4f1ea]"
+      className="dark relative h-screen w-full overflow-hidden bg-[#0a0a0b] text-[#f4f1ea]"
       style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
     >
-      {/* 固定全屏 3D 背景 */}
+      {/* 固定全屏 3D 背景（透明 canvas，DOM 提供暗背景，贴合 intro3d） */}
       <div className="fixed inset-0 z-0">
         <Canvas
           camera={{ position: [-0.4, -0.2, 4.55], fov: 38 }}
           dpr={[1, 2]}
-          gl={{ antialias: true, alpha: false }}
+          gl={{ antialias: true, alpha: true }}
           className="!h-full !w-full"
-          style={{ touchAction: "none" }}
+          style={{ touchAction: "none", background: "transparent" }}
         >
           <Scene scrollRef={scrollRef} pointerRef={pointerRef} />
         </Canvas>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,230,200,0.07)_0%,transparent_65%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_46%,rgba(60,50,40,0.5)_0%,rgba(10,10,11,1)_70%)]" />
       </div>
 
       {/* 四角装饰角标 */}
