@@ -392,7 +392,7 @@ export default function HomeClient() {
         <section className="relative flex h-screen w-full items-center justify-center">
           <div className="pointer-events-none flex flex-col items-center translate-y-[24vh]">
             <h1 className="text-[clamp(36px,7cqw,72px)] font-normal tracking-normal text-[#f4f1ea] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-              xiao zhe
+              XIAO ZHE
             </h1>
             <p className="mt-3 max-w-[min(560px,86cqw)] text-center text-[clamp(12px,1.3cqw,15px)] leading-relaxed text-[#f4f1ea]/80">
               Your future is created by what you do today, not tomorrow.
@@ -415,9 +415,9 @@ export default function HomeClient() {
             <span className="text-[10px] uppercase tracking-[0.32em] text-[#f4f1ea]/40">
               Scroll down
             </span>
-            <span className="relative block h-10 w-px overflow-hidden bg-white/15">
+            {/* <span className="relative block h-10 w-px overflow-hidden bg-white/15">
               <span className="absolute left-1/2 top-0 h-[9px] w-[3px] -translate-x-1/2 animate-[scrolldot_1.8s_ease-in-out_infinite] bg-white/70" />
-            </span>
+            </span> */}
           </div>
         </section>
 
