@@ -401,7 +401,7 @@ export default function HomeClient() {
               {[
                 { src: "/images/juejin.png", href: "https://juejin.cn/user/1295692732053241", label: "掘金" },
                 { src: "/images/github.png", href: "https://github.com/ConsoleLZ", label: "GitHub" },
-                { src: "/images/email.png", href: "17347187569@163.com", label: "邮箱" },
+                { src: "/images/email.png", href: "mailto:17347187569@163.com", label: "邮箱" },
               ].map((item) => (
                 <a
                   key={item.label}
