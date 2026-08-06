@@ -398,13 +398,25 @@ export default function HomeClient() {
               Your future is created by what you do today, not tomorrow.
             </p>
             <div className="pointer-events-auto mt-6 flex flex-wrap gap-2">
-              {[0, 1, 2].map((i) => (
+              {[
+                { src: "/images/juejin.png", href: "https://juejin.cn/user/1295692732053241", label: "掘金" },
+                { src: "/images/github.png", href: "https://github.com/ConsoleLZ", label: "GitHub" },
+                { src: "/images/email.png", href: "17347187569@163.com", label: "邮箱" },
+              ].map((item) => (
                 <a
-                  key={i}
-                  href="#"
-                  className="flex size-9 items-center justify-center rounded-full border border-[#f4f1ea]/15 text-[#f4f1ea]/70 transition-colors hover:border-[#f4f1ea]/40 hover:text-[#f4f1ea]"
+                  key={item.label}
+                  href={item.href}
+                  target={item.href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  aria-label={item.label}
+                  className="flex size-9 items-center justify-center rounded-full bg-white/85 transition-colors hover:bg-white"
                 >
-                  <span className="text-[11px]">•</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.src}
+                    alt={item.label}
+                    className="size-4 object-contain"
+                  />
                 </a>
               ))}
             </div>
