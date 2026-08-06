@@ -47,7 +47,7 @@ type Key = { p: number; pos: [number, number, number]; look: [number, number, nu
 const KEYS: Key[] = [
   { p: 0.0, pos: [-0.4, 1.3, 4.55], look: [0, -0.3, 0] },
   { p: 0.5, pos: [3.0, 1.4, 2.55], look: [0, -0.3, 0] },
-  { p: 1.0, pos: [-0.3, 1.4, 6.1], look: [0, -0.3, 0] },
+  { p: 1.5, pos: [-0.3, 1.4, 6.1], look: [0, -0.3, 0] },
 ]
 
 const _v = new THREE.Vector3()
