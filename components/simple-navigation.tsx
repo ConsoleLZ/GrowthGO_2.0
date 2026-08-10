@@ -85,7 +85,7 @@ export function SimpleNavigation() {
   const pathname = usePathname()
 
   return (
-    <header className="fixed left-1/2 top-[20px] z-50 -translate-x-1/2">
+    <header className="fixed left-1/2 top-[40px] z-50 -translate-x-1/2">
       {isMobile ? (
         <MobileNav />
       ) : (
@@ -97,7 +97,7 @@ export function SimpleNavigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-[10px] font-normal uppercase tracking-[0.2em] transition-colors duration-300",
+                  "text-[12px] font-normal uppercase tracking-[0.2em] transition-colors duration-300",
                   active ? "text-[#f4f1ea]" : "text-[#f4f1ea]/55 hover:text-[#f4f1ea]"
                 )}
               >
