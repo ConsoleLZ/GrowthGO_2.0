@@ -113,8 +113,8 @@ function Loader() {
   return (
     <Html center>
       <div className="flex flex-col items-center gap-3 select-none">
-        <div className="w-9 h-9 border-2 border-[#f4f1ea]/15 border-t-[#f4f1ea]/80 rounded-full animate-spin" />
-        <div className="text-[#f4f1ea]/50 text-[11px] tracking-[0.3em] uppercase">
+        <div className="w-9 h-9 border-2 border-foreground/15 border-t-foreground/80 rounded-full animate-spin" />
+        <div className="text-foreground/50 text-[11px] tracking-[0.3em] uppercase">
           {progress.toFixed(0)}%
         </div>
       </div>
@@ -282,7 +282,7 @@ export default function HomeClient() {
 
   return (
     <main
-      className="dark relative h-screen w-full overflow-hidden bg-[#0a0a0b] text-[#f4f1ea]"
+      className="relative h-screen w-full overflow-hidden bg-background text-foreground"
       style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
     >
       {/* 站内统一导航（SimpleNavigation） */}
@@ -299,45 +299,47 @@ export default function HomeClient() {
         >
           <Scene scrollRef={scrollRef} pointerRef={pointerRef} />
         </Canvas>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_46%,rgba(60,50,40,0.5)_0%,rgba(10,10,11,1)_70%)]" />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(ellipse at 50% 46%, transparent 0%, var(--background) 72%)" }}
+        />
       </div>
 
       {/* 四角细边框 + 角标（原站：inset clamp(14,2.2cqw,28) · 1px @18% · 11px 角标） */}
       <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
-        <div className="absolute border border-white/[0.18]" style={{ inset: cornerInset }} />
+        <div className="absolute border border-foreground/15" style={{ inset: cornerInset }} />
         <span className="absolute" style={{ top: cornerInset, left: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
         </span>
         <span className="absolute" style={{ top: cornerInset, right: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
         </span>
         <span className="absolute" style={{ bottom: cornerInset, left: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
         </span>
         <span className="absolute" style={{ bottom: cornerInset, right: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
         </span>
       </div>
 
       {/* 四角文字（原站：clamp(9,0.9cqw,11) · tracking .26em · 60%） */}
       <div
-        className="pointer-events-none absolute inset-0 z-20"
+        className="pointer-events-none absolute inset-0 z-20 text-foreground/60"
         style={{
           fontSize: "clamp(9px,0.9vw,11px)",
           letterSpacing: "0.26em",
           lineHeight: 1.7,
           textTransform: "uppercase",
           whiteSpace: "pre-line",
-          color: "rgba(244,241,234,.6)",
         }}
       >
         <div className="absolute" style={{ top: `calc(${cornerInset} + 18px)`, left: `calc(${cornerInset} + 18px)` }}>
           <div>xiaozhe</div>
-          <div className="mt-1 text-[#f4f1ea]/60">一个还在成长的程序员</div>
+          <div className="mt-1 text-foreground/60">一个还在成长的程序员</div>
         </div>
         <div className="absolute text-right" style={{ top: `calc(${cornerInset} + 18px)`, right: `calc(${cornerInset} + 18px)` }}>
           Portfolio · 2026
@@ -371,12 +373,12 @@ export default function HomeClient() {
         <section className="pointer-events-none relative z-[1] -mb-[28.57vh] flex h-screen w-full flex-col items-center justify-end px-6 pb-[7vh] text-center">
           <div className="flex flex-col items-center">
             <h1
-              className="text-[clamp(28px,5.2vw,60px)] font-semibold leading-[1.05] tracking-[-0.01em] text-[#f4f1ea]"
+              className="text-[clamp(28px,5.2vw,60px)] font-semibold leading-[1.05] tracking-[-0.01em] text-foreground"
               style={{ fontFamily: DISPLAY_FONT }}
             >
               XIAO ZHE
             </h1>
-            <p className="mt-3 max-w-[min(560px,86vw)] text-[clamp(12px,1.3vw,15px)] leading-relaxed text-[#f4f1ea]/80">
+            <p className="mt-3 max-w-[min(560px,86vw)] text-[clamp(12px,1.3vw,15px)] leading-relaxed text-foreground/80">
               Your future is created by what you do today, not tomorrow.
             </p>
             <div className="pointer-events-auto mt-6 flex flex-wrap gap-2">
@@ -391,7 +393,7 @@ export default function HomeClient() {
                   target={item.href.startsWith("mailto:") ? undefined : "_blank"}
                   rel="noopener noreferrer"
                   aria-label={item.label}
-                  className="flex size-9 items-center justify-center rounded-full bg-white/85 transition-colors hover:bg-white"
+                  className="flex size-9 items-center justify-center rounded-full bg-white/90 text-black border border-black/10 transition-colors hover:bg-white"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={item.src} alt={item.label} className="size-4 object-contain" />
@@ -400,13 +402,13 @@ export default function HomeClient() {
             </div>
             {/* 底部 Scroll down 提示（原站 scroll-cue） */}
             <div className="mt-[2.2vh] flex flex-col items-center gap-2">
-              <span className="text-[10px] uppercase tracking-[0.32em] text-[#f4f1ea]/60">Scroll down</span>
+              <span className="text-[10px] uppercase tracking-[0.32em] text-foreground/60">Scroll down</span>
               <span
                 className="relative block h-10 w-px overflow-hidden"
-                style={{ background: "linear-gradient(rgba(244,241,234,.28), rgba(244,241,234,.04))" }}
+                style={{ background: "linear-gradient(color-mix(in oklab, var(--foreground) 25%, transparent), color-mix(in oklab, var(--foreground) 5%, transparent))" }}
               >
                 <span
-                  className="absolute left-1/2 top-0 h-[9px] w-[3px] rounded-[2px] bg-[#f4f1ea] shadow-[0_0_6px_rgba(244,241,234,.8)]"
+                  className="absolute left-1/2 top-0 h-[9px] w-[3px] rounded-[2px] bg-foreground shadow-[0_0_6px_var(--foreground)]"
                   style={{ animation: "scroll-cue 2s ease-in-out infinite" }}
                 />
               </span>
@@ -420,7 +422,7 @@ export default function HomeClient() {
             <div className="relative">
               {/* 竖线 */}
               <span
-                className="absolute left-[5px] top-[6px] w-px bg-[#f4f1ea]"
+                className="absolute left-[5px] top-[6px] w-px bg-foreground/25"
                 style={{ height: `${(timeline.length - 1) * 71.43}vh` }}
                 aria-hidden="true"
               />
@@ -428,22 +430,23 @@ export default function HomeClient() {
                 <Reveal key={idx} delay={idx * 80}>
                   <div className="pl-[34px]" style={{ minHeight: "71.43vh" }}>
                     <div className="relative">
-                      {/* 节点圆点（原站 nodeColor #ffd9b3 + 光晕） */}
+                      {/* 节点圆点（跟随主题 accent + 光晕） */}
                       <span
-                        className="absolute -left-[34px] top-[6px] size-[11px] rounded-full bg-[#ffd9b3] shadow-[0_0_0_4px_rgba(255,217,179,0.14)]"
+                        className="absolute -left-[34px] top-[6px] size-[11px] rounded-full bg-accent"
+                        style={{ boxShadow: "0 0 0 4px color-mix(in oklab, var(--accent) 14%, transparent)" }}
                         aria-hidden="true"
                       />
                       <div className="flex flex-col">
                         <div className="flex items-center gap-3 pt-2.5">
                           <h2
-                            className="text-[clamp(18px,2.4vw,26px)] font-semibold leading-[1.25] text-[#f4f1ea]"
+                            className="text-[clamp(18px,2.4vw,26px)] font-semibold leading-[1.25] text-foreground"
                             style={{ fontFamily: DISPLAY_FONT }}
                           >
                             {item.title}
                           </h2>
                         </div>
-                        <div className="pt-1.5 text-[15px] font-normal text-[#f4f1ea]/80">{item.subtitle}</div>
-                        <div className="pt-4 text-[14px] leading-[1.5] font-normal text-[#f4f1ea]/95">{item.body}</div>
+                        <div className="pt-1.5 text-[15px] font-normal text-foreground/80">{item.subtitle}</div>
+                        <div className="pt-4 text-[14px] leading-[1.5] font-normal text-foreground/95">{item.body}</div>
                       </div>
                     </div>
                   </div>
