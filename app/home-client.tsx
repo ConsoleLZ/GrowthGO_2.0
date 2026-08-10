@@ -3,7 +3,7 @@
 import { Suspense, useRef, useEffect, useState, type ReactNode } from "react"
 import Link from "next/link"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, useProgress } from "@react-three/drei"
+import { useGLTF, useProgress, Html } from "@react-three/drei"
 import * as THREE from "three"
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js"
 import { Button } from "@/components/ui/button"
@@ -117,55 +117,19 @@ function ScrollCamera({ scrollRef }: { scrollRef: React.MutableRefObject<number>
   return null
 }
 
-/* ── 加载屏（原站：bg #202020 · 青色圆点 #cbf53d） ─────────────────── */
+/* ── 3D 模型加载指示（画布内，随模型加载显示） ──────────────────────── */
 
-function TemplateLoader() {
-  const { active } = useProgress()
-  const [seen, setSeen] = useState(false)
-  const [fading, setFading] = useState(false)
-  const [gone, setGone] = useState(false)
-
-  useEffect(() => {
-    const max = setTimeout(() => {
-      setFading(true)
-      setTimeout(() => setGone(true), 500)
-    }, 8000)
-    return () => clearTimeout(max)
-  }, [])
-
-  useEffect(() => {
-    if (active) {
-      setSeen(true)
-      return
-    }
-    if (seen) {
-      setFading(true)
-      const t = setTimeout(() => setGone(true), 500)
-      return () => clearTimeout(t)
-    }
-  }, [active, seen])
-
-  if (gone) return null
+function Loader() {
+  const { progress } = useProgress()
   return (
-    <div
-      className={cn(
-        "fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#202020] text-[#f4f1ea] transition-opacity duration-500",
-        fading && "pointer-events-none opacity-0",
-      )}
-      role="status"
-      aria-label="加载中"
-    >
-      <div className="flex gap-2">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className="size-2 rounded-full bg-[#cbf53d]"
-            style={{ animation: `loader-dot 1.2s ease-in-out ${i * 0.15}s infinite` }}
-          />
-        ))}
+    <Html center>
+      <div className="flex flex-col items-center gap-3 select-none">
+        <div className="w-9 h-9 border-2 border-[#f4f1ea]/15 border-t-[#f4f1ea]/80 rounded-full animate-spin" />
+        <div className="text-[#f4f1ea]/50 text-[11px] tracking-[0.3em] uppercase">
+          {progress.toFixed(0)}%
+        </div>
       </div>
-      <div className="mt-4 text-xs tracking-[0.2em] text-white/65">Loading…</div>
-    </div>
+    </Html>
   )
 }
 
@@ -218,7 +182,7 @@ function Scene({
       <EnvironmentMap />
       <ambientLight intensity={0.2} />
       <directionalLight position={[0, 1.2, 1.2]} intensity={0.8} />
-      <Suspense fallback={null}>
+      <Suspense fallback={<Loader />}>
         <PointerFollow pointerRef={pointerRef}>
           <Model />
         </PointerFollow>
@@ -378,9 +342,6 @@ export default function HomeClient() {
       className="dark relative h-screen w-full overflow-hidden bg-[#0a0a0b] text-[#f4f1ea]"
       style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
     >
-      {/* 加载屏：原站 #202020 + 青色圆点 */}
-      <TemplateLoader />
-
       {/* 固定全屏 3D 背景（透明 canvas，DOM 提供暗背景，贴合 intro3d） */}
       <div className="fixed inset-0 z-0">
         <Canvas
@@ -571,10 +532,6 @@ export default function HomeClient() {
           0% { opacity: 0; transform: translate(-50%, -2px); }
           18%, 82% { opacity: 1; }
           100% { opacity: 0; transform: translate(-50%, 30px); }
-        }
-        @keyframes loader-dot {
-          0%, 100% { opacity: .25; transform: scale(.7); }
-          40% { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </main>
