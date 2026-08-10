@@ -85,7 +85,12 @@ export function SimpleNavigation() {
   const pathname = usePathname()
 
   return (
-    <header className="fixed left-1/2 top-[40px] z-50 -translate-x-1/2">
+    <header
+      className={cn(
+        "fixed z-50",
+        isMobile ? "right-[16px] top-[20px]" : "left-1/2 top-[30px] -translate-x-1/2"
+      )}
+    >
       {isMobile ? (
         <MobileNav />
       ) : (
