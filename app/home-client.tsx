@@ -17,7 +17,7 @@ const DISPLAY_FONT =
 function Model() {
   // 使用 Draco 压缩版本 + Google CDN 解码器，显著减小下载体积
   // 注意：贴纸已烘焙在 me.glb 模型内，这里不再重复加载
-  const { scene } = useGLTF("/glb/me-draco.glb", "https://www.gstatic.com/draco/v1/decoders/")
+  const { scene } = useGLTF("/glb/1.glb", "https://www.gstatic.com/draco/v1/decoders/")
   const ref = useRef<THREE.Group>(null)
 
   useEffect(() => {
