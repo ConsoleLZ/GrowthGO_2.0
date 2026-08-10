@@ -23,19 +23,25 @@ function Model() {
   useEffect(() => {
     const group = ref.current
     if (!group) return
-    const box = new THREE.Box3().setFromObject(group)
-    const size = box.getSize(new THREE.Vector3())
-    const center = box.getCenter(new THREE.Vector3())
-    const maxDim = Math.max(size.x, size.y, size.z) || 1
-    const scale = 2.15 / maxDim
-    // 对齐原站：模型 position [0,0,0]，居中于原点
-    group.scale.setScalar(scale)
-    group.position.x = -center.x * scale
-    group.position.y = -center.y * scale
-    group.position.z = -center.z * scale
 
-    // 降低环境反射光泽：material envMapIntensity=0.5（× scene 0.5 = 有效 0.25）
-    // 与参考版一致，避免模型显得过亮过油；想更哑光可再调小此值
+    // 幂等适配：useGLTF 会缓存同一个 scene，导航返回后 scene 仍是上次缩放过的尺寸。
+    // 若再按当前包围盒重算缩放，会得到 scale=1 并重置回原始尺寸导致模型变小。
+    // 因此只在首次挂载时做一次「按原始尺寸 → 2.15」的适配，之后跳过。
+    if (!group.userData.fitted) {
+      const box = new THREE.Box3().setFromObject(group)
+      const size = box.getSize(new THREE.Vector3())
+      const center = box.getCenter(new THREE.Vector3())
+      const maxDim = Math.max(size.x, size.y, size.z) || 1
+      const scale = 1.6 / maxDim
+      // 对齐：模型 position [0,0,0]，居中于原点
+      group.scale.setScalar(scale)
+      group.position.x = -center.x * scale
+      group.position.y = -center.y * scale
+      group.position.z = -center.z * scale
+      group.userData.fitted = true
+    }
+
+    // 降低环境反射光泽（幂等，每次挂载都设一遍）
     group.traverse((obj) => {
       const mesh = obj as THREE.Mesh
       if (!mesh.isMesh) return
