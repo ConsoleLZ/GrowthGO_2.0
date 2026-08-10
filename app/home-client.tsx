@@ -3,8 +3,9 @@
 import { Suspense, useRef, useEffect, useState, type ReactNode } from "react"
 import Link from "next/link"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, Float, Html, useProgress } from "@react-three/drei"
+import { useGLTF, useProgress } from "@react-three/drei"
 import * as THREE from "three"
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -18,37 +19,63 @@ const navItems = [
   { href: "/guestbook", label: "留言板" },
 ]
 
+/* 原站 intro3d 显示字体：Bricolage Grotesque（layout 中已加载） */
+const DISPLAY_FONT =
+  '"Bricolage Grotesque", "PingFang SC", -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif'
+
 /* ─── 3D model ─────────────────────────────────────────────────────── */
 
 function Model() {
   // 使用 Draco 压缩版本 + Google CDN 解码器，显著减小下载体积
+  // 注意：贴纸已烘焙在 me.glb 模型内，这里不再重复加载
   const { scene } = useGLTF("/glb/me-draco.glb", "https://www.gstatic.com/draco/v1/decoders/")
   const ref = useRef<THREE.Group>(null)
 
   useEffect(() => {
-    if (!ref.current) return
-    const box = new THREE.Box3().setFromObject(ref.current)
+    const group = ref.current
+    if (!group) return
+    const box = new THREE.Box3().setFromObject(group)
     const size = box.getSize(new THREE.Vector3())
     const center = box.getCenter(new THREE.Vector3())
     const maxDim = Math.max(size.x, size.y, size.z) || 1
     const scale = 2.15 / maxDim
-    ref.current.scale.setScalar(scale)
-    ref.current.position.x = -center.x * scale
-    ref.current.position.y = -center.y * scale - 0.3
-    ref.current.position.z = -center.z * scale
+    // 对齐原站：模型 position [0,0,0]，居中于原点
+    group.scale.setScalar(scale)
+    group.position.x = -center.x * scale
+    group.position.y = -center.y * scale
+    group.position.z = -center.z * scale
+
+    // 降低环境反射光泽：material envMapIntensity=0.5（× scene 0.5 = 有效 0.25）
+    // 与参考版一致，避免模型显得过亮过油；想更哑光可再调小此值
+    group.traverse((obj) => {
+      const mesh = obj as THREE.Mesh
+      if (!mesh.isMesh) return
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+      mats.forEach((m) => {
+        const std = m as THREE.MeshStandardMaterial
+        if (std.envMapIntensity !== undefined) std.envMapIntensity = 0.1
+      })
+    })
   }, [])
 
   return <primitive ref={ref} object={scene} />
 }
 
-/* ─── Scroll-driven camera ─────────────────────────────────────────── */
+/* ─── Scroll-driven camera（原站精确相机 tour） ─────────────────────── */
 
 type Key = { p: number; pos: [number, number, number]; look: [number, number, number] }
 
+// 原站精确值：hero 桌面 [-0.1966,1.4111,3.3293] / 移动端 [0.7885,-0.1009,3.5330]；节点1 [2.5846,0.3788,2.5081]
+const HERO_POS: [number, number, number] =
+  typeof window !== "undefined" && window.innerWidth < 768
+    ? [0.7885, -0.1009, 3.5330]
+    : [-0.1966, 1.4111, 3.3293]
+
 const KEYS: Key[] = [
-  { p: 0.0, pos: [-0.4, 1.3, 4.55], look: [0, -0.3, 0] },
-  { p: 0.5, pos: [3.0, 1.4, 2.55], look: [0, -0.3, 0] },
-  { p: 1.5, pos: [-0.3, 1.4, 6.1], look: [0, -0.3, 0] },
+  { p: 0.0, pos: HERO_POS, look: [0, 0, 0] },
+  { p: 0.64, pos: [2.5846, 0.3788, 2.5081], look: [0, 0, 0] }, // 节点1（原站 node camera）
+  { p: 0.97, pos: [-1.9, 0.8, 3.4], look: [0, 0, 0] },         // 节点2（延续：环绕左侧）
+  { p: 1.0, pos: [-0.3, 0.9, 4.3], look: [0, 0, 0] },          // 节点3（延续：拉远回中）
 ]
 
 const _v = new THREE.Vector3()
@@ -90,17 +117,55 @@ function ScrollCamera({ scrollRef }: { scrollRef: React.MutableRefObject<number>
   return null
 }
 
-function Loader() {
-  const { progress } = useProgress()
+/* ── 加载屏（原站：bg #202020 · 青色圆点 #cbf53d） ─────────────────── */
+
+function TemplateLoader() {
+  const { active } = useProgress()
+  const [seen, setSeen] = useState(false)
+  const [fading, setFading] = useState(false)
+  const [gone, setGone] = useState(false)
+
+  useEffect(() => {
+    const max = setTimeout(() => {
+      setFading(true)
+      setTimeout(() => setGone(true), 500)
+    }, 8000)
+    return () => clearTimeout(max)
+  }, [])
+
+  useEffect(() => {
+    if (active) {
+      setSeen(true)
+      return
+    }
+    if (seen) {
+      setFading(true)
+      const t = setTimeout(() => setGone(true), 500)
+      return () => clearTimeout(t)
+    }
+  }, [active, seen])
+
+  if (gone) return null
   return (
-    <Html center>
-      <div className="flex flex-col items-center gap-3 select-none">
-        <div className="w-9 h-9 border-2 border-[#f4f1ea]/15 border-t-[#f4f1ea]/80 rounded-full animate-spin" />
-        <div className="text-[#f4f1ea]/50 text-[11px] tracking-[0.3em] uppercase">
-          {progress.toFixed(0)}%
-        </div>
+    <div
+      className={cn(
+        "fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#202020] text-[#f4f1ea] transition-opacity duration-500",
+        fading && "pointer-events-none opacity-0",
+      )}
+      role="status"
+      aria-label="加载中"
+    >
+      <div className="flex gap-2">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="size-2 rounded-full bg-[#cbf53d]"
+            style={{ animation: `loader-dot 1.2s ease-in-out ${i * 0.15}s infinite` }}
+          />
+        ))}
       </div>
-    </Html>
+      <div className="mt-4 text-xs tracking-[0.2em] text-white/65">Loading…</div>
+    </div>
   )
 }
 
@@ -116,11 +181,28 @@ function PointerFollow({
     if (!ref.current) return
     const p = pointerRef.current
     const targetY = p.x * 0.16
-    const targetX = -p.y * 0.10
+    const targetX = -p.y * 0.1
     ref.current.rotation.y += (targetY - ref.current.rotation.y) * 0.07
     ref.current.rotation.x += (targetX - ref.current.rotation.x) * 0.07
   })
   return <group ref={ref}>{children}</group>
+}
+
+// 环境映射：原站 environment preset "city" intensity 0.5，用 RoomEnvironment 近似
+function EnvironmentMap() {
+  const { gl, scene } = useThree()
+  useEffect(() => {
+    const pmrem = new THREE.PMREMGenerator(gl)
+    const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+    scene.environment = envTex
+    scene.environmentIntensity = 0.1
+    return () => {
+      scene.environment = null
+      envTex.dispose()
+      pmrem.dispose()
+    }
+  }, [gl, scene])
+  return null
 }
 
 function Scene({
@@ -132,18 +214,13 @@ function Scene({
 }) {
   return (
     <>
-      {/* intro3d 风格：透明背景 + 低强度暖光，让模型贴合暗背景 */}
-      <ambientLight intensity={0.4} />
-      <hemisphereLight args={["#fff5e8", "#1a1410", 0.5]} />
-      <directionalLight position={[3, 5, 4]} intensity={0.85} color="#fff2dc" />
-      <directionalLight position={[-3, 2, 2]} intensity={0.3} color="#ffd9a8" />
-      <directionalLight position={[0, -2, 4]} intensity={0.2} color="#ffcaa0" />
-      <pointLight position={[0, 1.4, 2.6]} intensity={0.4} color="#ffdcb0" />
-      <Suspense fallback={<Loader />}>
+      {/* 原站渲染机制：环境映射 + 白环境光 0.2 + 主光 0.8 @45° height1.2 */}
+      <EnvironmentMap />
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[0, 1.2, 1.2]} intensity={0.8} />
+      <Suspense fallback={null}>
         <PointerFollow pointerRef={pointerRef}>
-          <Float speed={1.3} rotationIntensity={0.12} floatIntensity={0.4}>
-            <Model />
-          </Float>
+          <Model />
         </PointerFollow>
       </Suspense>
       <ScrollCamera scrollRef={scrollRef} />
@@ -187,7 +264,7 @@ function Reveal({
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
         "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform",
-        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
+        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[26px]",
         className,
       )}
     >
@@ -294,15 +371,20 @@ export default function HomeClient() {
     return () => window.removeEventListener("pointermove", onPointer)
   }, [])
 
+  const cornerInset = "clamp(14px,2.2vw,28px)"
+
   return (
     <main
       className="dark relative h-screen w-full overflow-hidden bg-[#0a0a0b] text-[#f4f1ea]"
       style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
     >
+      {/* 加载屏：原站 #202020 + 青色圆点 */}
+      <TemplateLoader />
+
       {/* 固定全屏 3D 背景（透明 canvas，DOM 提供暗背景，贴合 intro3d） */}
       <div className="fixed inset-0 z-0">
         <Canvas
-          camera={{ position: [-0.4, 1.3, 4.55], fov: 38 }}
+          camera={{ position: HERO_POS, fov: 38 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true }}
           className="!h-full !w-full"
@@ -313,49 +395,60 @@ export default function HomeClient() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_46%,rgba(60,50,40,0.5)_0%,rgba(10,10,11,1)_70%)]" />
       </div>
 
-      {/* 四角装饰角标 */}
-      <div className="pointer-events-none absolute inset-0 z-20">
-        <div className="absolute left-[24px] top-[24px]">
-          <span className="absolute left-[-6px] top-1/2 h-px w-[11px] -translate-y-1/2 bg-white/40" />
-          <span className="absolute left-0 top-[-6px] h-[11px] w-px bg-white/40" />
-        </div>
-        <div className="absolute right-[24px] top-[24px]">
-          <span className="absolute right-[-6px] top-1/2 h-px w-[11px] -translate-y-1/2 bg-white/40" />
-          <span className="absolute right-0 top-[-6px] h-[11px] w-px bg-white/40" />
-        </div>
-        <div className="absolute left-[24px] bottom-[24px]">
-          <span className="absolute left-[-6px] top-1/2 h-px w-[11px] -translate-y-1/2 bg-white/40" />
-          <span className="absolute left-0 bottom-[-6px] h-[11px] w-px bg-white/40" />
-        </div>
-        <div className="absolute right-[24px] bottom-[24px]">
-          <span className="absolute right-[-6px] top-1/2 h-px w-[11px] -translate-y-1/2 bg-white/40" />
-          <span className="absolute right-0 bottom-[-6px] h-[11px] w-px bg-white/40" />
-        </div>
+      {/* 四角细边框 + 角标（原站：inset clamp(14,2.2cqw,28) · 1px @18% · 11px 角标） */}
+      <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
+        <div className="absolute border border-white/[0.18]" style={{ inset: cornerInset }} />
+        <span className="absolute" style={{ top: cornerInset, left: cornerInset }}>
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+        </span>
+        <span className="absolute" style={{ top: cornerInset, right: cornerInset }}>
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+        </span>
+        <span className="absolute" style={{ bottom: cornerInset, left: cornerInset }}>
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+        </span>
+        <span className="absolute" style={{ bottom: cornerInset, right: cornerInset }}>
+          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-white/40" />
+        </span>
       </div>
 
-      {/* 四角文字 */}
-      <div className="pointer-events-none absolute inset-0 z-20 px-[42px] py-[42px]">
-        {/* 左上 */}
-        <div className="absolute left-[42px] top-[42px]">
-          <div className="text-[10px] font-normal uppercase leading-tight tracking-[0.26em] text-[#f4f1ea]/60">xiaozhe</div>
-          <div className="mt-1 text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">一个还在成长的程序员</div>
+      {/* 四角文字（原站：clamp(9,0.9cqw,11) · tracking .26em · 60%） */}
+      <div
+        className="pointer-events-none absolute inset-0 z-20"
+        style={{
+          fontSize: "clamp(9px,0.9vw,11px)",
+          letterSpacing: "0.26em",
+          lineHeight: 1.7,
+          textTransform: "uppercase",
+          whiteSpace: "pre-line",
+          color: "rgba(244,241,234,.6)",
+        }}
+      >
+        <div className="absolute" style={{ top: `calc(${cornerInset} + 18px)`, left: `calc(${cornerInset} + 18px)` }}>
+          <div>xiaozhe</div>
+          <div className="mt-1 text-[#f4f1ea]/60">一个还在成长的程序员</div>
         </div>
-        {/* 右上 */}
-        <div className="absolute right-[42px] top-[42px] text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">
+        <div className="absolute text-right" style={{ top: `calc(${cornerInset} + 18px)`, right: `calc(${cornerInset} + 18px)` }}>
           Portfolio · 2026
         </div>
-        {/* 左下 */}
-        <div className="absolute left-[42px] bottom-[42px] text-[10px] font-normal uppercase tracking-[0.26em] text-[#f4f1ea]/60">
+        <div className="absolute" style={{ bottom: `calc(${cornerInset} + 18px)`, left: `calc(${cornerInset} + 18px)` }}>
           diy爱好者 · 代码 · 吉他 · 无畏契约
         </div>
-        {/* 右侧竖排 */}
-        <div className="absolute right-[28px] top-1/2 -translate-y-1/2">
-          <span
-            className="text-[10px] font-normal uppercase tracking-[0.3em] text-[#f4f1ea]/60"
-            style={{ writingMode: "vertical-rl" }}
-          >
-            广东
-          </span>
+        <div
+          className="absolute"
+          style={{
+            top: "50%",
+            right: `calc(${cornerInset} + 6px)`,
+            transform: "translateY(-50%)",
+            writingMode: "vertical-rl",
+            letterSpacing: "0.3em",
+          }}
+        >
+          广东
         </div>
       </div>
 
@@ -386,13 +479,16 @@ export default function HomeClient() {
       >
         <style>{`div::-webkit-scrollbar{display:none}`}</style>
 
-        {/* 第一屏：模型居中，文字叠加 */}
-        <section className="relative flex h-screen w-full items-center justify-center">
-          <div className="pointer-events-none flex flex-col items-center translate-y-[24vh]">
-            <h1 className="text-[clamp(36px,7cqw,72px)] font-normal tracking-normal text-[#f4f1ea] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+        {/* 第一屏：模型居中，文字叠底（原站 classic Flow：底部锚定） */}
+        <section className="pointer-events-none relative z-[1] -mb-[28.57vh] flex h-screen w-full flex-col items-center justify-end px-6 pb-[7vh] text-center">
+          <div className="flex flex-col items-center">
+            <h1
+              className="text-[clamp(28px,5.2vw,60px)] font-semibold leading-[1.05] tracking-[-0.01em] text-[#f4f1ea]"
+              style={{ fontFamily: DISPLAY_FONT }}
+            >
               XIAO ZHE
             </h1>
-            <p className="mt-3 max-w-[min(560px,86cqw)] text-center text-[clamp(12px,1.3cqw,15px)] leading-relaxed text-[#f4f1ea]/80">
+            <p className="mt-3 max-w-[min(560px,86vw)] text-[clamp(12px,1.3vw,15px)] leading-relaxed text-[#f4f1ea]/80">
               Your future is created by what you do today, not tomorrow.
             </p>
             <div className="pointer-events-auto mt-6 flex flex-wrap gap-2">
@@ -410,45 +506,56 @@ export default function HomeClient() {
                   className="flex size-9 items-center justify-center rounded-full bg-white/85 transition-colors hover:bg-white"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.src}
-                    alt={item.label}
-                    className="size-4 object-contain"
-                  />
+                  <img src={item.src} alt={item.label} className="size-4 object-contain" />
                 </a>
               ))}
             </div>
-          </div>
-
-          {/* 底部 Scroll down 提示 */}
-          <div className="pointer-events-none absolute bottom-[58px] left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-            <span className="text-[10px] uppercase tracking-[0.32em] text-[#f4f1ea]/40">
-              Scroll down
-            </span>
-            {/* <span className="relative block h-10 w-px overflow-hidden bg-white/15">
-              <span className="absolute left-1/2 top-0 h-[9px] w-[3px] -translate-x-1/2 animate-[scrolldot_1.8s_ease-in-out_infinite] bg-white/70" />
-            </span> */}
+            {/* 底部 Scroll down 提示（原站 scroll-cue） */}
+            <div className="mt-[2.2vh] flex flex-col items-center gap-2">
+              <span className="text-[10px] uppercase tracking-[0.32em] text-[#f4f1ea]/60">Scroll down</span>
+              <span
+                className="relative block h-10 w-px overflow-hidden"
+                style={{ background: "linear-gradient(rgba(244,241,234,.28), rgba(244,241,234,.04))" }}
+              >
+                <span
+                  className="absolute left-1/2 top-0 h-[9px] w-[3px] rounded-[2px] bg-[#f4f1ea] shadow-[0_0_6px_rgba(244,241,234,.8)]"
+                  style={{ animation: "scroll-cue 2s ease-in-out infinite" }}
+                />
+              </span>
+            </div>
           </div>
         </section>
 
-        {/* 滚动后右侧时间线内容 */}
+        {/* 滚动后右侧时间线（原站 classic Renderer） */}
         <section className="relative w-full">
-          <div className="ml-auto w-[min(520px,92vw)] px-[34px] pb-[20vh]">
-            <div className="space-y-[14vh]">
+          <div className="ml-auto mr-[clamp(20px,6vw,72px)] w-[min(420px,86vw)] px-[34px] pb-[20vh] pt-[30vh]">
+            <div className="relative">
+              {/* 竖线 */}
+              <span
+                className="absolute left-[5px] top-[6px] w-px bg-[#f4f1ea]"
+                style={{ height: `${(timeline.length - 1) * 71.43}vh` }}
+                aria-hidden="true"
+              />
               {timeline.map((item, idx) => (
                 <Reveal key={idx} delay={idx * 80}>
-                  <div className="relative pl-[34px]">
-                    {/* 时间线圆点 */}
-                    <span className="absolute -left-[6px] top-[6px] size-[11px] rounded-full border border-white/40 bg-[#0a0a0c]" />
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-3 pt-2.5">
-                        <h2 className="text-[clamp(18px,2.4cqw,26px)] leading-[1.15] font-semibold text-[#f4f1ea]">
-                          {item.title}
-                        </h2>
-                      </div>
-                      <div className="pt-1.5 text-[15px] font-normal text-[#f4f1ea]/80">{item.subtitle}</div>
-                      <div className="pt-4 text-[14px] leading-[1.5] font-normal text-[#f4f1ea]/95">
-                        {item.body}
+                  <div className="pl-[34px]" style={{ minHeight: "71.43vh" }}>
+                    <div className="relative">
+                      {/* 节点圆点（原站 nodeColor #ffd9b3 + 光晕） */}
+                      <span
+                        className="absolute -left-[34px] top-[6px] size-[11px] rounded-full bg-[#ffd9b3] shadow-[0_0_0_4px_rgba(255,217,179,0.14)]"
+                        aria-hidden="true"
+                      />
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-3 pt-2.5">
+                          <h2
+                            className="text-[clamp(18px,2.4vw,26px)] font-semibold leading-[1.25] text-[#f4f1ea]"
+                            style={{ fontFamily: DISPLAY_FONT }}
+                          >
+                            {item.title}
+                          </h2>
+                        </div>
+                        <div className="pt-1.5 text-[15px] font-normal text-[#f4f1ea]/80">{item.subtitle}</div>
+                        <div className="pt-4 text-[14px] leading-[1.5] font-normal text-[#f4f1ea]/95">{item.body}</div>
                       </div>
                     </div>
                   </div>
@@ -460,10 +567,14 @@ export default function HomeClient() {
       </div>
 
       <style>{`
-        @keyframes scrolldot {
-          0% { transform: translate(-50%, 0); opacity: 0; }
-          30% { opacity: 1; }
-          100% { transform: translate(-50%, 40px); opacity: 0; }
+        @keyframes scroll-cue {
+          0% { opacity: 0; transform: translate(-50%, -2px); }
+          18%, 82% { opacity: 1; }
+          100% { opacity: 0; transform: translate(-50%, 30px); }
+        }
+        @keyframes loader-dot {
+          0%, 100% { opacity: .25; transform: scale(.7); }
+          40% { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </main>
