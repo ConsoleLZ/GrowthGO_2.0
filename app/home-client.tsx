@@ -1,23 +1,12 @@
 "use client"
 
 import { Suspense, useRef, useEffect, useState, type ReactNode } from "react"
-import Link from "next/link"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useGLTF, useProgress, Html } from "@react-three/drei"
 import * as THREE from "three"
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-import { useIsMobile } from "@/hooks/use-mobile"
+import { SimpleNavigation } from "@/components/simple-navigation"
 import { cn } from "@/lib/utils"
-
-/* 功能入口（保留在最上方） */
-const navItems = [
-  { href: "/category", label: "导航" },
-  { href: "/blog", label: "笔记" },
-  { href: "/stats", label: "统计" },
-  { href: "/guestbook", label: "留言板" },
-]
 
 /* 原站 intro3d 显示字体：Bricolage Grotesque（layout 中已加载） */
 const DISPLAY_FONT =
@@ -237,51 +226,6 @@ function Reveal({
   )
 }
 
-/* ─── Mobile nav ───────────────────────────────────────────────────── */
-
-function MobileNav() {
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative h-9 w-9 text-white hover:bg-white/10 transition-colors duration-200"
-        >
-          <div className="flex h-5 w-5 flex-col items-center justify-center gap-[3px]">
-            <span className="h-[2px] w-4 rounded-full bg-white" />
-            <span className="h-[2px] w-4 rounded-full bg-white" />
-            <span className="h-[2px] w-4 rounded-full bg-white" />
-          </div>
-          <span className="sr-only">切换菜单</span>
-        </Button>
-      </SheetTrigger>
-      <SheetContent
-        side="right"
-        className="w-[280px] border-l border-white/10 bg-[#0a0a0c]/95 text-white backdrop-blur-xl sm:w-[300px]"
-      >
-        <SheetTitle className="sr-only">导航菜单</SheetTitle>
-        <div className="flex flex-col space-y-8 pt-14">
-          <div className="px-6">
-            <span className="text-xl font-serif tracking-tight text-white/90">小哲</span>
-          </div>
-          <nav className="flex flex-col space-y-1 px-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center px-4 py-3 text-[15px] font-medium text-white/60 hover:text-white hover:bg-white/5 transition-all duration-200 rounded-[8px]"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </SheetContent>
-    </Sheet>
-  )
-}
-
 /* ─── 内容数据（完全复制 intro3d 模板，后续可替换） ──────────────── */
 
 // 滚动后右侧时间线的内容卡片
@@ -306,7 +250,6 @@ const timeline = [
 /* ─── Page ─────────────────────────────────────────────────────────── */
 
 export default function HomeClient() {
-  const isMobile = useIsMobile()
   const scrollRef = useRef(0)
   const pointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
   // 内部滚动容器，与 intro3d 一致：3D 固定全屏背景 + 内部 overflow-y-auto 内容
@@ -342,6 +285,9 @@ export default function HomeClient() {
       className="dark relative h-screen w-full overflow-hidden bg-[#0a0a0b] text-[#f4f1ea]"
       style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
     >
+      {/* 站内统一导航（SimpleNavigation） */}
+      <SimpleNavigation />
+
       {/* 固定全屏 3D 背景（透明 canvas，DOM 提供暗背景，贴合 intro3d） */}
       <div className="fixed inset-0 z-0">
         <Canvas
@@ -412,25 +358,6 @@ export default function HomeClient() {
           广东
         </div>
       </div>
-
-      {/* 最上方功能入口 */}
-      <header className="absolute left-1/2 top-[28px] z-30 -translate-x-1/2">
-        {isMobile ? (
-          <MobileNav />
-        ) : (
-          <div className="flex items-center gap-6 rounded-full border border-white/10 bg-black/30 px-4 py-1.5 backdrop-blur-md">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-[10px] font-normal uppercase tracking-[0.2em] text-[#f4f1ea]/55 transition-colors duration-300 hover:text-[#f4f1ea]"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        )}
-      </header>
 
       {/* 内部滚动容器 */}
       <div
