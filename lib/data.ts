@@ -26,6 +26,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "FlClash",
+    ico: "/imgNull.png",
+    url: "https://github.com/chen08209/FlClash",
+    description: "科学上网",
+    tags: [tags.tools],
+  },
+  {
     name: "docsmall",
     ico: "https://docsmall.com/favicon.png",
     url: "https://docsmall.com/image-compress",
