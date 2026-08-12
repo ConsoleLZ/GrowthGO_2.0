@@ -347,8 +347,8 @@ export default function HomeClient() {
           <div>xiaozhe</div>
           <div className="mt-1 text-foreground/60">一个还在成长的程序员</div>
         </div>
-        <div className="absolute text-right" style={{ top: `calc(${cornerInset} + 18px)`, right: `calc(${cornerInset} + 18px)` }}>
-          Portfolio · 2026
+        <div className="pointer-events-auto absolute text-right" style={{ top: `calc(${cornerInset} + 18px)`, right: `calc(${cornerInset} + 18px)` }}>
+          <a href="https://github.com/ConsoleLZ/GrowthGO_2.0" target="_blank" rel="noopener noreferrer"><img style={{width: "24px"}} src="/images/github.png" alt="" /></a>
         </div>
         <div className="absolute" style={{ bottom: `calc(${cornerInset} + 18px)`, left: `calc(${cornerInset} + 18px)` }}>
           diy爱好者 · 代码 · 吉他 · 无畏契约
