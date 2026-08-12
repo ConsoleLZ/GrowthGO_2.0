@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "GrowthGO 2.0 Architecture",
+    "subtitle": "Next.js 14 个人主页 · 3D 简历 / 笔记系统 / 资源导航",
+    "output": "growthgo-architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/ConsoleLZ/GrowthGO_2.0.git",
+      "revision": "fcb38db4c958118083316844912f84f1ccc84615"
+    },
+    "views": [
+      { "id": "request-path", "label": "主请求路径", "focus": ["visitor", "vercel", "nextjs", "mdpipe", "posts"], "note": "访客请求经 Vercel 边缘进入 Next.js 服务，渲染笔记时读取 Markdown 内容。" },
+      { "id": "data-layer", "label": "数据层", "focus": ["nextjs", "mdpipe", "statsagg", "posts", "sitedata"], "note": "服务端从本地 Markdown 与导航数据聚合内容与统计。" },
+      { "id": "client-runtime", "label": "浏览器运行时", "focus": ["visitor", "home", "blog", "stats", "guestbook", "ext"], "note": "客户端页面 hydrate 后加载 3D 资源、字体与第三方脚本。" }
+    ]
+  },
+  "components": [
+    { "id": "ext", "type": "external", "label": "Third-party Services", "sublabel": "Google Fonts · Draco CDN · Busuanzi", "pos": [180, 90], "size": [240, 60], "sources": [{ "path": "app/layout.tsx", "line": 56, "label": "busuanzi script" }] },
+    { "id": "vercel", "type": "cloud", "label": "Vercel", "sublabel": "Host + Analytics", "tag": "Edge / SSR", "pos": [470, 90], "size": [150, 60], "sources": [{ "path": "vercel.json" }] },
+    { "id": "visitor", "type": "external", "label": "Visitors", "sublabel": "Browser", "pos": [40, 317], "size": [120, 60] },
+    { "id": "home", "type": "frontend", "label": "Home", "sublabel": "3D Resume · Three.js", "tag": "RSC + Client", "pos": [200, 190], "size": [140, 56], "sources": [{ "path": "app/home-client.tsx", "line": 17, "label": "Model loader" }] },
+    { "id": "blog", "type": "frontend", "label": "Blog & Notes", "sublabel": "Markdown · KaTeX", "pos": [200, 276], "size": [140, 56], "sources": [{ "path": "app/blog/blog-client.tsx" }] },
+    { "id": "stats", "type": "frontend", "label": "Stats", "sublabel": "recharts", "pos": [200, 362], "size": [140, 56], "sources": [{ "path": "app/stats/stats-client.tsx" }] },
+    { "id": "guestbook", "type": "frontend", "label": "Guestbook", "sublabel": "Valine (paused)", "pos": [200, 448], "size": [140, 56], "sources": [{ "path": "app/guestbook/guestbook-client.tsx", "line": 33, "label": "Valine init" }] },
+    { "id": "nextjs", "type": "backend", "label": "Next.js 14 Server", "sublabel": "App Router · RSC / SSR", "tag": "Node.js runtime", "pos": [430, 315], "size": [150, 64], "sources": [{ "path": "app/layout.tsx", "line": 29, "label": "RootLayout" }, { "path": "next.config.mjs" }] },
+    { "id": "mdpipe", "type": "backend", "label": "Markdown Pipeline", "sublabel": "unified · remark / rehype", "pos": [680, 190], "size": [180, 56], "sources": [{ "path": "lib/posts.ts", "line": 208, "label": "unified().use(...)" }] },
+    { "id": "statsagg", "type": "backend", "label": "Stats Aggregator", "sublabel": "posts + sites", "pos": [680, 410], "size": [180, 56], "sources": [{ "path": "app/stats/page.tsx.server.ts", "line": 4, "label": "getStatsData" }] },
+    { "id": "posts", "type": "database", "label": "content/posts", "sublabel": "127 Markdown notes", "pos": [930, 300], "size": [180, 56], "sources": [{ "path": "content/posts/1.md" }] },
+    { "id": "sitedata", "type": "database", "label": "lib/data.ts", "sublabel": "Navigation sites", "pos": [930, 410], "size": [180, 56], "sources": [{ "path": "lib/data.ts", "line": 27, "label": "sites array" }] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Browser · Client Runtime", "wraps": ["home", "blog", "stats", "guestbook"] },
+    { "kind": "region", "label": "Next.js Runtime (Node.js)", "wraps": ["nextjs", "mdpipe", "statsagg"] },
+    { "kind": "region", "label": "Local Content", "wraps": ["posts", "sitedata"] }
+  ],
+  "connections": [
+    { "id": "vercel-nextjs", "from": "vercel", "to": "nextjs", "label": "host · SSR", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "id": "visitor-nextjs", "from": "visitor", "to": "nextjs", "label": "HTTPS request", "variant": "emphasis", "fromSide": "right", "toSide": "left", "labelAt": [295, 347] },
+    { "id": "nextjs-home", "from": "nextjs", "to": "home", "fromSide": "top", "toSide": "bottom" },
+    { "id": "nextjs-blog", "from": "nextjs", "to": "blog", "fromSide": "left", "toSide": "right" },
+    { "id": "nextjs-stats", "from": "nextjs", "to": "stats", "fromSide": "left", "toSide": "right" },
+    { "id": "nextjs-guestbook", "from": "nextjs", "to": "guestbook", "fromSide": "bottom", "toSide": "right" },
+    { "id": "nextjs-mdpipe", "from": "nextjs", "to": "mdpipe", "label": "render MD", "fromSide": "top", "toSide": "bottom" },
+    { "id": "mdpipe-posts", "from": "mdpipe", "to": "posts", "label": "read .md", "fromSide": "bottom", "toSide": "top" },
+    { "id": "nextjs-statsagg", "from": "nextjs", "to": "statsagg", "label": "aggregate", "fromSide": "right", "toSide": "left" },
+    { "id": "statsagg-posts", "from": "statsagg", "to": "posts", "label": "count", "fromSide": "top", "toSide": "bottom" },
+    { "id": "statsagg-sitedata", "from": "statsagg", "to": "sitedata", "label": "read nav", "fromSide": "right", "toSide": "left" },
+    { "id": "ext-home", "from": "ext", "to": "home", "variant": "dashed", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "交付与运行时", "items": ["Vercel 托管 Next.js 14 并提供边缘 SSR 与 Analytics", "App Router 服务端组件渲染首页、博客、统计、留言板"] },
+    { "dot": "emerald", "title": "内容与数据", "items": ["Markdown 流水线：gray-matter + unified + remark/rehype + KaTeX + highlight", "content/posts 本地笔记与 lib/data.ts 导航数据由服务端聚合"] },
+    { "dot": "rose", "title": "客户端能力", "items": ["Three.js + drei 加载 Draco 压缩 GLB 3D 模型", "第三方：Google Fonts / Draco CDN / 不蒜子 访问统计"] }
+  ]
+}

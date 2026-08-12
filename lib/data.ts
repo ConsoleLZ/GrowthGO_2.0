@@ -26,6 +26,20 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "docsmall",
+    ico: "https://docsmall.com/favicon.png",
+    url: "https://docsmall.com/image-compress",
+    description: "免费在线图片压缩工具",
+    tags: [tags.tools],
+  },
+  {
+    name: "archify",
+    ico: "/imgNull.png",
+    url: "https://github.com/tt-a1i/archify",
+    description: "架构图生成的skill，可读取代码仓库或系统描述，生成可交互的架构图。",
+    tags: [tags.ai],
+  },
+  {
     name: "BaseToolbox",
     ico: "https://basetoolbox.com/favicon.ico",
     url: "https://basetoolbox.com/zh/3d-model-compressor/",
