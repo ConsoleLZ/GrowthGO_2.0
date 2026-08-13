@@ -26,6 +26,13 @@ export const tags = {
 // recommend: true
 export const sites: Site[] = [
   {
+    name: "Wot UI",
+    ico: "https://starter.wot-ui.cn/favicon.ico",
+    url: "https://wot-ui.cn/",
+    description: "轻量、美观、AI友好的uni-app组件库",
+    tags: [tags.frontend],
+  },
+  {
     name: "FlClash",
     ico: "/imgNull.png",
     url: "https://github.com/chen08209/FlClash",
