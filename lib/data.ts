@@ -8,7 +8,6 @@ export interface Site {
   quickAccess?: boolean;
 }
 
-
 // 所有的标签
 export const tags = {
   frontend: "前端",
@@ -24,7 +23,15 @@ export const tags = {
 };
 
 // recommend: true
+// quickAccess: true
 export const sites: Site[] = [
+  {
+    name: "智谱AI开放平台",
+    ico: "https://static.bigmodel.cn/wd-paas-front/static/images/favicon.png",
+    url: "https://open.bigmodel.cn/",
+    description: "不止模型，构建可信智能",
+    tags: [tags.ai],
+  },
   {
     name: "Wot UI",
     ico: "https://starter.wot-ui.cn/favicon.ico",
@@ -50,7 +57,8 @@ export const sites: Site[] = [
     name: "archify",
     ico: "/imgNull.png",
     url: "https://github.com/tt-a1i/archify",
-    description: "架构图生成的skill，可读取代码仓库或系统描述，生成可交互的架构图。",
+    description:
+      "架构图生成的skill，可读取代码仓库或系统描述，生成可交互的架构图。",
     tags: [tags.ai],
   },
   {
@@ -71,7 +79,8 @@ export const sites: Site[] = [
     name: "魔方简历",
     ico: "https://magicv.art/logo.svg",
     url: "https://magicv.art/zh",
-    description: "魔方简历利用 AI 技术，帮助您快速创建专业的简历。无需注册，免费使用，数据安全存储。",
+    description:
+      "魔方简历利用 AI 技术，帮助您快速创建专业的简历。无需注册，免费使用，数据安全存储。",
     tags: [tags.tools],
   },
   {
@@ -1671,6 +1680,14 @@ export const sites: Site[] = [
     url: "https://threedscans.com/",
     description: "3D素材，主要为雕塑",
     tags: [tags.resources],
+  },
+  {
+    name: "微信公众平台",
+    ico: "https://mp.weixin.qq.com/misc/getico?location=-1&rand=0.5256210485961926&token=&lang=zh_CN",
+    url: "https://mp.weixin.qq.com/",
+    description: "微信公众平台",
+    tags: [tags.frontend],
+    quickAccess: true
   },
   {
     name: "Z-Library",
