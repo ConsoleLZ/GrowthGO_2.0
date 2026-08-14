@@ -24,7 +24,16 @@ export const tags = {
 
 // recommend: true
 // quickAccess: true
+// /imgNull.png
 export const sites: Site[] = [
+  {
+    name: "ponytail",
+    ico: "/imgNull.png",
+    url: "https://github.com/DietrichGebert/ponytail",
+    description: "一个非常好用的skill，它可以将agent输出进行简化，但是又能保证质量，代码减少54%(最高94%) · 便宜约20% · 快 ~27% · 100% 安全",
+    tags: [tags.ai],
+    recommend: true
+  },
   {
     name: "智谱AI开放平台",
     ico: "https://static.bigmodel.cn/wd-paas-front/static/images/favicon.png",

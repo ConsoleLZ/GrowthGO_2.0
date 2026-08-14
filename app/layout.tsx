@@ -3,6 +3,7 @@ import { Inter, Inter_Tight } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { BackToTop } from '@/components/back-to-top'
+import { RouteProgress } from '@/components/route-progress'
 import Script from 'next/script'
 import './globals.css'
 
@@ -48,6 +49,7 @@ export default function RootLayout({
           defaultTheme="dark"
           disableTransitionOnChange
         >
+          <RouteProgress />
           {children}
           <BackToTop />
         </ThemeProvider>
