@@ -39,6 +39,18 @@ export function RouteProgress() {
     if (pending) setPending(false)
   }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ponytail: 不蒜子脚本只在页面加载时执行一次，SPA 导航时要手动重新执行，否则 .busuanzi_value_* span 不刷新
+  useEffect(() => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[src*="busuanzi.pure.mini.js"]'
+    )
+    if (!existing) return
+    const s = document.createElement("script")
+    s.src = existing.src
+    existing.remove()
+    document.head.appendChild(s)
+  }, [pathname])
+
   if (!pending) return null
 
   return (
