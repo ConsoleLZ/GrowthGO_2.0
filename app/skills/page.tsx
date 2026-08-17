@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { SimpleNavigation } from "@/components/simple-navigation"
 import { Button } from "@/components/ui/button"
-import { FileArchive, Folder, Download } from "lucide-react"
+import { FileArchive, Folder, Download, ExternalLink } from "lucide-react"
 import { CollectionPageJsonLd, BreadcrumbJsonLd } from "@/components/seo-jsonld"
 
 export const metadata: Metadata = {
@@ -32,6 +32,7 @@ interface Skill {
   zipPath: string
   zipName: string
   size: string
+  link?: string
 }
 
 function formatSize(bytes: number): string {
@@ -59,11 +60,13 @@ function getSkills(): Skill[] {
 
       const readmeFile = files.find(f => f.toLowerCase() === 'readme.md')
       const zipFile = files.find(f => f.endsWith('.zip'))
+      const linkFile = files.find(f => f.toLowerCase() === 'link.txt')
 
       if (!readmeFile || !zipFile) continue
 
       const description = fs.readFileSync(path.join(skillPath, readmeFile), 'utf8').trim()
       const stats = fs.statSync(path.join(skillPath, zipFile))
+      const link = linkFile ? fs.readFileSync(path.join(skillPath, linkFile), 'utf8').trim() : undefined
 
       skills.push({
         name: skillFolder.name,
@@ -72,6 +75,7 @@ function getSkills(): Skill[] {
         zipPath: `/skills/${cat.name}/${skillFolder.name}/${zipFile}`,
         zipName: zipFile,
         size: formatSize(stats.size),
+        link,
       })
     }
   }
@@ -139,6 +143,14 @@ export default function SkillsPage() {
 
                       <div className="flex items-center gap-3 shrink-0">
                         <span className="hidden sm:inline text-[11px] text-muted-foreground/60">{skill.size}</span>
+                        {skill.link && (
+                          <Button asChild size="sm" variant="ghost" className="gap-1.5">
+                            <a href={skill.link} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="h-3.5 w-3.5" />
+                              访问
+                            </a>
+                          </Button>
+                        )}
                         <Button asChild size="sm" variant="ghost" className="gap-1.5">
                           <a href={skill.zipPath} download={skill.zipName}>
                             <Download className="h-3.5 w-3.5" />
