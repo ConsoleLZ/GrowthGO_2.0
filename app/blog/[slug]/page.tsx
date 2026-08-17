@@ -1,9 +1,11 @@
+import type { Metadata } from 'next'
 import { notFound } from "next/navigation"
 import { SimpleNavigation } from "@/components/simple-navigation"
-import { getPostBySlug, getAllSlugs, hasTableOfContents } from "@/lib/posts"
+import { getPostBySlug, getAllSlugs, hasTableOfContents, getAllPosts } from "@/lib/posts"
 import { Badge } from "@/components/ui/badge"
 import { TableOfContents } from "@/components/blog/table-of-contents"
 import { MobileTocDrawer } from "@/components/blog/mobile-toc-drawer"
+import { BlogPostingJsonLd, BreadcrumbJsonLd } from "@/components/seo-jsonld"
 import MarkdownContent from "../markdown-content"
 
 interface Props {
@@ -17,6 +19,51 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }))
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
+
+  if (!post) {
+    return {
+      title: '文章未找到',
+      description: '您访问的文章不存在或已删除。',
+    }
+  }
+
+  const jsonLd = {
+    title: post.title,
+    description: post.description || post.title,
+    keywords: post.tags,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
+    openGraph: {
+      type: 'article',
+      url: `/blog/${slug}`,
+      title: post.title,
+      description: post.description || post.title,
+      publishedTime: post.date,
+      tags: post.tags,
+      images: [
+        {
+          url: '/avatar.png',
+          width: 512,
+          height: 512,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description || post.title,
+      images: ['/avatar.png'],
+    },
+  }
+
+  return jsonLd
+}
+
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
   const post = await getPostBySlug(slug)
@@ -25,8 +72,26 @@ export default async function BlogPostPage({ params }: Props) {
 
   const hasToc = hasTableOfContents(post.content)
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xiaozhe.me'
+
   return (
     <div className="min-h-screen bg-background">
+      <BlogPostingJsonLd
+        title={post.title}
+        description={post.description || post.title}
+        datePublished={post.date}
+        url={`${siteUrl}/blog/${slug}`}
+        tags={post.tags}
+        wordCount={post.wordCount}
+        readingTimeMinutes={post.readingTime}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: '首页', url: '/' },
+          { name: '技术笔记', url: '/blog' },
+          { name: post.title },
+        ]}
+      />
       <SimpleNavigation />
       <div className="pt-20 mx-auto max-w-7xl px-6 py-8">
         <div className="flex gap-8">

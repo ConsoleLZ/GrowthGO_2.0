@@ -1,9 +1,10 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Inter_Tight } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { BackToTop } from '@/components/back-to-top'
 import { RouteProgress } from '@/components/route-progress'
+import { WebsiteJsonLd, PersonJsonLd } from '@/components/seo-jsonld'
 import Script from 'next/script'
 import './globals.css'
 
@@ -20,11 +21,95 @@ const interTight = Inter_Tight({
   display: 'swap',
 })
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xiaozhe.me'
+const siteName = '小哲来了'
+const siteDescription = '小哲个人信息 / 个人简历 / 技术笔记 / 资源导航。分享前端开发、AI工具、设计资源、学习资料等优质内容。'
+const siteKeywords = ['小哲', '个人博客', '技术笔记', '前端开发', 'AI工具', '资源导航', '个人简历', 'React', 'Next.js', 'TypeScript']
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
+
 export const metadata: Metadata = {
-  title: '小哲来了',
-  description: '小哲个人信息 / 个人简历 / 技术笔记 / 资源导航',
-  generator: 'v0.app',
-  icons: '/favicon.ico'
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteName,
+    template: `%s | ${siteName}`,
+  },
+  description: siteDescription,
+  keywords: siteKeywords,
+  authors: [{ name: '小哲', url: siteUrl }],
+  creator: '小哲',
+  publisher: '小哲',
+  generator: 'Next.js',
+  category: 'technology',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [{ url: '/favicon.ico' }],
+  },
+  manifest: `${siteUrl}/site.webmanifest`,
+  alternates: {
+    canonical: '/',
+    types: {
+      'application/rss+xml': [{ url: '/rss.xml', title: `${siteName} RSS 订阅` }],
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'zh_CN',
+    url: siteUrl,
+    siteName: siteName,
+    title: {
+      default: siteName,
+      template: `%s | ${siteName}`,
+    },
+    description: siteDescription,
+    images: [
+      {
+        url: '/avatar.png',
+        width: 512,
+        height: 512,
+        alt: siteName,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: siteUrl,
+    creator: '@xiaozhe',
+    title: {
+      default: siteName,
+      template: `%s | ${siteName}`,
+    },
+    description: siteDescription,
+    images: ['/avatar.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'google-site-verification-code',
+    yandex: 'yandex-verification-code',
+    baidu: 'baidu-site-verification-code',
+  },
 }
 
 export default function RootLayout({
@@ -49,6 +134,8 @@ export default function RootLayout({
           defaultTheme="dark"
           disableTransitionOnChange
         >
+          <WebsiteJsonLd />
+          <PersonJsonLd />
           <RouteProgress />
           {children}
           <BackToTop />
