@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${siteUrl}/category`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 0.8,
     },
     {
