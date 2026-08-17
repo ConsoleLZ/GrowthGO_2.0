@@ -21,8 +21,8 @@ const interTight = Inter_Tight({
 })
 
 export const metadata: Metadata = {
-  title: '小哲的一些宝藏',
-  description: '个人主页 · 前端开发 / 电子工程 / 技术笔记 / 资源导航',
+  title: '小哲来了',
+  description: '小哲个人信息 / 个人简历 / 技术笔记 / 资源导航',
   generator: 'v0.app',
   icons: '/favicon.ico'
 }
