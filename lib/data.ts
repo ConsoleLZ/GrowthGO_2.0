@@ -27,14 +27,6 @@ export const tags = {
 // /imgNull.png
 export const sites: Site[] = [
   {
-    name: "ponytail",
-    ico: "/imgNull.png",
-    url: "https://github.com/DietrichGebert/ponytail",
-    description: "一个非常好用的skill，它可以将agent输出进行简化，但是又能保证质量，代码减少54%(最高94%) · 便宜约20% · 快 ~27% · 100% 安全",
-    tags: [tags.ai],
-    recommend: true
-  },
-  {
     name: "智谱AI开放平台",
     ico: "https://static.bigmodel.cn/wd-paas-front/static/images/favicon.png",
     url: "https://open.bigmodel.cn/",
@@ -63,14 +55,6 @@ export const sites: Site[] = [
     tags: [tags.tools],
   },
   {
-    name: "archify",
-    ico: "/imgNull.png",
-    url: "https://github.com/tt-a1i/archify",
-    description:
-      "架构图生成的skill，可读取代码仓库或系统描述，生成可交互的架构图。",
-    tags: [tags.ai],
-  },
-  {
     name: "BaseToolbox",
     ico: "https://basetoolbox.com/favicon.ico",
     url: "https://basetoolbox.com/zh/3d-model-compressor/",
@@ -91,13 +75,6 @@ export const sites: Site[] = [
     description:
       "魔方简历利用 AI 技术，帮助您快速创建专业的简历。无需注册，免费使用，数据安全存储。",
     tags: [tags.tools],
-  },
-  {
-    name: "Hyperframes",
-    ico: "https://hyperframes.heygen.com/favicon.ico",
-    url: "https://hyperframes.heygen.com/",
-    description: "HyperFrames 让 AI 代理通过编写 HTML、CSS 和 JS 来编写视频。",
-    tags: [tags.ai],
   },
   {
     name: "hermes-agent",
