@@ -27,6 +27,13 @@ export const tags = {
 // /imgNull.png
 export const sites: Site[] = [
   {
+    name: "诗泉",
+    ico: "https://poetry.palemoky.com/icon.png",
+    url: "https://github.com/palemoky/chinese-poetry-api",
+    description: "基于 Go 语言的高性能中国古诗词 API 服务，支持 REST 和 GraphQL 接口，提供简体/繁体中文、爬虫练习场等功能",
+    tags: [tags.entertainment],
+  },
+  {
     name: "智谱AI开放平台",
     ico: "https://static.bigmodel.cn/wd-paas-front/static/images/favicon.png",
     url: "https://open.bigmodel.cn/",
@@ -2058,13 +2065,6 @@ export const sites: Site[] = [
     tags: [tags.cloud],
   },
   {
-    name: "Biofy",
-    ico: "https://biofy.cn/favicon.ico",
-    url: "https://biofy.cn/",
-    description: "拼接、聚合你的多元化世界",
-    tags: [tags.cloud],
-  },
-  {
     name: "BUUCTF",
     ico: "https://buuoj.cn/themes/buu_core/static/img/favicon.ico",
     url: "https://buuoj.cn/",
@@ -2103,28 +2103,6 @@ export const sites: Site[] = [
     tags: [tags.learning],
   },
   {
-    name: "中国独立开发者项目",
-    ico: "https://developer.hubing.online/favicon.png",
-    url: "https://developer.hubing.online",
-    description: "各种大佬的项目",
-    tags: [tags.learning],
-  },
-  {
-    name: "roadmap",
-    ico: "https://roadmap.sh/manifest/favicon.ico",
-    url: "https://roadmap.sh/",
-    description:
-      "roadmap.sh 是社区努力的结果 创建路线图、指南和其他教育内容以帮助指导开发人员 在选择一条道路并指导他们的学习。",
-    tags: [tags.learning],
-  },
-  {
-    name: "ProjectHunt",
-    ico: "https://projecthunt.me/favicon.ico",
-    url: "https://projecthunt.me/",
-    description: "发现和分享出色的项目",
-    tags: [tags.learning],
-  },
-  {
     name: "思否",
     ico: "https://static.segmentfault.com/main_site_next/dc3490f3/favicon.ico",
     url: "https://segmentfault.com/",
@@ -2147,13 +2125,6 @@ export const sites: Site[] = [
     tags: [tags.entertainment],
   },
   {
-    name: "多邻国",
-    ico: "https://d35aaqx5ub95lt.cloudfront.net/favicon.ico",
-    url: "https://www.duolingo.cn/",
-    description: "学习英语神器",
-    tags: [tags.learning],
-  },
-  {
     name: "力扣",
     ico: "https://leetcode.cn/favicon.ico",
     url: "https://leetcode.cn/",
@@ -2169,25 +2140,11 @@ export const sites: Site[] = [
     tags: [tags.frontend],
   },
   {
-    name: "wallspic",
-    ico: "https://wallspic.com/static/images/favicon/favicon-32x32.png",
-    url: "https://wallspic.com/",
-    description: "看看有没有好看的壁纸吧!",
-    tags: [tags.resources],
-  },
-  {
     name: "Qwerty Learner",
     ico: "https://qwerty.kaiyi.cool/favicon.ico",
     url: "https://qwerty.kaiyi.cool/",
     description: "不想记单词",
     tags: [tags.learning],
-  },
-  {
-    name: "Vue.js挑战",
-    ico: "https://cn-vuejs-challenges.netlify.app/favicon.ico",
-    url: "https://cn-vuejs-challenges.netlify.app/",
-    description: "一个Vue.js在线挑战平台",
-    tags: [tags.frontend, tags.learning],
   },
   {
     name: "SVG Filters",
@@ -2259,13 +2216,6 @@ export const sites: Site[] = [
     url: "https://wallpapers-clan.com/",
     description: "有很多好看的壁纸，图标(移动端，桌面端)",
     tags: [tags.resources],
-  },
-  {
-    name: "面试鸭",
-    ico: "https://www.mianshiya.com/favicon.ico",
-    url: "https://www.mianshiya.com/",
-    description: "题库质量高，完善，一个很好的刷题网站",
-    tags: [tags.learning],
   },
   {
     name: "OpenStreetMap",
@@ -2464,34 +2414,11 @@ export const sites: Site[] = [
     tags: [tags.resources, tags.frontend],
   },
   {
-    name: "idurar / idurar-erp-crm",
-    ico: "/imgNull.png",
-    url: "https://github.com/idurar/idurar-erp-crm",
-    description: "开源无头ERP CRM电子商务会计软件",
-    tags: [tags.resources],
-  },
-  {
     name: "mindskip / xzs",
     ico: "/imgNull.png",
     url: "https://github.com/mindskip/xzs",
     description: "在线考试系统",
     tags: [tags.resources],
-  },
-  {
-    name: "Aras-ax / lottery",
-    ico: "/imgNull.png",
-    url: "https://github.com/Aras-ax/lottery",
-    description:
-      "🎉🌟✨🎈年会抽奖程序，基于 Express + Three.js的 3D 球体抽奖程序，奖品🧧🎁，文字，图片，抽奖规则均可配置，😜抽奖人员信息Excel一键导入😍，抽奖结果Excel导出😎，给你的抽奖活动带来全新酷炫体验🚀🚀🚀",
-    tags: [tags.resources],
-  },
-  {
-    name: "PanJiaChen / vue-element-admin",
-    ico: "/imgNull.png",
-    url: "https://github.com/PanJiaChen/vue-element-admin",
-    description:
-      "🎉 一个神奇的 Vue 管理员 https://panjiachen.github.io/vue-element-admin",
-    tags: [tags.resources, tags.frontend],
   },
   {
     name: "koodo-reader / koodo-reader",
@@ -2500,13 +2427,6 @@ export const sites: Site[] = [
     description:
       "现代电子书管理器和阅读器，具有适用于 Windows、macOS、Linux 和 Web 的同步和备份功能",
     tags: [tags.resources],
-  },
-  {
-    name: "steve / gallery",
-    ico: "/imgNull.png",
-    url: "https://gitee.com/steve007/gallery",
-    description: "数字展馆",
-    tags: [tags.frontend],
   },
   {
     name: "guchengwuyue / yshop-drink意象桌面扫码点餐系统",
@@ -2524,49 +2444,12 @@ export const sites: Site[] = [
     tags: [tags.learning],
   },
   {
-    name: "GrowingGit / GitHub-Chinese-Top-Charts",
-    ico: "/imgNull.png",
-    url: "https://github.com/GrowingGit/GitHub-Chinese-Top-Charts",
-    description:
-      "GitHub中文排行榜，各语言分设「软件 | 资料」榜单，精准定位中文好项目。各取所需，高效学习。",
-    tags: [tags.learning],
-  },
-  {
     name: "krahets / hello-algo",
     ico: "/imgNull.png",
     url: "https://github.com/krahets/hello-algo",
     description:
       "《Hello 算法》：动画图解、一键运行的数据结构与算法教程。支持 Python, Java, C++, C, C#, JS, Go, Swift, Rust, Ruby, Kotlin, TS, Dart 代码。简体版和繁体版同步更新，English version ongoing",
     tags: [tags.learning],
-  },
-  {
-    name: "ascoders / weekly",
-    ico: "/imgNull.png",
-    url: "https://github.com/ascoders/weekly",
-    description: "前端精读周刊。帮你理解最前沿、实用的技术。",
-    tags: [tags.frontend, tags.learning],
-  },
-  {
-    name: "chokcoco / iCSS",
-    ico: "/imgNull.png",
-    url: "https://github.com/chokcoco/iCSS",
-    description: "不止于 CSS",
-    tags: [tags.frontend, tags.learning],
-  },
-  {
-    name: "chokcoco / CSS-Inspiration",
-    ico: "/imgNull.png",
-    url: "https://github.com/chokcoco/CSS-Inspiration",
-    description: "CSS Inspiration，在这里找到写 CSS 的灵感！",
-    tags: [tags.frontend, tags.learning],
-  },
-  {
-    name: "hepengwei / visualization-collection-vue",
-    ico: "/imgNull.png",
-    url: "https://github.com/hepengwei/visualization-collection-vue",
-    description:
-      "🌈 一个专注于前端视觉效果的集合应用，包含CSS动效、Canvas动画、Three.js3D、人工智能应用等上百个案例（Vue版本）",
-    tags: [tags.frontend, tags.learning],
   },
   {
     name: "Syknapse / Contribute-To-This-Project",
@@ -2592,54 +2475,12 @@ export const sites: Site[] = [
     tags: [tags.learning],
   },
   {
-    name: "you-dont-need / You-Dont-Need-JavaScript",
-    ico: "/imgNull.png",
-    url: "https://github.com/you-dont-need/You-Dont-Need-JavaScript",
-    description: "CSS 很强大，你可以在没有 JS 的情况下做很多事情。",
-    tags: [tags.frontend, tags.learning],
-  },
-  {
-    name: "1c7 / chinese-independent-developer",
-    ico: "/imgNull.png",
-    url: "https://github.com/1c7/chinese-independent-developer",
-    description: "👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻中国独立开发者项目列表 -- 分享大家都在做什么",
-    tags: [tags.learning],
-  },
-  {
-    name: "phaserjs / examples",
-    ico: "/imgNull.png",
-    url: "https://github.com/phaserjs/examples",
-    description: "Phaser 3 例子",
-    tags: [tags.frontend, tags.learning],
-  },
-  {
     name: "zhayujie / chatgpt-on-wechat",
     ico: "/imgNull.png",
     url: "https://github.com/zhayujie/chatgpt-on-wechat",
     description:
       "基于大模型搭建的聊天机器人，同时支持 微信公众号、企业微信应用、飞书、钉钉 等接入，可选择GPT3.5/GPT-4o/GPT4.0/ Claude/文心一言/讯飞星火/通义千问/ Gemini/GLM-4/Claude/Kimi/LinkAI，能处理文本、语音和图片，访问操作系统和互联网，支持基于自有知识库进行定制企业智能客服。",
     tags: [tags.ai],
-  },
-  {
-    name: "Guyungy / damaihelper",
-    ico: "/imgNull.png",
-    url: "https://github.com/Guyungy/damaihelper",
-    description: "支持大麦网，淘票票、缤玩岛等多个平台，演唱会演出抢票脚本",
-    tags: [tags.tools],
-  },
-  {
-    name: "gzldc / 12306",
-    ico: "/imgNull.png",
-    url: "https://github.com/gzldc/12306",
-    description: "12306抢票脚本",
-    tags: [tags.tools],
-  },
-  {
-    name: "Codennnn / vue-color-avatar",
-    ico: "/imgNull.png",
-    url: "https://github.com/Codennnn/vue-color-avatar",
-    description: "一个在线头像生成器只是为了好玩 |一个纯前端实现的头像生成网站",
-    tags: [tags.tools, tags.entertainment],
   },
   {
     name: "zhaoolee / ChineseBQB",
@@ -2650,25 +2491,11 @@ export const sites: Site[] = [
     tags: [tags.resources],
   },
   {
-    name: "Java-S12138 / frank",
-    ico: "/imgNull.png",
-    url: "https://github.com/Java-S12138/frank",
-    description: "全新的英雄联盟助手软件，WeGame 的替代品",
-    tags: [tags.entertainment],
-  },
-  {
     name: "Blankj / awesome-comment",
     ico: "/imgNull.png",
     url: "https://github.com/Blankj/awesome-comment",
     description: "有趣的评论",
     tags: [tags.entertainment],
-  },
-  {
-    name: "alievk / avatarify-python",
-    ico: "/imgNull.png",
-    url: "https://github.com/alievk/avatarify-python",
-    description: "适用于 Zoom、Skype 和其他视频会议应用程序的头像。",
-    tags: [tags.tools, tags.entertainment],
   },
   {
     name: "bb-music / flutter-app",
@@ -2677,22 +2504,6 @@ export const sites: Site[] = [
     description:
       "使用 flutter 编写的哔哔音乐客户端，无需登录，没有信息收集，实现你的听歌自由。",
     tags: [tags.entertainment],
-  },
-  {
-    name: "travellings-link / travellings",
-    ico: "/imgNull.png",
-    url: "https://github.com/travellings-link/travellings",
-    description:
-      '「开往 Travellings」是一个友链接力项目，旨在通过网络跳转的方式将流量引入那些鲜为人知的独立站点。 每当用户访问加入该项目的网页时，点击该网页上的"开往"按钮将随机跳转到另一个加入该项目的网页。',
-    tags: [tags.learning],
-  },
-  {
-    name: "NianBroken / Firework_Simulator",
-    ico: "/imgNull.png",
-    url: "https://github.com/NianBroken/Firework_Simulator",
-    description:
-      "烟花模拟器，一个可以模拟各种烟花效果的网页|它可以展示各种绚丽多彩的烟花效果，并让人仿佛置身于真实烟花的绚丽世界之中。|模拟烟花|烟花网页|烟花绽放|烟花效果",
-    tags: [tags.frontend],
   },
   {
     name: "篡改猴",
@@ -2760,13 +2571,6 @@ export const sites: Site[] = [
     tags: [tags.plugin],
   },
   {
-    name: "LeetCode",
-    description: "解决 VS Code 中的 LeetCode 问题",
-    ico: "https://leetcode.gallerycdn.vsassets.io/extensions/leetcode/vscode-leetcode/0.18.4/1726212071110/Microsoft.VisualStudio.Services.Icons.Default",
-    url: "https://marketplace.visualstudio.com/items?itemName=LeetCode.vscode-leetcode",
-    tags: [tags.plugin, tags.learning],
-  },
-  {
     name: "Auto Rename Tag",
     description: "自动重命名配对的 HTML/XML 标签",
     ico: "https://formulahendry.gallerycdn.vsassets.io/extensions/formulahendry/auto-rename-tag/0.1.10/1644319230173/Microsoft.VisualStudio.Services.Icons.Default",
@@ -2793,13 +2597,6 @@ export const sites: Site[] = [
     description: "在 VS Code 终端中运行批处理文件",
     ico: "https://nilssoderman.gallerycdn.vsassets.io/extensions/nilssoderman/batch-runner/1.3.2/1723902315400/Microsoft.VisualStudio.Services.Icons.Default",
     url: "https://marketplace.visualstudio.com/items?itemName=NilsSoderman.batch-runner",
-    tags: [tags.plugin],
-  },
-  {
-    name: "Project Manager",
-    description: "在项目之间轻松切换",
-    ico: "https://alefragnani.gallerycdn.vsassets.io/extensions/alefragnani/project-manager/12.8.0/1711736277737/Microsoft.VisualStudio.Services.Icons.Default",
-    url: "https://marketplace.visualstudio.com/items?itemName=alefragnani.project-manager",
     tags: [tags.plugin],
   },
   {
