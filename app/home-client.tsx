@@ -44,6 +44,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
       <div className="mx-auto max-w-[1120px] px-6">
         {/* ═════════ Hero ═════════ */}
         <section className="border-b border-border/70 py-16 md:py-24">
+          <RoleIdleSprite />
           <div className="mb-4 flex items-center gap-3 text-[12px] uppercase tracking-[0.24em] text-muted-foreground">
             <span>最新文章</span>
             <span className="text-foreground/30">·</span>
@@ -245,6 +246,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
 
 // ═════════ 右下角小角色:走 → 撞墙 → 攻击 → 反向走,循环 ═════════
 const ROLE_FRAME_MS = 140
+const ROLE_ATTACK_FRAME_MS = 80
 const ROLE_MOVE_MS = 16
 const ROLE_SPEED = 1.4
 const ROLE_X_MIN = -240
@@ -256,11 +258,14 @@ function RoleSprite() {
   const [x, setX] = useState(ROLE_X_MAX)
   const [frame, setFrame] = useState(0)
 
-  // 帧动画:0..3 循环(走/攻击各 4 帧)
+  // 帧动画:走 2 帧 / 攻击 4 帧,切换动作时重置
   useEffect(() => {
-    const id = setInterval(() => setFrame((f) => (f + 1) % 4), ROLE_FRAME_MS)
+    setFrame(0)
+    const max = action === "walk" ? 2 : 4
+    const ms = action === "walk" ? ROLE_FRAME_MS : ROLE_ATTACK_FRAME_MS
+    const id = setInterval(() => setFrame((f) => (f + 1) % max), ms)
     return () => clearInterval(id)
-  }, [])
+  }, [action])
 
   // 走路位移
   useEffect(() => {
@@ -284,7 +289,7 @@ function RoleSprite() {
     const id = setTimeout(() => {
       setDir((d) => (d === 1 ? -1 : 1))
       setAction("walk")
-    }, ROLE_FRAME_MS * 4)
+    }, ROLE_ATTACK_FRAME_MS * 8)
     return () => clearTimeout(id)
   }, [action])
 
@@ -304,6 +309,19 @@ function RoleSprite() {
         alt=""
         className="h-full w-full object-contain"
         style={{ transform: `scaleX(${dir})` }}
+      />
+    </div>
+  )
+}
+
+// ═════════ Hero 区 idle 角色(gif) ═════════
+function RoleIdleSprite() {
+  return (
+    <div style={{ width: 36, height: 36 }}>
+      <img
+        src="/images/role1/idle/1.gif"
+        alt=""
+        className="h-full w-full object-contain"
       />
     </div>
   )
