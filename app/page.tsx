@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getAllPosts } from "@/lib/posts"
 import HomeClient from "./home-client"
 
 export const metadata: Metadata = {
@@ -21,5 +22,6 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
-  return <HomeClient />
+  const posts = getAllPosts()
+  return <HomeClient posts={posts} />
 }

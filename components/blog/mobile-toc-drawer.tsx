@@ -19,7 +19,7 @@ export function MobileTocDrawer({ content }: MobileTocDrawerProps) {
         <Button
           variant="outline"
           size="sm"
-          className="lg:hidden fixed bottom-6 right-6 z-50 shadow-lg bg-background text-[12px] rounded-[8px] border-border/50"
+          className="lg:hidden fixed bottom-6 right-6 z-50 shadow-none bg-background text-[12px] border-border"
         >
           <Menu className="h-3.5 w-3.5 mr-1.5" />
           大纲

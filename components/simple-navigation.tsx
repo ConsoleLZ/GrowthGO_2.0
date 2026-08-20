@@ -54,7 +54,9 @@ function MobileNav() {
         <SheetTitle className="sr-only">导航菜单</SheetTitle>
         <div className="flex flex-col space-y-8 pt-14">
           <div className="px-6">
-            <span className="text-xl font-serif tracking-tight text-foreground/90">小哲</span>
+            <Link href="/" onClick={() => setOpen(false)} className="text-xl font-serif tracking-tight text-foreground/90">
+              小哲
+            </Link>
           </div>
           <nav className="flex flex-col space-y-1 px-4">
             {navItems.map((item) => {
@@ -65,7 +67,7 @@ function MobileNav() {
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "flex items-center px-4 py-3 text-[15px] font-medium transition-all duration-200 rounded-[8px]",
+                    "flex items-center px-4 py-3 text-[15px] font-medium transition-all duration-200",
                     active
                       ? "text-foreground bg-secondary/50"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
@@ -75,7 +77,6 @@ function MobileNav() {
                 </Link>
               )
             })}
-            {/* 主题切换放在导航菜单末尾 */}
             <div className="flex items-center gap-2 px-4 pt-3">
               <ThemeToggle />
               <span className="text-sm text-muted-foreground">切换主题</span>
@@ -92,35 +93,39 @@ export function SimpleNavigation() {
   const pathname = usePathname()
 
   return (
-    <header
-      className={cn(
-        "fixed z-50",
-        isMobile ? "right-[16px] top-[20px]" : "left-1/2 top-[30px] -translate-x-1/2"
-      )}
-    >
-      {isMobile ? (
-        <MobileNav />
-      ) : (
-        <nav className="flex items-center gap-6 rounded-full border border-border/40 bg-background/40 px-4 py-1.5 backdrop-blur-md">
-          {navItems.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "text-[12px] font-normal uppercase tracking-[0.2em] transition-colors duration-300",
-                  active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {item.label}
-              </Link>
-            )
-          })}
-          <div className="h-4 w-px bg-border/60 mx-1" aria-hidden="true" />
-          <ThemeToggle />
-        </nav>
-      )}
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1120px] items-center justify-between px-6 py-4">
+        <Link
+          href="/"
+          className="font-serif text-lg font-semibold tracking-[-0.005em] text-foreground hover:text-foreground/80 transition-colors"
+        >
+          小哲
+        </Link>
+
+        {isMobile ? (
+          <MobileNav />
+        ) : (
+          <nav className="flex items-center gap-8">
+            {navItems.map((item) => {
+              const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "text-[13px] font-normal uppercase tracking-[0.2em] transition-colors duration-300",
+                    active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
+            <div className="h-4 w-px bg-border/60 mx-1" aria-hidden="true" />
+            <ThemeToggle />
+          </nav>
+        )}
+      </div>
     </header>
   )
 }

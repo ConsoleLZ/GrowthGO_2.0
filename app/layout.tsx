@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Inter_Tight } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import { BackToTop } from '@/components/back-to-top'
@@ -14,13 +14,6 @@ const inter = Inter({
   display: 'swap',
 })
 
-const interTight = Inter_Tight({
-  subsets: ["latin"],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: "--font-display",
-  display: 'swap',
-})
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xiaozhe.me'
 const siteName = '小哲来了'
 const siteDescription = '小哲个人信息 / 个人简历 / 技术笔记 / 资源导航。分享前端开发、AI工具、设计资源、学习资料等优质内容。'
@@ -28,8 +21,8 @@ const siteKeywords = ['小哲', '个人博客', '技术笔记', '前端开发', 
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+    { media: '(prefers-color-scheme: light)', color: '#f7f5ef' },
+    { media: '(prefers-color-scheme: dark)', color: '#1b1916' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -118,13 +111,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="zh-CN" suppressHydrationWarning className={`${inter.variable} ${interTight.variable}`}>
+    <html lang="zh-CN" suppressHydrationWarning className={inter.variable}>
       <head>
-        {/* intro3d 原站显示字体：Bricolage Grotesque（首页 1:1 复刻使用） */}
+        {/* 杂志衬线显示字体：Noto Serif SC（中文标题宋体） */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap"
           rel="stylesheet"
         />
       </head>

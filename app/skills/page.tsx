@@ -125,7 +125,7 @@ export default function SkillsPage() {
                   <span className="ml-auto text-[11px] text-muted-foreground/60">{items.length} 个文件</span>
                 </div>
 
-                <div className="rounded-[8px] border border-border/50 bg-card overflow-hidden divide-y divide-border/30">
+                <div className="border border-border bg-card overflow-hidden divide-y divide-border/30">
                   {items.map(skill => (
                     <div
                       key={`${skill.category}/${skill.name}`}

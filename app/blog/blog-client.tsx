@@ -122,7 +122,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
               placeholder="搜索文章..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-10 pl-10 bg-secondary/50 border-0 focus-visible:ring-accent/40 text-[14px] rounded-[8px]"
+              className="h-10 pl-10 bg-transparent border-0 border-b border-border rounded-none focus-visible:ring-accent/40 text-[14px]"
             />
           </div>
 
@@ -131,10 +131,10 @@ export default function BlogClient({ posts }: BlogClientProps) {
             <button
               onClick={() => handleTagSelect(null)}
               className={cn(
-                "rounded-full px-3 py-1 text-[12px] font-medium transition-all",
+                "rounded-none px-3 py-1 text-[12px] font-medium transition-all",
                 !selectedTag
                   ? "bg-accent text-accent-on"
-                  : "bg-secondary/50 text-muted-foreground hover:text-foreground"
+                  : "border border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground"
               )}
             >
               全部
@@ -144,10 +144,10 @@ export default function BlogClient({ posts }: BlogClientProps) {
                 key={tag}
                 onClick={() => handleTagSelect(tag)}
                 className={cn(
-                  "rounded-full px-3 py-1 text-[12px] font-medium transition-all",
+                  "rounded-none px-3 py-1 text-[12px] font-medium transition-all",
                   selectedTag === tag
                     ? "bg-accent text-accent-on"
-                    : "bg-secondary/50 text-muted-foreground hover:text-foreground"
+                    : "border border-border bg-transparent text-muted-foreground hover:text-foreground hover:border-foreground"
                 )}
               >
                 {tag}
@@ -169,7 +169,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
                   onClick={() => toggleYear(year)}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="block h-5 w-[3px] rounded-full bg-foreground/80" />
+                    <span className="block h-5 w-[3px] bg-foreground/80" />
                     <h2 className="text-[28px] font-serif font-semibold tracking-tight">
                       {year}
                     </h2>
@@ -178,7 +178,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
                     </span>
                   </div>
                   <button
-                    className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary/50 hover:text-foreground"
+                    className="flex h-7 w-7 items-center justify-center text-muted-foreground transition-colors hover:bg-secondary/50 hover:text-foreground"
                     aria-label={isCollapsed ? "展开" : "收起"}
                   >
                     {isCollapsed ? (
@@ -220,7 +220,7 @@ export default function BlogClient({ posts }: BlogClientProps) {
                             {post.tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="rounded-full bg-secondary/60 px-2.5 py-0.5 text-[11px] text-muted-foreground"
+                                className="rounded-none bg-secondary/60 px-2.5 py-0.5 text-[11px] text-muted-foreground"
                               >
                                 {tag}
                               </span>

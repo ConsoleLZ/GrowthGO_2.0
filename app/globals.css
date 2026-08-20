@@ -4,41 +4,42 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ─────────────────────────────────────────────────────────────────────────
- * Apple Design System — token bindings
- * Contract from design-systems/apple/tokens.css
+ * Editorial Monocle — magazine token bindings
+ * Direction: editorial-monocle — serif display / sans body / mono metadata,
+ * warm paper + ink + a single terracotta accent, hairline borders.
  * ─────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* ─── Surface ────────────────────────────────────────────────────── */
-  --bg: #ffffff;
-  --surface: #f5f5f7;
-  --surface-warm: #fbfbfd;
+  /* ─── Surface (warm paper) ───────────────────────────────────────── */
+  --bg: oklch(98% 0.004 95);
+  --surface: oklch(100% 0.002 95);
+  --surface-warm: oklch(97% 0.006 95);
 
-  /* ─── Foreground ramp ────────────────────────────────────────────── */
-  --fg: #1d1d1f;
-  --fg-2: #424245;
-  --muted: #6e6e73;
-  --meta: #86868b;
+  /* ─── Foreground ramp (ink) ──────────────────────────────────────── */
+  --fg: oklch(20% 0.018 70);
+  --fg-2: oklch(36% 0.02 70);
+  --muted: oklch(48% 0.012 70);
+  --meta: oklch(58% 0.01 70);
 
-  /* ─── Border ──────────────────────────────────────────────────────── */
-  --border: #d2d2d7;
-  --border-soft: #e8e8ed;
+  /* ─── Border (hairline) ──────────────────────────────────────────── */
+  --border: oklch(90% 0.006 95);
+  --border-soft: oklch(93% 0.004 95);
 
-  /* ─── Accent ──────────────────────────────────────────────────────── */
-  --accent: #0071e3;
-  --accent-on: #ffffff;
-  --accent-hover: #0077ed;
-  --accent-active: #0066cc;
+  /* ─── Accent (terracotta — at most 2× per screen) ────────────────── */
+  --accent: oklch(52% 0.10 28);
+  --accent-on: oklch(99% 0.004 95);
+  --accent-hover: oklch(46% 0.10 28);
+  --accent-active: oklch(42% 0.10 28);
 
   /* ─── Semantic ────────────────────────────────────────────────────── */
-  --success: #16a34a;
-  --warn:    #eab308;
-  --danger:  #dc2626;
+  --success: oklch(58% 0.15 150);
+  --warn:    oklch(72% 0.16 82);
+  --danger:  oklch(53% 0.19 25);
 
-  /* ─── Typography ──────────────────────────────────────────────────── */
-  --font-display: "Inter Tight", "SF Pro Display", system-ui, -apple-system, sans-serif;
-  --font-body: "Inter", "SF Pro Text", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+  /* ─── Typography (serif display / sans body / mono metadata) ─────── */
+  --font-display: "Iowan Old Style", "Charter", Georgia, "Times New Roman", "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --font-body: "Inter", "SF Pro Text", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
 
   --text-xs:   12px;
   --text-sm:   14px;
@@ -49,9 +50,9 @@
   --text-3xl:  56px;
   --text-4xl:  80px;
 
-  --leading-body:  1.47;
-  --leading-tight: 1.05;
-  --tracking-display: -0.015em;
+  --leading-body:  1.55;
+  --leading-tight: 1.08;
+  --tracking-display: -0.01em;
 
   /* ─── Spacing ─────────────────────────────────────────────────────── */
   --space-1:  4px;
@@ -67,16 +68,16 @@
   --section-y-tablet:  64px;
   --section-y-phone:   40px;
 
-  /* ─── Radius ──────────────────────────────────────────────────────── */
-  --radius-sm:   8px;
-  --radius-md:   12px;
-  --radius-lg:   18px;
-  --radius-pill: 980px;
+  /* ─── Radius (sharp editorial — hairline over rounded) ───────────── */
+  --radius-sm:   2px;
+  --radius-md:   3px;
+  --radius-lg:   4px;
+  --radius-pill: 2px;
 
-  /* ─── Elevation ───────────────────────────────────────────────────── */
+  /* ─── Elevation (hairline, minimal shadow) ────────────────────────── */
   --elev-flat:   none;
   --elev-ring:   0 0 0 1px var(--border);
-  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.08);
+  --elev-raised: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   /* ─── Focus ───────────────────────────────────────────────────────── */
   --focus-ring: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%);
@@ -104,12 +105,12 @@
   --secondary: var(--surface);
   --secondary-foreground: var(--fg);
   --muted-foreground: var(--muted);
-  --accent-foreground: var(--fg);
+  --accent-foreground: var(--accent-on);
   --destructive: var(--danger);
   --destructive-foreground: var(--bg);
   --input: var(--border);
   --ring: var(--accent);
-  --radius: 0.5rem;
+  --radius: 0.125rem;
   --highlight: var(--accent);
   --highlight-foreground: var(--accent-on);
   --highlight-soft: color-mix(in oklab, var(--accent), var(--surface) 85%);
@@ -118,44 +119,54 @@
 }
 
 .dark {
-  --bg: #0a0a0b;
-  --surface: #15151a;
-  --surface-warm: #121216;
-  --fg: #f4f1ea;
-  --fg-2: #c9c5bc;
-  --muted: #8a8780;
-  --meta: #6f6d66;
-  --border: #2a2a2f;
-  --border-soft: #1e1e22;
-  --accent: #cb7350;
-  --accent-on: #f4f1ea;
-  --accent-hover: #d4855f;
-  --accent-active: #b85f3f;
-  --success: #22c55e;
-  --warn: #facc15;
-  --danger: #ef4444;
-  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.5);
+  /* ─── Surface (warm ink) ─────────────────────────────────────────── */
+  --bg: oklch(19% 0.006 70);
+  --surface: oklch(23% 0.007 70);
+  --surface-warm: oklch(21% 0.006 70);
+
+  /* ─── Foreground ramp (paper) ────────────────────────────────────── */
+  --fg: oklch(93% 0.006 95);
+  --fg-2: oklch(82% 0.008 95);
+  --muted: oklch(62% 0.012 85);
+  --meta: oklch(52% 0.01 85);
+
+  /* ─── Border (hairline) ──────────────────────────────────────────── */
+  --border: oklch(30% 0.008 70);
+  --border-soft: oklch(25% 0.007 70);
+
+  /* ─── Accent (lighter terracotta for ink grounds) ────────────────── */
+  --accent: oklch(68% 0.10 28);
+  --accent-on: oklch(19% 0.006 70);
+  --accent-hover: oklch(74% 0.10 28);
+  --accent-active: oklch(62% 0.10 28);
+
+  /* ─── Semantic ────────────────────────────────────────────────────── */
+  --success: oklch(70% 0.15 150);
+  --warn: oklch(78% 0.16 82);
+  --danger: oklch(64% 0.19 25);
+
+  --elev-raised: 0 1px 3px rgba(0, 0, 0, 0.4);
   --focus-ring: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 60%);
 
   /* shadcn dark aliases */
-  --background: #0a0a0b;
-  --foreground: #f4f1ea;
-  --card: #121216;
-  --card-foreground: #f4f1ea;
-  --popover: #121216;
-  --popover-foreground: #f4f1ea;
-  --primary: #f4f1ea;
-  --primary-foreground: #0a0a0b;
-  --secondary: #15151a;
-  --secondary-foreground: #f4f1ea;
-  --muted-foreground: #8a8780;
-  --accent-foreground: #f4f1ea;
-  --destructive: #ef4444;
-  --destructive-foreground: #f4f1ea;
-  --input: #2a2a2f;
-  --ring: #cb7350;
-  --highlight: #cb7350;
-  --highlight-foreground: #f4f1ea;
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--surface-warm);
+  --card-foreground: var(--fg);
+  --popover: var(--surface-warm);
+  --popover-foreground: var(--fg);
+  --primary: var(--fg);
+  --primary-foreground: var(--bg);
+  --secondary: var(--surface);
+  --secondary-foreground: var(--fg);
+  --muted-foreground: var(--muted);
+  --accent-foreground: var(--bg);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--fg);
+  --input: var(--border);
+  --ring: var(--accent);
+  --highlight: var(--accent);
+  --highlight-foreground: var(--bg);
   --highlight-soft: color-mix(in oklab, var(--accent), var(--surface) 85%);
 }
 

@@ -90,9 +90,9 @@ export default function CategoryClient() {
                   href={site.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 rounded-[8px] border border-border/50 bg-card px-3 py-2 transition-all hover:border-border hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+                  className="group flex items-center gap-2 border border-border bg-card px-3 py-2 transition-colors hover:border-foreground"
                 >
-                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] bg-secondary overflow-hidden">
+                  <div className="flex h-5 w-5 shrink-0 items-center justify-center bg-secondary overflow-hidden">
                     <LazyImage
                       src={site.ico}
                       alt={site.name}
@@ -121,7 +121,7 @@ export default function CategoryClient() {
                     key={tag}
                     onClick={() => handleTagSelect(tag)}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-[8px] px-3 py-2 text-[13px] transition-colors",
+                      "flex w-full items-center justify-between px-3 py-2 text-[13px] transition-colors",
                       selectedTag === tag
                         ? "bg-accent text-accent-on"
                         : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
@@ -143,7 +143,7 @@ export default function CategoryClient() {
                   key={tag}
                   onClick={() => handleTagSelect(tag)}
                   className={cn(
-                    "shrink-0 rounded-full px-4 py-1.5 text-[13px] font-medium transition-all",
+                    "shrink-0 px-4 py-1.5 text-[13px] font-medium transition-all",
                     selectedTag === tag ? "bg-accent text-accent-on" : "bg-secondary/50 text-muted-foreground"
                   )}
                 >
@@ -171,7 +171,7 @@ export default function CategoryClient() {
                 placeholder="搜索资源..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 pl-10 bg-secondary/50 border-0 focus-visible:ring-accent/40 text-[14px] rounded-[8px]"
+                className="h-10 pl-10 bg-transparent border-0 border-b border-border rounded-none focus-visible:ring-accent/40 text-[14px]"
               />
             </div>
 
@@ -182,10 +182,10 @@ export default function CategoryClient() {
                   href={site.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group rounded-[8px] border border-border/50 bg-card p-3 md:p-4 transition-all hover:border-border hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+                  className="group border border-border bg-card p-3 md:p-4 transition-colors hover:border-foreground"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-8 w-8 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-[8px] bg-secondary overflow-hidden">
+                    <div className="flex h-8 w-8 md:h-10 md:w-10 shrink-0 items-center justify-center bg-secondary overflow-hidden">
                       <LazyImage
                         src={site.ico}
                         alt={site.name}

@@ -1,477 +1,248 @@
 "use client"
 
-import { Suspense, useRef, useEffect, useState, type ReactNode } from "react"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, useProgress, Html } from "@react-three/drei"
-import * as THREE from "three"
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js"
+import Link from "next/link"
 import { SimpleNavigation } from "@/components/simple-navigation"
-import { cn } from "@/lib/utils"
+import type { Post } from "@/lib/posts"
 
-/* 原站 intro3d 显示字体：Bricolage Grotesque（layout 中已加载） */
 const DISPLAY_FONT =
-  '"Bricolage Grotesque", "PingFang SC", -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif'
+  '"Iowan Old Style", "Charter", Georgia, "Times New Roman", "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif'
 
-/* ─── 3D model ─────────────────────────────────────────────────────── */
-
-function Model() {
-  // 使用 Draco 压缩版本 + Google CDN 解码器，显著减小下载体积
-  // 注意：贴纸已烘焙在 me.glb 模型内，这里不再重复加载
-  const { scene } = useGLTF("/glb/1.glb", "https://www.gstatic.com/draco/v1/decoders/")
-  const ref = useRef<THREE.Group>(null)
-
-  useEffect(() => {
-    const group = ref.current
-    if (!group) return
-
-    // 幂等适配：useGLTF 会缓存同一个 scene，导航返回后 scene 仍是上次缩放过的尺寸。
-    // 若再按当前包围盒重算缩放，会得到 scale=1 并重置回原始尺寸导致模型变小。
-    // 因此只在首次挂载时做一次「按原始尺寸 → 2.15」的适配，之后跳过。
-    if (!group.userData.fitted) {
-      const box = new THREE.Box3().setFromObject(group)
-      const size = box.getSize(new THREE.Vector3())
-      const center = box.getCenter(new THREE.Vector3())
-      const maxDim = Math.max(size.x, size.y, size.z) || 1
-      const scale = 1.6 / maxDim
-      // 对齐：模型 position [0,0,0]，居中于原点
-      group.scale.setScalar(scale)
-      group.position.x = -center.x * scale
-      group.position.y = -center.y * scale
-      group.position.z = -center.z * scale
-      group.userData.fitted = true
-    }
-
-    // 降低环境反射光泽（幂等，每次挂载都设一遍）
-    group.traverse((obj) => {
-      const mesh = obj as THREE.Mesh
-      if (!mesh.isMesh) return
-      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
-      mats.forEach((m) => {
-        const std = m as THREE.MeshStandardMaterial
-        if (std.envMapIntensity !== undefined) std.envMapIntensity = 0.1
-      })
-    })
-  }, [])
-
-  return <primitive ref={ref} object={scene} />
+function formatDate(date: string) {
+  const d = new Date(date)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}/${m}/${day}`
 }
 
-/* ─── Scroll-driven camera（原站精确相机 tour） ─────────────────────── */
-
-type Key = { p: number; pos: [number, number, number]; look: [number, number, number] }
-
-// 原站精确值：hero 桌面 [-0.1966,1.4111,3.3293] / 移动端 [0.7885,-0.1009,3.5330]；节点1 [2.5846,0.3788,2.5081]
-const HERO_POS: [number, number, number] =
-  typeof window !== "undefined" && window.innerWidth < 768
-    ? [0.7885, -0.1009, 3.5330]
-    : [-0.1966, 1.4111, 3.3293]
-
-const KEYS: Key[] = [
-  { p: 0.0, pos: HERO_POS, look: [0, 0, 0] },
-  { p: 0.64, pos: [2.5846, 0.3788, 2.5081], look: [0, 0, 0] }, // 节点1（原站 node camera）
-  { p: 0.97, pos: [-1.9, 0.8, 3.4], look: [0, 0, 0] },         // 节点2（延续：环绕左侧）
-  { p: 1.0, pos: [-0.3, 0.9, 4.3], look: [0, 0, 0] },          // 节点3（延续：拉远回中）
-]
-
-const _v = new THREE.Vector3()
-const _look = new THREE.Vector3()
-
-function sampleCamera(p: number, out: THREE.Vector3, lookOut: THREE.Vector3) {
-  const k = KEYS
-  let a = k[0]
-  let b = k[k.length - 1]
-  for (let i = 0; i < k.length - 1; i++) {
-    if (p >= k[i].p && p <= k[i + 1].p) {
-      a = k[i]
-      b = k[i + 1]
-      break
-    }
-  }
-  const span = b.p - a.p || 1
-  let t = (p - a.p) / span
-  t = t * t * (3 - 2 * t)
-  out.set(
-    a.pos[0] + (b.pos[0] - a.pos[0]) * t,
-    a.pos[1] + (b.pos[1] - a.pos[1]) * t,
-    a.pos[2] + (b.pos[2] - a.pos[2]) * t,
-  )
-  lookOut.set(
-    a.look[0] + (b.look[0] - a.look[0]) * t,
-    a.look[1] + (b.look[1] - a.look[1]) * t,
-    a.look[2] + (b.look[2] - a.look[2]) * t,
-  )
+interface HomeClientProps {
+  posts: Omit<Post, "content">[]
 }
 
-function ScrollCamera({ scrollRef }: { scrollRef: React.MutableRefObject<number> }) {
-  const { camera } = useThree()
-  useFrame(() => {
-    sampleCamera(scrollRef.current, _v, _look)
-    camera.position.lerp(_v, 0.08)
-    camera.lookAt(_look)
-  })
-  return null
+const siteInfo = {
+  name: "小哲",
+  tagline: "一个还在成长的程序员",
+  bio:
+    "我是一名研发，白天写代码，做产品设计与工程交付，晚上把踩过的坑写下来。这里没有「10分钟学会 XX」，只有我真实做过、并且愿意为自己说过的话负责的记录。",
+  email: "17347187569@163.com",
+  github: "https://github.com/ConsoleLZ",
+  juejin: "https://juejin.cn/user/1295692732053241",
+  githubRepo: "https://github.com/ConsoleLZ/GrowthGO_2.0",
+  location: "广东",
+  keywords: ["前端工程", "设计系统", "TypeScript", "效率工具", "独立开发", "产品设计", "随笔"],
+  interests: ["DIY爱好者", "代码", "吉他", "无畏契约"],
 }
 
-/* ── 3D 模型加载指示（画布内，随模型加载显示） ──────────────────────── */
-
-function Loader() {
-  const { progress } = useProgress()
-  return (
-    <Html center>
-      <div className="flex flex-col items-center gap-3 select-none">
-        <div className="w-9 h-9 border-2 border-foreground/15 border-t-foreground/80 rounded-full animate-spin" />
-        <div className="text-foreground/50 text-[11px] tracking-[0.3em] uppercase">
-          {progress.toFixed(0)}%
-        </div>
-      </div>
-    </Html>
-  )
-}
-
-function PointerFollow({
-  children,
-  pointerRef,
-}: {
-  children: ReactNode
-  pointerRef: React.MutableRefObject<{ x: number; y: number }>
-}) {
-  const ref = useRef<THREE.Group>(null)
-  useFrame(() => {
-    if (!ref.current) return
-    const p = pointerRef.current
-    const targetY = p.x * 0.16
-    const targetX = -p.y * 0.1
-    ref.current.rotation.y += (targetY - ref.current.rotation.y) * 0.07
-    ref.current.rotation.x += (targetX - ref.current.rotation.x) * 0.07
-  })
-  return <group ref={ref}>{children}</group>
-}
-
-// 环境映射：原站 environment preset "city" intensity 0.5，用 RoomEnvironment 近似
-function EnvironmentMap() {
-  const { gl, scene } = useThree()
-  useEffect(() => {
-    const pmrem = new THREE.PMREMGenerator(gl)
-    const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
-    scene.environment = envTex
-    scene.environmentIntensity = 0.1
-    return () => {
-      scene.environment = null
-      envTex.dispose()
-      pmrem.dispose()
-    }
-  }, [gl, scene])
-  return null
-}
-
-function Scene({
-  scrollRef,
-  pointerRef,
-}: {
-  scrollRef: React.MutableRefObject<number>
-  pointerRef: React.MutableRefObject<{ x: number; y: number }>
-}) {
-  return (
-    <>
-      {/* 原站渲染机制：环境映射 + 白环境光 0.2 + 主光 0.8 @45° height1.2 */}
-      <EnvironmentMap />
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[0, 1.2, 1.2]} intensity={0.8} />
-      <Suspense fallback={<Loader />}>
-        <PointerFollow pointerRef={pointerRef}>
-          <Model />
-        </PointerFollow>
-      </Suspense>
-      <ScrollCamera scrollRef={scrollRef} />
-    </>
-  )
-}
-
-/* ─── Reveal on scroll ─────────────────────────────────────────────── */
-
-function Reveal({
-  children,
-  className,
-  delay = 0,
-}: {
-  children: ReactNode
-  className?: string
-  delay?: number
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [shown, setShown] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setShown(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.1 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
+export default function HomeClient({ posts }: HomeClientProps) {
+  const latest = posts[0]
+  const recent = posts.slice(1, 6)
 
   return (
-    <div
-      ref={ref}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={cn(
-        "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform",
-        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[26px]",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  )
-}
-
-/* ─── 内容数据（完全复制 intro3d 模板，后续可替换） ──────────────── */
-
-// 滚动后右侧时间线的内容卡片
-const timeline = [
-  {
-    title: "技能",
-    subtitle: "正在积攒技能点数",
-    body: "前端：HTML、CSS、JS、Node、Vue、React、Mysql、Redis、Docker等，\n硬件：C语言、单片机各种外设，单片机各种通讯协议（IIC、SPI、USART）、电路设计等",
-  },
-  {
-    title: "作品",
-    subtitle: "一个好的作品是经得起时间的考验的",
-    body: "说来惭愧，觉得自己并没有作品拿的出手的，很多东西做的中途就放弃了（各种原因），后续会加油做出至少令自己满意的作品的",
-  },
-  {
-    title: "文化水平",
-    subtitle: "一个普通的本科生-湖南人文科技学院",
-    body: "我爱我的大学",
-  },
-]
-
-/* ─── Page ─────────────────────────────────────────────────────────── */
-
-export default function HomeClient() {
-  const scrollRef = useRef(0)
-  const pointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
-  // 内部滚动容器，与 intro3d 一致：3D 固定全屏背景 + 内部 overflow-y-auto 内容
-  const scrollElRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = scrollElRef.current
-    if (!el) return
-    const onScroll = () => {
-      const max = el.scrollHeight - el.clientHeight
-      scrollRef.current = max > 0 ? Math.min(1, Math.max(0, el.scrollTop / max)) : 0
-    }
-    onScroll()
-    el.addEventListener("scroll", onScroll, { passive: true })
-    return () => el.removeEventListener("scroll", onScroll)
-  }, [])
-
-  useEffect(() => {
-    const onPointer = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      pointerRef.current.x = (e.clientX / w) * 2 - 1
-      pointerRef.current.y = -((e.clientY / h) * 2 - 1)
-    }
-    window.addEventListener("pointermove", onPointer, { passive: true })
-    return () => window.removeEventListener("pointermove", onPointer)
-  }, [])
-
-  const cornerInset = "clamp(14px,2.2vw,28px)"
-
-  return (
-    <main
-      className="relative h-screen w-full overflow-hidden bg-background text-foreground"
-      style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
-    >
-      {/* 站内统一导航（SimpleNavigation） */}
+    <main className="min-h-screen w-full bg-background text-foreground">
       <SimpleNavigation />
 
-      {/* 固定全屏 3D 背景（透明 canvas，DOM 提供暗背景，贴合 intro3d） */}
-      <div className="fixed inset-0 z-0">
-        <Canvas
-          camera={{ position: HERO_POS, fov: 38 }}
-          dpr={[1, 2]}
-          gl={{ antialias: true, alpha: true }}
-          className="!h-full !w-full"
-          style={{ touchAction: "none", background: "transparent" }}
-        >
-          <Scene scrollRef={scrollRef} pointerRef={pointerRef} />
-        </Canvas>
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 50% 46%, transparent 0%, var(--background) 72%)" }}
-        />
-      </div>
+      <div className="mx-auto max-w-[1120px] px-6">
+        {/* ═════════ Hero ═════════ */}
+        <section className="border-b border-border/70 py-16 md:py-24">
+          <div className="mb-4 flex items-center gap-3 text-[12px] uppercase tracking-[0.24em] text-muted-foreground">
+            <span>最新文章</span>
+            <span className="text-foreground/30">·</span>
+            <span>{latest ? formatDate(latest.date) : ""}</span>
+          </div>
+          <h1
+            className="max-w-[900px] text-[clamp(36px,5.4vw,68px)] font-semibold leading-[1.05] tracking-[-0.015em] text-foreground"
+            style={{ fontFamily: DISPLAY_FONT }}
+          >
+            {latest?.title ?? "设计系统不是组件库"}
+          </h1>
+          <p className="mt-5 max-w-[680px] text-[15px] leading-[1.7] text-foreground/75 md:text-base">
+            {latest?.description ??
+              "组件可以复制，规范会漂移。这篇写给既写代码、又要维护设计系统的工程师。"}
+          </p>
 
-      {/* 四角细边框 + 角标（原站：inset clamp(14,2.2cqw,28) · 1px @18% · 11px 角标） */}
-      <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
-        <div className="absolute border border-foreground/15" style={{ inset: cornerInset }} />
-        <span className="absolute" style={{ top: cornerInset, left: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-        </span>
-        <span className="absolute" style={{ top: cornerInset, right: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-        </span>
-        <span className="absolute" style={{ bottom: cornerInset, left: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-        </span>
-        <span className="absolute" style={{ bottom: cornerInset, right: cornerInset }}>
-          <span className="absolute left-1/2 top-1/2 h-px w-[11px] -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-          <span className="absolute left-1/2 top-1/2 h-[11px] w-px -translate-x-1/2 -translate-y-1/2 bg-foreground/40" />
-        </span>
-      </div>
+          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 text-[13px] text-muted-foreground">
+            <span>{latest ? formatDate(latest.date) : ""}</span>
+            <span className="text-foreground/30">·</span>
+            <span>约 {latest?.readingTime ?? 12} 分钟</span>
+            <span className="text-foreground/30">·</span>
+            <span>设计系统</span>
+          </div>
 
-      {/* 四角文字（原站：clamp(9,0.9cqw,11) · tracking .26em · 60%） */}
-      <div
-        className="pointer-events-none absolute inset-0 z-20 text-foreground/60"
-        style={{
-          fontSize: "clamp(9px,0.9vw,11px)",
-          letterSpacing: "0.26em",
-          lineHeight: 1.7,
-          textTransform: "uppercase",
-          whiteSpace: "pre-line",
-        }}
-      >
-        <div className="absolute" style={{ top: `calc(${cornerInset} + 18px)`, left: `calc(${cornerInset} + 18px)` }}>
-          <div>xiaozhe</div>
-          <div className="mt-1 text-foreground/60">一个还在成长的程序员</div>
-        </div>
-        <div className="pointer-events-auto absolute text-right" style={{ top: `calc(${cornerInset} + 18px)`, right: `calc(${cornerInset} + 18px)` }}>
-          <a href="https://github.com/ConsoleLZ/GrowthGO_2.0" target="_blank" rel="noopener noreferrer"><img style={{width: "24px"}} src="/images/github.png" alt="" /></a>
-        </div>
-        <div className="absolute" style={{ bottom: `calc(${cornerInset} + 18px)`, left: `calc(${cornerInset} + 18px)` }}>
-          diy爱好者 · 代码 · 吉他 · 无畏契约
-        </div>
-        <div
-          className="absolute"
-          style={{
-            top: "50%",
-            right: `calc(${cornerInset} + 6px)`,
-            transform: "translateY(-50%)",
-            writingMode: "vertical-rl",
-            letterSpacing: "0.3em",
-          }}
-        >
-          广东
-        </div>
-      </div>
-
-      {/* 内部滚动容器 */}
-      <div
-        ref={scrollElRef}
-        className="absolute inset-0 z-10 overflow-y-auto overflow-x-hidden"
-        style={{ scrollbarWidth: "none" }}
-      >
-        <style>{`div::-webkit-scrollbar{display:none}`}</style>
-
-        {/* 第一屏：模型居中，文字叠底（原站 classic Flow：底部锚定） */}
-        <section className="pointer-events-none relative z-[1] -mb-[28.57vh] flex h-screen w-full flex-col items-center justify-end px-6 pb-[7vh] text-center">
-          <div className="flex flex-col items-center">
-            <h1
-              className="text-[clamp(28px,5.2vw,60px)] font-semibold leading-[1.05] tracking-[-0.01em] text-foreground"
-              style={{ fontFamily: DISPLAY_FONT }}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link
+              href={`/blog/${latest?.slug ?? ""}`}
+              className="inline-flex items-center gap-2 bg-accent px-5 py-2.5 text-[13px] font-medium text-accent-on transition-colors hover:bg-accent-hover"
             >
-              XIAO ZHE
-            </h1>
-            <p className="mt-3 max-w-[min(560px,86vw)] text-[clamp(12px,1.3vw,15px)] leading-relaxed text-foreground/80">
-              Your future is created by what you do today, not tomorrow.
-            </p>
-            <div className="pointer-events-auto mt-6 flex flex-wrap gap-2">
-              {[
-                { src: "/images/juejin.png", href: "https://juejin.cn/user/1295692732053241", label: "掘金" },
-                { src: "/images/github.png", href: "https://github.com/ConsoleLZ", label: "GitHub" },
-                { src: "/images/email.png", href: "mailto:17347187569@163.com", label: "邮箱" },
-              ].map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target={item.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel="noopener noreferrer"
-                  aria-label={item.label}
-                  className="flex size-9 items-center justify-center rounded-full bg-white/90 text-black border border-black/10 transition-colors hover:bg-white"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.src} alt={item.label} className="size-4 object-contain" />
-                </a>
-              ))}
-            </div>
-            {/* 底部 Scroll down 提示（原站 scroll-cue） */}
-            <div className="mt-[2.2vh] flex flex-col items-center gap-2">
-              <span className="text-[10px] uppercase tracking-[0.32em] text-foreground/60">Scroll down</span>
+              阅读全文
+              <span aria-hidden>→</span>
+            </Link>
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-1 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              查看全部文章 →
+            </Link>
+          </div>
+
+          <div className="mt-8 flex items-center gap-3">
+            {siteInfo.interests.map((it) => (
               <span
-                className="relative block h-10 w-px overflow-hidden"
-                style={{ background: "linear-gradient(color-mix(in oklab, var(--foreground) 25%, transparent), color-mix(in oklab, var(--foreground) 5%, transparent))" }}
+                key={it}
+                className="border-l border-border/70 pl-3 text-[12px] tracking-wide text-muted-foreground first:border-l-0 first:pl-0"
               >
-                <span
-                  className="absolute left-1/2 top-0 h-[9px] w-[3px] rounded-[2px] bg-foreground shadow-[0_0_6px_var(--foreground)]"
-                  style={{ animation: "scroll-cue 2s ease-in-out infinite" }}
-                />
+                {it}
               </span>
-            </div>
+            ))}
           </div>
         </section>
 
-        {/* 滚动后右侧时间线（原站 classic Renderer） */}
-        <section className="relative w-full">
-          <div className="ml-auto mr-[clamp(20px,6vw,72px)] w-[min(420px,86vw)] px-[34px] pb-[20vh] pt-[30vh]">
-            <div className="relative">
-              {/* 竖线 */}
-              <span
-                className="absolute left-[5px] top-[6px] w-px bg-foreground/25"
-                style={{ height: `${(timeline.length - 1) * 71.43}vh` }}
-                aria-hidden="true"
-              />
-              {timeline.map((item, idx) => (
-                <Reveal key={idx} delay={idx * 80}>
-                  <div className="pl-[34px]" style={{ minHeight: "71.43vh" }}>
-                    <div className="relative">
-                      {/* 节点圆点（跟随主题 accent + 光晕） */}
-                      <span
-                        className="absolute -left-[34px] top-[6px] size-[11px] rounded-full bg-accent"
-                        style={{ boxShadow: "0 0 0 4px color-mix(in oklab, var(--accent) 14%, transparent)" }}
-                        aria-hidden="true"
-                      />
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-3 pt-2.5">
-                          <h2
-                            className="text-[clamp(18px,2.4vw,26px)] font-semibold leading-[1.25] text-foreground"
-                            style={{ fontFamily: DISPLAY_FONT }}
-                          >
-                            {item.title}
-                          </h2>
-                        </div>
-                        <div className="pt-1.5 text-[15px] font-normal text-foreground/80">{item.subtitle}</div>
-                        <div className="pt-4 text-[14px] leading-[1.5] font-normal text-foreground/95">{item.body}</div>
-                      </div>
-                    </div>
+        {/* ═════════ 最新文章列表 ═════════ */}
+        <section className="border-b border-border/70 py-16 md:py-20">
+          <div className="mb-10 flex items-end justify-between">
+            <div>
+              <div className="mb-2 text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                写作 · 按时间倒序
+              </div>
+              <h2
+                className="text-[clamp(28px,3.6vw,44px)] font-semibold leading-[1.1] tracking-[-0.012em] text-foreground"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                最新文章
+              </h2>
+            </div>
+            <Link
+              href="/blog"
+              className="text-[12px] tracking-wide text-muted-foreground transition-colors hover:text-foreground"
+            >
+              全部文章 →
+            </Link>
+          </div>
+
+          <ul className="divide-y divide-border/70">
+            {recent.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  href={`/blog/${p.slug}`}
+                  className="group grid grid-cols-1 items-start gap-4 py-6 transition-colors hover:bg-surface/60 md:grid-cols-12 md:gap-6 md:py-7 md:px-2"
+                >
+                  <div className="text-[12px] tracking-[0.05em] text-muted-foreground md:col-span-2 md:pt-1">
+                    {formatDate(p.date)}
                   </div>
-                </Reveal>
-              ))}
+                  <div className="md:col-span-8">
+                    <h3
+                      className="text-[20px] font-semibold leading-[1.3] tracking-[-0.005em] text-foreground transition-colors group-hover:text-accent"
+                      style={{ fontFamily: DISPLAY_FONT }}
+                    >
+                      {p.title}
+                    </h3>
+                    <p className="mt-2 text-[13px] leading-[1.65] text-foreground/70">
+                      {p.description}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 md:col-span-2 md:justify-end">
+                    {p.tags.slice(0, 1).map((t) => (
+                      <span
+                        key={t}
+                        className="border border-border px-2.5 py-1 text-[11px] tracking-wide text-muted-foreground"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* ═════════ 关于 / 个人联系方式 ═════════ */}
+        <section className="border-b border-border/70 py-16 md:py-20">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-14">
+            <div className="md:col-span-7">
+              <div className="mb-2 text-[11px] uppercase tracking-[0.24em] text-muted-foreground">关于</div>
+              <h2
+                className="mb-5 text-[clamp(28px,3.6vw,44px)] font-semibold leading-[1.1] tracking-[-0.012em] text-foreground"
+                style={{ fontFamily: DISPLAY_FONT }}
+              >
+                {siteInfo.name}
+              </h2>
+              <p className="max-w-[640px] text-[15px] leading-[1.8] text-foreground/80">
+                {siteInfo.bio}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[12px] text-muted-foreground">
+                {siteInfo.keywords.map((k, i) => (
+                  <span key={k}>
+                    {k}
+                    {i < siteInfo.keywords.length - 1 && (
+                      <span className="ml-6 text-foreground/20">·</span>
+                    )}
+                  </span>
+                ))}
+              </div>
             </div>
+
+            <aside className="md:col-span-5 md:border-l md:border-border/70 md:pl-10">
+              <div className="mb-4 text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
+                个人 IP · 联系方式
+              </div>
+              <ul className="divide-y divide-border/70">
+                {[
+                  { label: "GitHub", href: siteInfo.github, note: "代码仓库与日常提交", target: "_blank" },
+                  { label: "掘金", href: siteInfo.juejin, note: "中文技术文章", target: "_blank" },
+                  { label: "邮箱", href: `mailto:${siteInfo.email}`, note: siteInfo.email, target: undefined },
+                  { label: "站点源码", href: siteInfo.githubRepo, note: "本站开源实现", target: "_blank" },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      target={item.target}
+                      rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
+                      className="group flex items-start justify-between gap-6 py-4 transition-colors hover:bg-surface/60"
+                    >
+                      <div>
+                        <div className="text-[14px] font-medium text-foreground">{item.label}</div>
+                        <div className="mt-1 text-[12px] text-muted-foreground">{item.note}</div>
+                      </div>
+                      <span className="pt-1 text-[12px] text-muted-foreground transition-colors group-hover:text-foreground">
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </aside>
           </div>
         </section>
-      </div>
 
-      <style>{`
-        @keyframes scroll-cue {
-          0% { opacity: 0; transform: translate(-50%, -2px); }
-          18%, 82% { opacity: 1; }
-          100% { opacity: 0; transform: translate(-50%, 30px); }
-        }
-      `}</style>
+        {/* ═════════ 页脚 ═════════ */}
+        <footer className="border-t border-border/70 py-10">
+          <div className="flex flex-col items-start justify-between gap-4 text-[12px] text-muted-foreground md:flex-row md:items-center">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <span>© {new Date().getFullYear()} {siteInfo.name}</span>
+              <Link href="/" className="transition-colors hover:text-foreground">
+                关于
+              </Link>
+              <Link href="/blog" className="transition-colors hover:text-foreground">
+                文章
+              </Link>
+              <Link href="/category" className="transition-colors hover:text-foreground">
+                分类
+              </Link>
+              <a
+                href={`mailto:${siteInfo.email}`}
+                className="transition-colors hover:text-foreground"
+              >
+                联系
+              </a>
+            </div>
+            <div className="flex items-center gap-x-5">
+              <span>用键盘与咖啡维护</span>
+              <span className="hidden md:inline text-foreground/20">·</span>
+              <span>每篇文章都手写</span>
+            </div>
+          </div>
+        </footer>
+      </div>
     </main>
   )
 }
-
-useGLTF.preload("/glb/me-draco.glb", "https://www.gstatic.com/draco/v1/decoders/")
