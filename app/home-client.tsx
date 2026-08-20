@@ -257,24 +257,46 @@ function RoleSprite() {
   const [dir, setDir] = useState<-1 | 1>(-1)
   const [x, setX] = useState(ROLE_X_MAX)
   const [frame, setFrame] = useState(0)
+  const [ready, setReady] = useState(false)
 
-  // 帧动画:走 2 帧 / 攻击 4 帧,切换动作时重置
+  // 预加载所有帧,避免运行时切 src 触发"加载-取消-重试"循环
   useEffect(() => {
+    const urls = [
+      "/images/role/Run/1.png",
+      "/images/role/Run/2.png",
+      "/images/role/PunchAttack/1.png",
+      "/images/role/PunchAttack/2.png",
+      "/images/role/PunchAttack/3.png",
+      "/images/role/PunchAttack/4.png",
+    ]
+    let pending = urls.length
+    const done = () => { if (--pending === 0) setReady(true) }
+    urls.forEach((u) => {
+      const img = new Image()
+      img.onload = done
+      img.onerror = done
+      img.src = u
+    })
+  }, [])
+
+  // 帧动画:走 2 帧 / 攻击 4 帧,切换动作时重置(预加载完成后启动)
+  useEffect(() => {
+    if (!ready) return
     setFrame(0)
     const max = action === "walk" ? 2 : 4
     const ms = action === "walk" ? ROLE_FRAME_MS : ROLE_ATTACK_FRAME_MS
     const id = setInterval(() => setFrame((f) => (f + 1) % max), ms)
     return () => clearInterval(id)
-  }, [action])
+  }, [action, ready])
 
   // 走路位移
   useEffect(() => {
-    if (action !== "walk") return
+    if (!ready || action !== "walk") return
     const id = setInterval(() => {
       setX((p) => Math.min(ROLE_X_MAX, Math.max(ROLE_X_MIN, p + dir * ROLE_SPEED)))
     }, ROLE_MOVE_MS)
     return () => clearInterval(id)
-  }, [action, dir])
+  }, [action, dir, ready])
 
   // 撞墙 → 触发攻击(dir 条件避免翻转后立刻再次触发,形成死循环)
   useEffect(() => {
