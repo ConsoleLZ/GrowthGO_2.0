@@ -290,8 +290,8 @@ function RoleSprite() {
 
   const src =
     action === "walk"
-      ? `/images/role/Walk/Walk${frame + 1}.png`
-      : `/images/role/Stay_Attack/StayAttack${frame + 1}.png`
+      ? `/images/role/Run/${frame + 1}.png`
+      : `/images/role/PunchAttack/${frame + 1}.png`
 
   return (
     <div
