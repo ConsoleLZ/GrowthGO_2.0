@@ -219,14 +219,11 @@ export default function HomeClient({ posts }: HomeClientProps) {
           <div className="flex flex-col items-start justify-between gap-4 text-[12px] text-muted-foreground md:flex-row md:items-center">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <span>© {new Date().getFullYear()} {siteInfo.name}</span>
-              <Link href="/" className="transition-colors hover:text-foreground">
-                关于
-              </Link>
               <Link href="/blog" className="transition-colors hover:text-foreground">
                 文章
               </Link>
               <Link href="/category" className="transition-colors hover:text-foreground">
-                分类
+                导航
               </Link>
               <a
                 href={`mailto:${siteInfo.email}`}
