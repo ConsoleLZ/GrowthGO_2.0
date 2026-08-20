@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import { SimpleNavigation } from "@/components/simple-navigation"
 import type { Post } from "@/lib/posts"
 
@@ -236,6 +237,74 @@ export default function HomeClient({ posts }: HomeClientProps) {
           </div>
         </footer>
       </div>
+
+      <RoleSprite />
     </main>
+  )
+}
+
+// ═════════ 右下角小角色:走 → 撞墙 → 攻击 → 反向走,循环 ═════════
+const ROLE_FRAME_MS = 140
+const ROLE_MOVE_MS = 16
+const ROLE_SPEED = 1.4
+const ROLE_X_MIN = -240
+const ROLE_X_MAX = 0
+
+function RoleSprite() {
+  const [action, setAction] = useState<"walk" | "attack">("walk")
+  const [dir, setDir] = useState<-1 | 1>(-1)
+  const [x, setX] = useState(ROLE_X_MAX)
+  const [frame, setFrame] = useState(0)
+
+  // 帧动画:0..3 循环(走/攻击各 4 帧)
+  useEffect(() => {
+    const id = setInterval(() => setFrame((f) => (f + 1) % 4), ROLE_FRAME_MS)
+    return () => clearInterval(id)
+  }, [])
+
+  // 走路位移
+  useEffect(() => {
+    if (action !== "walk") return
+    const id = setInterval(() => {
+      setX((p) => Math.min(ROLE_X_MAX, Math.max(ROLE_X_MIN, p + dir * ROLE_SPEED)))
+    }, ROLE_MOVE_MS)
+    return () => clearInterval(id)
+  }, [action, dir])
+
+  // 撞墙 → 触发攻击(dir 条件避免翻转后立刻再次触发,形成死循环)
+  useEffect(() => {
+    if (action !== "walk") return
+    if (x <= ROLE_X_MIN && dir === -1) setAction("attack")
+    else if (x >= ROLE_X_MAX && dir === 1) setAction("attack")
+  }, [x, action, dir])
+
+  // 攻击播完一轮 → 翻转方向,继续走
+  useEffect(() => {
+    if (action !== "attack") return
+    const id = setTimeout(() => {
+      setDir((d) => (d === 1 ? -1 : 1))
+      setAction("walk")
+    }, ROLE_FRAME_MS * 4)
+    return () => clearTimeout(id)
+  }, [action])
+
+  const src =
+    action === "walk"
+      ? `/images/role/Walk/Walk${frame + 1}.png`
+      : `/images/role/Stay_Attack/StayAttack${frame + 1}.png`
+
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none fixed bottom-3 right-3 z-40 select-none"
+      style={{ width: 56, height: 56, transform: `translateX(${x}px)` }}
+    >
+      <img
+        src={src}
+        alt=""
+        className="h-full w-full object-contain"
+        style={{ transform: `scaleX(${dir})` }}
+      />
+    </div>
   )
 }
