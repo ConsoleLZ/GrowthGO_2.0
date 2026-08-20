@@ -21,16 +21,15 @@ interface HomeClientProps {
 
 const siteInfo = {
   name: "小哲",
-  tagline: "一个还在成长的程序员",
   bio:
-    "我是一名研发，白天写代码，做产品设计与工程交付，晚上把踩过的坑写下来。这里没有「10分钟学会 XX」，只有我真实做过、并且愿意为自己说过的话负责的记录。",
+    "一个非常普通的开发，用此网站来记录自己的一些笔记、心得或者一些好用的工具，喜欢的菜是火腿炒蛋，喜欢的水果是发青的香蕉，爱玩的游戏是无畏契约，喜欢的歌手是赵雷",
   email: "17347187569@163.com",
   github: "https://github.com/ConsoleLZ",
   juejin: "https://juejin.cn/user/1295692732053241",
   githubRepo: "https://github.com/ConsoleLZ/GrowthGO_2.0",
   location: "广东",
   keywords: ["前端开发", "AI agent", "效率工具", "skills", "资源素材", "随笔"],
-  interests: ["DIY爱好者", "代码", "吉他", "无畏契约"],
+  interests: ["DIY爱好者", "痴迷代码", "落灰的吉他"],
 }
 
 export default function HomeClient({ posts }: HomeClientProps) {
@@ -219,15 +218,15 @@ export default function HomeClient({ posts }: HomeClientProps) {
           <div className="flex flex-col items-start justify-between gap-4 text-[12px] text-muted-foreground md:flex-row md:items-center">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <span>© {new Date().getFullYear()} {siteInfo.name}</span>
-              <Link href="https://blog.joker2yue.com/" className="transition-colors hover:text-foreground">
-                Moker2yue
-              </Link>
-              <Link href="https://mikeytk.cn/" className="transition-colors hover:text-foreground">
+              <a target="_blank" href="https://blog.joker2yue.com/" className="transition-colors hover:text-foreground">
+                Joker2yue
+              </a>
+              <a target="_blank" href="https://mikeytk.cn/" className="transition-colors hover:text-foreground">
                 MiKey
-              </Link>
-              <Link href="https://www.travellings.cn/go" className="transition-colors hover:text-foreground">
+              </a>
+              <a target="_blank" href="https://www.travellings.cn/go" className="transition-colors hover:text-foreground">
                 随机博客
-              </Link>
+              </a>
             </div>
             <div className="flex items-center gap-x-5">
               <span>用键盘与咖啡维护</span>
