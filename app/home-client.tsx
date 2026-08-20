@@ -159,12 +159,12 @@ export default function HomeClient({ posts }: HomeClientProps) {
         <section className="border-b border-border/70 py-16 md:py-20">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-14">
             <div className="md:col-span-7">
-              <div className="mb-2 text-[11px] uppercase tracking-[0.24em] text-muted-foreground">关于</div>
+              {/* <div className="mb-2 text-[11px] uppercase tracking-[0.24em] text-muted-foreground">关于</div> */}
               <h2
                 className="mb-5 text-[clamp(28px,3.6vw,44px)] font-semibold leading-[1.1] tracking-[-0.012em] text-foreground"
                 style={{ fontFamily: DISPLAY_FONT }}
               >
-                {siteInfo.name}
+                关于我
               </h2>
               <p className="max-w-[640px] text-[15px] leading-[1.8] text-foreground/80">
                 {siteInfo.bio}
