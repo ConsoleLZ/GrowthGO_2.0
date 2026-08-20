@@ -29,7 +29,7 @@ const siteInfo = {
   juejin: "https://juejin.cn/user/1295692732053241",
   githubRepo: "https://github.com/ConsoleLZ/GrowthGO_2.0",
   location: "广东",
-  keywords: ["前端工程", "设计系统", "TypeScript", "效率工具", "独立开发", "产品设计", "随笔"],
+  keywords: ["前端开发", "AI agent", "效率工具", "skills", "资源素材", "随笔"],
   interests: ["DIY爱好者", "代码", "吉他", "无畏契约"],
 }
 
@@ -219,18 +219,15 @@ export default function HomeClient({ posts }: HomeClientProps) {
           <div className="flex flex-col items-start justify-between gap-4 text-[12px] text-muted-foreground md:flex-row md:items-center">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <span>© {new Date().getFullYear()} {siteInfo.name}</span>
-              <Link href="/blog" className="transition-colors hover:text-foreground">
-                文章
+              <Link href="https://blog.joker2yue.com/" className="transition-colors hover:text-foreground">
+                Moker2yue
               </Link>
-              <Link href="/category" className="transition-colors hover:text-foreground">
-                导航
+              <Link href="https://mikeytk.cn/" className="transition-colors hover:text-foreground">
+                MiKey
               </Link>
-              <a
-                href={`mailto:${siteInfo.email}`}
-                className="transition-colors hover:text-foreground"
-              >
-                联系
-              </a>
+              <Link href="https://www.travellings.cn/go" className="transition-colors hover:text-foreground">
+                随机博客
+              </Link>
             </div>
             <div className="flex items-center gap-x-5">
               <span>用键盘与咖啡维护</span>
