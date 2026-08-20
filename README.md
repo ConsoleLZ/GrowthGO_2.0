@@ -17,8 +17,6 @@
 
 [https://www.xiaozhe.me/](https://www.xiaozhe.me/)
 
-![预览图片](https://github.com/ConsoleLZ/GrowthGO_2.0/blob/main/docs/2.png?raw=true)
-
 ## 架构图
 ![架构图](https://github.com/ConsoleLZ/GrowthGO_2.0/blob/main/docs/1.png?raw=true)
 
