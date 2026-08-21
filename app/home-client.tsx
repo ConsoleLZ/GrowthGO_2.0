@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import Typed from "typed.js"
 import { SimpleNavigation } from "@/components/simple-navigation"
 import type { Post } from "@/lib/posts"
 
@@ -258,6 +259,8 @@ function RoleSprite() {
   const [x, setX] = useState(ROLE_X_MAX)
   const [frame, setFrame] = useState(0)
   const [ready, setReady] = useState(false)
+  const dialogRef = useRef<HTMLSpanElement>(null)
+  const typedRef = useRef<Typed | null>(null)
 
   // 预加载所有帧,避免运行时切 src 触发"加载-取消-重试"循环
   useEffect(() => {
@@ -285,6 +288,29 @@ function RoleSprite() {
       img.onerror = done
       img.src = u
     })
+  }, [])
+
+  // 打字机对话框:首页加载时请求一次 API,与第一段固定文案循环打字
+  useEffect(() => {
+    let mounted = true
+    const start = (line2: string) => {
+      if (!mounted || !dialogRef.current) return
+      typedRef.current = new Typed(dialogRef.current, {
+        strings: ["哥布林正在巡视领地", line2],
+        typeSpeed: 45,
+        backSpeed: 20,
+        backDelay: 1800,
+        loop: true,
+      })
+    }
+    fetch("https://v2.xxapi.cn/api/dujitang")
+      .then((r) => r.json())
+      .then((j) => start(typeof j?.data === "string" && j.data ? j.data : "网络走丢了"))
+      .catch(() => start("网络走丢了"))
+    return () => {
+      mounted = false
+      typedRef.current?.destroy()
+    }
   }, [])
 
   // 帧动画:走  / 闲置,切换动作时重置(预加载完成后启动)
@@ -334,6 +360,10 @@ function RoleSprite() {
       className="pointer-events-none fixed bottom-3 right-3 z-40 select-none"
       style={{ width: 36, height: 36, transform: `translateX(${x}px)` }}
     >
+      {/* NPC 对话框:角色右上角,随根 div 的 translateX 跟随移动 */}
+      <div className="absolute bottom-full right-0 mb-2 w-[200px] break-words rounded-md border border-black/15 bg-white px-3 py-1.5 text-[12px] leading-relaxed text-black shadow-md">
+        <span ref={dialogRef} />
+      </div>
       <img
         src={src}
         alt=""
