@@ -246,7 +246,7 @@ export default function HomeClient({ posts }: HomeClientProps) {
 
 // ═════════ 右下角小角色:走 → 撞墙 → 攻击 → 反向走,循环 ═════════
 const ROLE_FRAME_MS = 140
-const ROLE_ATTACK_FRAME_MS = 80
+const ROLE_ATTACK_FRAME_MS = 140
 const ROLE_MOVE_MS = 16
 const ROLE_SPEED = 1.4
 const ROLE_X_MIN = -240
@@ -264,10 +264,18 @@ function RoleSprite() {
     const urls = [
       "/images/role/Run/1.png",
       "/images/role/Run/2.png",
-      "/images/role/PunchAttack/1.png",
-      "/images/role/PunchAttack/2.png",
-      "/images/role/PunchAttack/3.png",
-      "/images/role/PunchAttack/4.png",
+      "/images/role/Run/3.png",
+      "/images/role/Run/4.png",
+      "/images/role/Run/5.png",
+      "/images/role/Run/6.png",
+      "/images/role/Run/7.png",
+      "/images/role/Run/8.png",
+      "/images/role/Idle/1.png",
+      "/images/role/Idle/2.png",
+      "/images/role/Idle/3.png",
+      "/images/role/Idle/4.png",
+      "/images/role/Idle/5.png",
+      "/images/role/Idle/6.png",
     ]
     let pending = urls.length
     const done = () => { if (--pending === 0) setReady(true) }
@@ -279,11 +287,11 @@ function RoleSprite() {
     })
   }, [])
 
-  // 帧动画:走 2 帧 / 攻击 4 帧,切换动作时重置(预加载完成后启动)
+  // 帧动画:走  / 闲置,切换动作时重置(预加载完成后启动)
   useEffect(() => {
     if (!ready) return
     setFrame(0)
-    const max = action === "walk" ? 2 : 4
+    const max = action === "walk" ? 8 : 6
     const ms = action === "walk" ? ROLE_FRAME_MS : ROLE_ATTACK_FRAME_MS
     const id = setInterval(() => setFrame((f) => (f + 1) % max), ms)
     return () => clearInterval(id)
@@ -298,33 +306,33 @@ function RoleSprite() {
     return () => clearInterval(id)
   }, [action, dir, ready])
 
-  // 撞墙 → 触发攻击(dir 条件避免翻转后立刻再次触发,形成死循环)
+  // 撞墙 → 触发闲置动画(dir 条件避免翻转后立刻再次触发,形成死循环)
   useEffect(() => {
     if (action !== "walk") return
     if (x <= ROLE_X_MIN && dir === -1) setAction("attack")
     else if (x >= ROLE_X_MAX && dir === 1) setAction("attack")
   }, [x, action, dir])
 
-  // 攻击播完一轮 → 翻转方向,继续走
+  // 播完一轮 → 翻转方向,继续走
   useEffect(() => {
     if (action !== "attack") return
     const id = setTimeout(() => {
       setDir((d) => (d === 1 ? -1 : 1))
       setAction("walk")
-    }, ROLE_ATTACK_FRAME_MS * 8)
+    }, ROLE_ATTACK_FRAME_MS * 24)
     return () => clearTimeout(id)
   }, [action])
 
   const src =
     action === "walk"
       ? `/images/role/Run/${frame + 1}.png`
-      : `/images/role/PunchAttack/${frame + 1}.png`
+      : `/images/role/Idle/${frame + 1}.png`
 
   return (
     <div
       aria-hidden
       className="pointer-events-none fixed bottom-3 right-3 z-40 select-none"
-      style={{ width: 56, height: 56, transform: `translateX(${x}px)` }}
+      style={{ width: 36, height: 36, transform: `translateX(${x}px)` }}
     >
       <img
         src={src}
