@@ -280,14 +280,21 @@ function RoleSprite() {
       "/images/role/Idle/5.png",
       "/images/role/Idle/6.png",
     ]
-    let pending = urls.length
-    const done = () => { if (--pending === 0) setReady(true) }
-    urls.forEach((u) => {
-      const img = new Image()
-      img.onload = done
-      img.onerror = done
-      img.src = u
-    })
+    const preload = () => {
+      let pending = urls.length
+      const done = () => { if (--pending === 0) setReady(true) }
+      urls.forEach((u) => {
+        const img = new Image()
+        img.onload = done
+        img.onerror = done
+        img.src = u
+      })
+    }
+    preload()
+    // 切回标签页时浏览器可能已清空 memory cache,先停动画再重新预加载,避免运行时切 src 陷入加载循环
+    const onVis = () => { if (!document.hidden) { setReady(false); preload() } }
+    document.addEventListener("visibilitychange", onVis)
+    return () => document.removeEventListener("visibilitychange", onVis)
   }, [])
 
   // 打字机对话框:首页加载时请求一次 API,与第一段固定文案循环打字
