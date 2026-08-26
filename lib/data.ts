@@ -27,6 +27,14 @@ export const tags = {
 // /imgNull.png
 export const sites: Site[] = [
   {
+    name: "astryx",
+    ico: "https://astryx.atmeta.com/favicon.svg",
+    url: "https://astryx.atmeta.com/",
+    description: "react组件库，内置 150+ 组件、7 套可定制主题、深色模式、页面模板和 CLI，对 AI Agent 友好。",
+    tags: [tags.frontend],
+    recommend: true
+  },
+  {
     name: "诗泉",
     ico: "https://poetry.palemoky.com/icon.png",
     url: "https://github.com/palemoky/chinese-poetry-api",
