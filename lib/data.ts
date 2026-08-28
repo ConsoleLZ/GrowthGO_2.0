@@ -27,6 +27,14 @@ export const tags = {
 // /imgNull.png
 export const sites: Site[] = [
   {
+    name: "DeskBox",
+    ico: "/imgNull.png",
+    url: "https://github.com/Tianyu199509/DeskBox",
+    description: "一款开源的 Windows 桌面整理工具，为桌面加入具有 Windows 原生质感的文件格子和日常工具。它内置待办、随记、搜索、天气和音乐控制等小组件，支持映射现有文件夹、自动整理桌面文件和 QuickLook 预览等功能。",
+    tags: [tags.tools],
+    recommend: true
+  },
+  {
     name: "astryx",
     ico: "https://astryx.atmeta.com/favicon.svg",
     url: "https://astryx.atmeta.com/",
