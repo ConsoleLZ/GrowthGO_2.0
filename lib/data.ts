@@ -27,6 +27,13 @@ export const tags = {
 // /imgNull.png
 export const sites: Site[] = [
   {
+    name: "瞬投",
+    ico: "https://shuntou.top/favicon-32x32.png?v=20260817",
+    url: "https://shuntou.top/",
+    description: "无畏契约点位快速查询",
+    tags: [tags.entertainment]
+  },
+  {
     name: "DeskBox",
     ico: "/imgNull.png",
     url: "https://github.com/Tianyu199509/DeskBox",
