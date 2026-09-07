@@ -27,6 +27,13 @@ export const tags = {
 // /imgNull.png
 export const sites: Site[] = [
   {
+    name: "Rustdesk",
+    ico: "/imgNull.png",
+    url: "https://github.com/rustdesk/rustdesk",
+    description: "免费开源的远程桌面软件。开箱即用无需任何配置，支持 Linux/Mac/Win/Android 等平台。还能够自行搭建服务器，由用户自己掌控数据，不必担心隐私数据泄露的问题",
+    tags: [tags.tools]
+  },
+  {
     name: "瞬投",
     ico: "https://shuntou.top/favicon-32x32.png?v=20260817",
     url: "https://shuntou.top/",
