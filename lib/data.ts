@@ -27,6 +27,14 @@ export const tags = {
 // /imgNull.png
 export const sites: Site[] = [
   {
+    name: "OOOSplat",
+    ico: "/imgNull.png",
+    url: "https://github.com/ooolabdev/ooosplat",
+    description: "OOOSplat 是一款将普通环绕拍摄视频或图片序列一键转换为3D高斯泼溅的本地桌面应用。选择素材、项目目录和质量档位后，应用会自动完成画面准备、相机重建、训练与 PLY 发布，并可直接预览、调整和导出结果。",
+    tags: [tags.tools],
+    recommend: true
+  },
+  {
     name: "Rustdesk",
     ico: "/imgNull.png",
     url: "https://github.com/rustdesk/rustdesk",
